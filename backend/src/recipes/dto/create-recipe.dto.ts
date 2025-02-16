@@ -11,6 +11,10 @@ export class CreateRecipeDto {
 
   @IsString()
   @IsNotEmpty()
+  recipeDescription: string;
+
+  @IsString()
+  @IsNotEmpty()
   hashtags: string;
 
   @IsString()

@@ -16,6 +16,8 @@ export class Recipe {
   @Column()
   description: string;
   
+  @Column()
+  recipeDescription: string;
 
   @Column()
   hashtags: string;
@@ -26,7 +28,7 @@ export class Recipe {
   @ManyToOne(() => Category, (categories) => categories.recipe)
   category: Category;
 
-  @OneToMany(() => Image, (image) => image.recipe)
+  @OneToMany(() => Image, (image) => image.recipe, { cascade: true })
   images: Image[];
 
  @CreateDateColumn()

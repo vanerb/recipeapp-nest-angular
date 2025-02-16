@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, BeforeInsert, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, BeforeInsert, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/users/users.entity';
 import { Recipe } from 'src/recipes/recipes.entity';
@@ -14,13 +14,14 @@ export class Image {
   @Column()
   path: string;
 
-  @ManyToOne(() => Recipe, (recipe) => recipe.images)
+  @ManyToOne(() => Recipe, (recipe) => recipe.images, { onDelete: 'CASCADE' })
   recipe: Recipe;
 
-  @Column()
+
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn()
   updatedAt: Date;
 
 }

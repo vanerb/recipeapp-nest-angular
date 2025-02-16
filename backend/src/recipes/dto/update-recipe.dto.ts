@@ -12,6 +12,10 @@ export class UpdateRecipeDto {
 
     @IsString()
     @IsOptional()
+    recipeDescription: string;
+
+    @IsString()
+    @IsOptional()
     hashtags: string;
 
     @IsString()
