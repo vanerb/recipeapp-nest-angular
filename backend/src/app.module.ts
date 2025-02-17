@@ -34,6 +34,10 @@ import { RecipesService } from './recipes/recipes.service';
       synchronize: true, // Solo para desarrollo
     }),
     TypeOrmModule.forFeature([User, Recipe, Category, Image]),
+    UsersModule, // <-- Asegúrate de agregar esto
+    RecipesModule,
+    CategoriesModule,
+    ImagesModule,
   ],
   controllers: [UsersController, RecipesController, CategoriesController, ImagesController],
   providers:[UsersService, RecipesService, CategoriesService, ImagesService],

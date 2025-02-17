@@ -1,16 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
 
     constructor(
         @InjectRepository(User) private usersRepository: Repository<User>,
+        private jwtService: JwtService
     ) { }
 
     async getAllUsers(): Promise<User[]> {
@@ -57,5 +59,16 @@ export class UsersService {
 
         this.usersRepository.delete(id);
     }
+
+
+    async login(email: string, password: string) {
+        const user = await this.usersRepository.findOne({ where: { email } });
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+          throw new UnauthorizedException('Credenciales incorrectas');
+        }
+    
+        const payload = { userId: user.id, email: user.email };
+        return { access_token: this.jwtService.sign(payload) };
+      }
 
 }
