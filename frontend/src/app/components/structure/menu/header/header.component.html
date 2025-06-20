@@ -1,1 +1,14 @@
-<p>header works!</p>
+<div class="w-full h-[56px] bg-header-base border-b border-solid border-header-primary flex justify-between items-center">
+    <div class="flex space-x-2 cursor-pointer ">
+        <span *ngFor="let item of this.getMenu('left')" [ngClass]="{'bg-header-secondary text-text-inverted': item.name === this.selected}" class="cursor-pointer h-full hover:bg-header-secondary hover:text-text-inverted p-4" (click)="item.action()">
+            {{item.name}}
+        </span>
+
+    </div>
+    <div class="flex space-x-2">
+        <span *ngFor="let item of this.getMenu('right')" [ngClass]="{'bg-header-secondary text-text-inverted': item.name === this.selected}" class="cursor-pointer h-full hover:bg-header-secondary hover:text-text-inverted p-4" (click)="item.action()">
+            {{item.name}}
+        </span>
+
+    </div>
+</div>

@@ -1,1 +1,44 @@
-<p>register works!</p>
+<div class="w-full flex justify-center items-center bg-primary h-[calc(100vh_-_56px)]">
+    <div class="w-full h-full flex  justify-center items-center">
+
+        <div class="flex flex-col justify-center items-center w-[80vh] p-4 bg-secondary rounded">
+            <div class="text-text-base">
+                <h1 class="text-xl font-bold">REGISTRARSE</h1>
+            </div>
+            <form class=" p-4 rounded w-full space-y-4">
+                <div class="flex space-x-2">
+                    <div class="flex w-full text-text-base flex-col">
+                        <label for="name">Nombre: </label>
+                        <input class="p-2 rounded" id="name" placeholder="Introduzca su nombre completo" type="name">
+                    </div>
+                    <div class="flex w-full text-text-base flex-col">
+                        <label for="subname">Apellidos: </label>
+                        <input class="p-2 rounded" id="subname" placeholder="Introduzca su apellido completo"
+                            type="subname">
+                    </div>
+                </div>
+
+                <div class="flex text-text-base flex-col">
+                    <label for="email">Correo: </label>
+                    <input class="p-2 rounded" id="email" placeholder="Introduzca un correo válido" type="email">
+                </div>
+
+                <div class="flex text-text-base flex-col">
+                    <label for="password">Contraseña: </label>
+                    <input class="p-2 rounded" id="paswsword" placeholder="Introduzca una contraseña válida"
+                        type="password">
+                </div>
+                <div class="flex text-text-base flex-col">
+                    <label for="repeatPaswsword">Repetir contraseña: </label>
+                    <input class="p-2 rounded" id="repeatPaswsword" placeholder="Introduzca de nuevo su contraseña"
+                        type="password">
+                </div>
+
+                <div class="w-full flex justify-end items-center">
+                    <button class="px-[16px] h-[32px] rounded-full bg-accent text-text-inverted">Registrarse</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

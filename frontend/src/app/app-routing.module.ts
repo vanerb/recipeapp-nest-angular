@@ -4,11 +4,15 @@ import { WelcomeComponent } from './components/structure/pages/welcome/welcome.c
 import { AuthGuard } from './guards/auth-guard.guard';
 import { LoginComponent } from './components/structure/pages/login/login.component';
 import { RegisterComponent } from './components/structure/pages/register/register.component';
+import { ContactComponent } from './components/structure/pages/contact/contact.component';
+import { MainComponent } from './components/structure/pages/main/main.component';
 
 const routes: Routes = [
-  { path: '', component: WelcomeComponent,  canActivate: [AuthGuard], },
+  { path: '', component: WelcomeComponent, canActivate: [AuthGuard], },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'contact', component: ContactComponent },
+  { path: 'recipes', component: MainComponent, canActivate: [AuthGuard], },
 ];
 
 @NgModule({

@@ -13,6 +13,8 @@ import { MainComponent } from './components/structure/pages/main/main.component'
 import { ContactComponent } from './components/structure/pages/contact/contact.component';
 import { HeaderComponent } from './components/structure/menu/header/header.component';
 import { FooterComponent } from './components/structure/menu/footer/footer.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { FooterComponent } from './components/structure/menu/footer/footer.compo
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule,
   ],
   providers: [
     provideClientHydration()
