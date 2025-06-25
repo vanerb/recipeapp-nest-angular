@@ -1,14 +1,49 @@
 <div class="w-full h-[56px] bg-header-base border-b border-solid border-header-primary flex justify-between items-center">
-    <div class="flex space-x-2 cursor-pointer ">
-        <span *ngFor="let item of this.getMenu('left')" [ngClass]="{'bg-header-secondary text-text-inverted': item.name === this.selected}" class="cursor-pointer h-full hover:bg-header-secondary hover:text-text-inverted p-4" (click)="item.action()">
-            {{item.name}}
+  <!-- Menú izquierdo -->
+  <div class="flex space-x-2 cursor-pointer">
+    <span
+      *ngFor="let item of getMenu('left')"
+      [ngClass]="{'bg-header-secondary text-text-inverted': item.name === selected}"
+      class="cursor-pointer h-full hover:bg-header-secondary hover:text-text-inverted p-4"
+      (click)="item.action?.()"
+    >
+      {{ item.name }}
+    </span>
+  </div>
+
+  <!-- Menú derecho -->
+  <div class="flex space-x-2 cursor-pointer items-center">
+    <ng-container *ngFor="let item of getMenu('right')">
+      <div class="relative group" *ngIf="item.children; else singleItem">
+        <span
+          [ngClass]="{'bg-header-secondary text-text-inverted': item.name === selected}"
+          class="cursor-pointer h-full hover:bg-header-secondary hover:text-text-inverted p-4"
+        >
+          {{ item.name }}
         </span>
 
-    </div>
-    <div class="flex space-x-2">
-        <span *ngFor="let item of this.getMenu('right')" [ngClass]="{'bg-header-secondary text-text-inverted': item.name === this.selected}" class="cursor-pointer h-full hover:bg-header-secondary hover:text-text-inverted p-4" (click)="item.action()">
-            {{item.name}}
-        </span>
+        <!-- Submenú dropdown -->
+        <div class="absolute right-0 mt-2 hidden group-hover:flex flex-col bg-white border border-gray-200 shadow-lg z-50">
+          <span
+            *ngFor="let child of item.children"
+            class="px-4 py-2 hover:bg-header-secondary hover:text-text-inverted"
+            (click)="child.action?.()"
+          >
+            {{ child.name }}
+          </span>
+        </div>
+      </div>
 
-    </div>
+      <!-- Ítem sin submenú -->
+      <ng-template #singleItem>
+        <span
+          [ngClass]="{'bg-header-secondary text-text-inverted': item.name === selected}"
+          class="cursor-pointer h-full hover:bg-header-secondary hover:text-text-inverted p-4"
+          (click)="item.action?.()"
+        >
+          {{ item.name }}
+        </span>
+      </ng-template>
+    </ng-container>
+  </div>
 </div>

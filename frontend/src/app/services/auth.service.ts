@@ -47,11 +47,7 @@ export class AuthService {
       error: (error) => {
         this.removeToken()
       }
-    }).unsubscribe()
-
-
-    
-
+    })
   }
 
 

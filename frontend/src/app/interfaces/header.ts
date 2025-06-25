@@ -1,6 +1,7 @@
 export interface Header {
     key: string;
     name: string;
-    position: string;
-    action: () => void;
+    position: 'left' | 'right';
+    action?: () => Promise<void>;
+    children?: Header[];
 }

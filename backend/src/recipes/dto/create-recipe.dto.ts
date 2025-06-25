@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsString, IsStrongPassword, IsUUID } from 'class-validator';
+import { IsArray, IsEmail, IsNotEmpty, IsString, IsStrongPassword, IsUUID } from 'class-validator';
+import { CreateHashtagDto } from 'src/hashtags/dto/create-hashtag.dto';
+import { Hashtags } from 'src/hashtags/hashtags.entity';
+import { CreateIngredientDto } from 'src/ingredients/dto/create-ingredient.dto';
+import { Ingredients } from 'src/ingredients/ingredients.entity';
+import { CreatePreaparationDto } from 'src/preparations/dto/create-preparation.dto';
+import { Preparations } from 'src/preparations/preparations.entity';
 
 export class CreateRecipeDto {
   @IsString()
@@ -9,13 +15,17 @@ export class CreateRecipeDto {
   @IsNotEmpty()
   description: string;
 
-  @IsString()
+  @IsArray()
   @IsNotEmpty()
-  recipeDescription: string;
+  hashtags: Hashtags[];
 
-  @IsString()
+  @IsArray()
   @IsNotEmpty()
-  hashtags: string;
+  ingredients: Ingredients[];
+
+  @IsArray()
+  @IsNotEmpty()
+  preparations: Preparations[];
 
   @IsString()
   @IsNotEmpty()

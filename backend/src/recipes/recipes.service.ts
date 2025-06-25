@@ -8,6 +8,12 @@ import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { Category } from 'src/categories/categories.entity';
 import { User } from 'src/users/users.entity';
 import { Image } from 'src/images/images.entity';
+import { Hashtags } from 'src/hashtags/hashtags.entity';
+import { Preparations } from 'src/preparations/preparations.entity';
+import { Ingredients } from 'src/ingredients/ingredients.entity';
+import { CreateHashtagDto } from 'src/hashtags/dto/create-hashtag.dto';
+import { CreatePreaparationDto } from 'src/preparations/dto/create-preparation.dto';
+import { CreateIngredientDto } from 'src/ingredients/dto/create-ingredient.dto';
 
 @Injectable()
 export class RecipesService {
@@ -20,7 +26,16 @@ export class RecipesService {
     ) { }
 
     async getAllRecipes(): Promise<Recipe[]> {
-        return await this.recipesRepository.find();
+        return await this.recipesRepository.find({
+            relations: ['images', 'ingredients', 'hashtags', 'preparations'],
+        });
+    }
+
+    async getRecipe(id: string): Promise<Recipe[]> {
+        return await this.recipesRepository.find({
+            where: { id },
+            relations: ['images', 'ingredients', 'hashtags', 'preparations'],
+        });
     }
 
     async createRecipe(createRecipeDto: CreateRecipeDto, images: Express.Multer.File[]): Promise<Recipe> {
@@ -29,28 +44,31 @@ export class RecipesService {
         if (!user) {
             throw new Error('Usuario no encontrado');
         }
-    
+
         const category = await this.cateoriesRepository.findOne({ where: { id: createRecipeDto.categoryId } });
         if (!category) {
             throw new Error('Categoría no encontrada');
         }
-    
+
         let newRecipe = this.recipesRepository.create({ ...createRecipeDto, user, category });
-    
-        newRecipe = await this.recipesRepository.save(newRecipe); 
-    
-        const imageEntities = images.map((file) => {
-            const image = new Image();
-            image.url = `/uploads/recipes/${file.filename}`;
-            image.recipe = newRecipe; 
-            return image;
-        });
-    
-        await this.imageRepository.save(imageEntities);
-    
+
+        newRecipe = await this.recipesRepository.save(newRecipe);
+
+        if (images) {
+            const imageEntities = images.map((file) => {
+                const image = new Image();
+                image.url = `/uploads/recipes/${file.filename}`;
+                image.recipe = newRecipe;
+                return image;
+            });
+
+            await this.imageRepository.save(imageEntities);
+        }
+
+
         return newRecipe;
     }
-    
+
 
     async updateRecipe(id: string, updateRecipeDto: UpdateRecipeDto, images: Express.Multer.File[]): Promise<Recipe> {
         const recipe = await this.recipesRepository.findOne({

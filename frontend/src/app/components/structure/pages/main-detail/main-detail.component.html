@@ -1,0 +1,25 @@
+<div class="w-full h-[calc(100vh_-_56px)] bg-primary">
+    <div class="w-full flex justify-center flex-col space-y-2 items-center">
+        <div class="w-full max-h-[100px] flex rounded bg-secondary justify-center ">
+            <img (error)="onImageError($event)" class="object-cover rounded"
+                src="http://localhost:3002{{recipe?.images?.[0]?.url}}">
+        </div>
+        <div class=" w-full h-full">
+            <div class="w-full flex justify-center items-center">
+                <span class="text-3xl">{{recipe?.title}}</span>
+            </div>
+
+            <div class="w-full flex justify-center items-center">
+                <span class="text-xl">{{recipe?.description}}</span>
+            </div>
+
+             <div class="w-full flex justify-center items-center">
+                <span class="text-base">{{recipe?.recipeDescription}}</span>
+            </div>
+            <div class="w-full flex justify-center items-center">
+                <span class="text-base">{{recipe?.hashtags}}</span>
+            </div>
+        </div>
+
+    </div>
+</div>

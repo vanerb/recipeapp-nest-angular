@@ -15,6 +15,11 @@ export class RecipesController {
     return this.recipesService.getAllRecipes()
   }
 
+   @Get(':id')
+  getRecipe(@Param('id') id: string): Promise<Recipe[]> {
+    return this.recipesService.getRecipe(id)
+  }
+
   @Post()
   @UseInterceptors(
     FilesInterceptor('images', 10, {

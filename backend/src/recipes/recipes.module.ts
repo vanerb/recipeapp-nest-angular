@@ -6,9 +6,11 @@ import { Recipe } from './recipes.entity';
 import { User } from 'src/users/users.entity';
 import { Category } from 'src/categories/categories.entity';
 import { Image } from 'src/images/images.entity';
+import { Preparations } from 'src/preparations/preparations.entity';
+import { Ingredients } from 'src/ingredients/ingredients.entity';
 
 @Module({
-  imports: [ TypeOrmModule.forFeature([Recipe, User, Image, Category])], // Asegúrate de que tus entidades estén registradas
+  imports: [ TypeOrmModule.forFeature([Recipe, User, Image, Category, Preparations, Ingredients])], // Asegúrate de que tus entidades estén registradas
   controllers: [RecipesController],
   providers: [RecipesService], 
 })

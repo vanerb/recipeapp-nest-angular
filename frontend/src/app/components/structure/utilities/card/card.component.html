@@ -1,1 +1,11 @@
-<p>card works!</p>
+<div class="rounded border space-y-2 border-header-secondary border-solid flex flex-col items-center p-4 bg-secondary">
+    <div class="w-full max-h-[100px] flex rounded">
+        <img (error)="onImageError($event)" class="object-cover rounded"
+            src="http://localhost:3002{{data?.images?.[0]?.url}}">
+    </div>
+    <span class="text-xl text-text-base">{{data?.title}}</span>
+    <span class="text-m text-text-muted">{{ data?.description }}</span>
+    <div class=" w-full h-full flex items-end">
+        <button (click)="viewDetails(data)" class="w-full h-[40px] bg-accent rounded text-text-inverted">Ver</button>
+    </div>
+</div>

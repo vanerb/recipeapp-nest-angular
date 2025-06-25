@@ -13,7 +13,12 @@ export class UsersController {
     return this.usersService.getAllUsers()
   }
 
-  @Post()
+  @Get('token/:token')
+  getUserByToken(@Param('token') token: string): Promise<User | null> {
+    return this.usersService.getUserByToken(token)
+  }
+
+  @Post('create')
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.createUser(createUserDto);
   }

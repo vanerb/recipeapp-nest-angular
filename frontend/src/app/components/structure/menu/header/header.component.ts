@@ -3,6 +3,8 @@ import { AuthService } from '../../../../services/auth.service';
 import { Header } from '../../../../interfaces/header';
 import { ActivatedRoute, Router } from '@angular/router';
 import { log } from 'console';
+import { UsersService } from '../../../../services/users.service';
+import { User } from '../../../../interfaces/users';
 
 @Component({
   selector: 'app-header',
@@ -18,7 +20,8 @@ export class HeaderComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private readonly userService: UsersService
   ) {
 
   }
@@ -33,8 +36,7 @@ export class HeaderComponent implements OnInit {
           position: "left",
           action: async () => {
             this.router.navigate(['/']);
-            await this.selectionMenu()
-
+            await this.selectionMenu();
           }
         },
         {
@@ -43,8 +45,7 @@ export class HeaderComponent implements OnInit {
           position: "left",
           action: async () => {
             this.router.navigate(['/recipes']);
-            await this.selectionMenu()
-
+            await this.selectionMenu();
           }
         },
         {
@@ -53,67 +54,50 @@ export class HeaderComponent implements OnInit {
           position: "left",
           action: async () => {
             this.router.navigate(['/contact']);
-            await this.selectionMenu()
-
+            await this.selectionMenu();
           }
         },
         {
-          key: "register",
-          name: "Registrarse",
+          key: "profile",
+          name: "Mi perfil",
           position: "right",
-          action: async () => {
-            this.router.navigate(['/register']);
-            await this.selectionMenu()
-
-          }
-        },
-        {
-          key: "logout",
-          name: "Cerrar sesión",
-          position: "right",
-          action: async () => {
-            this.authService.logout()
-            await this.selectionMenu()
-
-
-          }
-        },
-      ]
-    }
-    else if (!this.authService.isAuthenticated()) {
-      this.menu = [
-        {
-          key: "init",
-          name: "Inicio",
-          position: "left",
-          action: async () => {
-            this.router.navigate(['/']);
-            await this.selectionMenu()
-          }
-        },
-        {
-          key: "register",
-          name: "Registrarse",
-          position: "right",
-          action: async () => {
-            this.router.navigate(['/register']);
-            await this.selectionMenu()
-          }
-        },
-        {
-          key: "login",
-          name: "Iniciar sesión",
-          position: "right",
-          action: async () => {
-            this.router.navigate(['/login']);
-            await this.selectionMenu()
-          }
-        },
-      ]
-
+          children: [
+            {
+              key: "profile-page",
+              name: "Perfil",
+              position: "right",
+              action: async () => {
+                const user = await this.userService.getByToken(this.authService.getToken() ?? '');
+                this.router.navigate(['/profile/' + user.id]);
+                 await this.selectionMenu();
+              }
+            },
+            {
+              key: "my-products",
+              name: "Mis recetas",
+              position: "right",
+              action: async () => {
+                this.router.navigate(['/']);
+                 await this.selectionMenu();
+              }
+            },
+            {
+              key: "logout",
+              name: "Cerrar sesión",
+              position: "right",
+              action: async () => {
+                this.authService.logout();
+                this.router.navigate(['/login']);
+                 await this.selectionMenu();
+              }
+            }
+          ]
+        }
+      ];
     }
 
 
+    this.selectionMenu()
 
 
 
@@ -147,6 +131,9 @@ export class HeaderComponent implements OnInit {
         return
       case "contact":
         this.selected = this.menu.find(el => el.key === "contact")?.name ?? ""
+        return
+      case "profile":
+        this.selected = this.menu.find(el => el.key === "profile")?.name ?? ""
         return
       case "":
         this.selected = this.menu.find(el => el.key === "init")?.name ?? ""

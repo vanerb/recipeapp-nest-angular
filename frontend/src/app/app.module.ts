@@ -15,6 +15,8 @@ import { HeaderComponent } from './components/structure/menu/header/header.compo
 import { FooterComponent } from './components/structure/menu/footer/footer.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ProfileComponent } from './components/structure/pages/profile/profile.component';
+import { MainDetailComponent } from './components/structure/pages/main-detail/main-detail.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     AdminComponent,
     WelcomeComponent,
     MainComponent,
-    ContactComponent
+    ContactComponent,
+    ProfileComponent,
+    MainDetailComponent
   ],
   imports: [
     BrowserModule,

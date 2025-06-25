@@ -19,6 +19,10 @@ export class UsersService {
         return await this.usersRepository.find();
     }
 
+    async getUserByToken(token: string): Promise<User | null> {
+        return this.usersRepository.findOneBy({ token });
+    }
+
     async createUser(createUserDto: CreateUserDto): Promise<User> {
         if (createUserDto.password) {
             const salt = await bcrypt.genSalt(10);
@@ -64,11 +68,14 @@ export class UsersService {
     async login(email: string, password: string) {
         const user = await this.usersRepository.findOne({ where: { email } });
         if (!user || !(await bcrypt.compare(password, user.password))) {
-          throw new UnauthorizedException('Credenciales incorrectas');
+            throw new UnauthorizedException('Credenciales incorrectas');
         }
-    
         const payload = { userId: user.id, email: user.email };
+
+        user.token = this.jwtService.sign(payload)
+        await this.usersRepository.update(user.id, user);
+
         return { access_token: this.jwtService.sign(payload) };
-      }
+    }
 
 }

@@ -3,6 +3,9 @@ import * as bcrypt from 'bcrypt';
 import { User } from 'src/users/users.entity';
 import { Category } from 'src/categories/categories.entity';
 import { Image } from 'src/images/images.entity';
+import { Ingredients } from 'src/ingredients/ingredients.entity';
+import { Preparations } from 'src/preparations/preparations.entity';
+import { Hashtags } from 'src/hashtags/hashtags.entity';
 
 @Entity()
 export class Recipe {
@@ -12,15 +15,17 @@ export class Recipe {
   @Column()
   title: string;
 
- 
   @Column()
   description: string;
-  
-  @Column()
-  recipeDescription: string;
 
-  @Column()
-  hashtags: string;
+  @OneToMany(() => Ingredients, (ingredient) => ingredient.recipe, { cascade: true })
+  ingredients: Ingredients[];
+
+  @OneToMany(() => Preparations, (preparation) => preparation.recipe, { cascade: true })
+  preparations: Preparations[];
+
+  @OneToMany(() => Hashtags, (hashtag) => hashtag.recipe, { cascade: true })
+  hashtags: Preparations[];
 
   @ManyToOne(() => User, (user) => user.recipes)
   user: User;
@@ -31,7 +36,7 @@ export class Recipe {
   @OneToMany(() => Image, (image) => image.recipe, { cascade: true })
   images: Image[];
 
- @CreateDateColumn()
+  @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
