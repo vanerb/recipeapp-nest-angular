@@ -17,6 +17,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProfileComponent } from './components/structure/pages/profile/profile.component';
 import { MainDetailComponent } from './components/structure/pages/main-detail/main-detail.component';
+import { MainManagementComponent } from './components/structure/pages/main-management/main-management.component';
+import { AddModalComponent } from './components/structure/pages/main-management/add-modal/add-modal.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { MainDetailComponent } from './components/structure/pages/main-detail/ma
     MainComponent,
     ContactComponent,
     ProfileComponent,
-    MainDetailComponent
+    MainDetailComponent,
+    MainManagementComponent,
+    AddModalComponent
   ],
   imports: [
     BrowserModule,

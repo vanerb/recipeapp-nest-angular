@@ -69,16 +69,17 @@ export class HeaderComponent implements OnInit {
               action: async () => {
                 const user = await this.userService.getByToken(this.authService.getToken() ?? '');
                 this.router.navigate(['/profile/' + user.id]);
-                 await this.selectionMenu();
+                await this.selectionMenu();
               }
             },
             {
-              key: "my-products",
+              key: "my-recipes",
               name: "Mis recetas",
               position: "right",
               action: async () => {
-                this.router.navigate(['/']);
-                 await this.selectionMenu();
+                const user = await this.userService.getByToken(this.authService.getToken() ?? '');
+                this.router.navigate(['/management/' + user.id]);
+                await this.selectionMenu();
               }
             },
             {
@@ -88,7 +89,7 @@ export class HeaderComponent implements OnInit {
               action: async () => {
                 this.authService.logout();
                 this.router.navigate(['/login']);
-                 await this.selectionMenu();
+                await this.selectionMenu();
               }
             }
           ]

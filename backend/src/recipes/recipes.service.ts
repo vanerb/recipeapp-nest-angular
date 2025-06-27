@@ -11,9 +11,6 @@ import { Image } from 'src/images/images.entity';
 import { Hashtags } from 'src/hashtags/hashtags.entity';
 import { Preparations } from 'src/preparations/preparations.entity';
 import { Ingredients } from 'src/ingredients/ingredients.entity';
-import { CreateHashtagDto } from 'src/hashtags/dto/create-hashtag.dto';
-import { CreatePreaparationDto } from 'src/preparations/dto/create-preparation.dto';
-import { CreateIngredientDto } from 'src/ingredients/dto/create-ingredient.dto';
 
 @Injectable()
 export class RecipesService {
@@ -30,6 +27,15 @@ export class RecipesService {
             relations: ['images', 'ingredients', 'hashtags', 'preparations'],
         });
     }
+
+
+     async getRecipeByUserId(id: string): Promise<Recipe[]> {
+        return await this.recipesRepository.find({
+            where: { user: { id: id }  },
+            relations: ['images', 'ingredients', 'hashtags', 'preparations'],
+        });
+    }
+    
 
     async getRecipe(id: string): Promise<Recipe[]> {
         return await this.recipesRepository.find({

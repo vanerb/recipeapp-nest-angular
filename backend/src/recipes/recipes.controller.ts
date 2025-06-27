@@ -15,9 +15,14 @@ export class RecipesController {
     return this.recipesService.getAllRecipes()
   }
 
-   @Get(':id')
+  @Get(':id')
   getRecipe(@Param('id') id: string): Promise<Recipe[]> {
     return this.recipesService.getRecipe(id)
+  }
+
+  @Get('user/:id')
+  getRecipeByUserId(@Param('id') id: string): Promise<Recipe[]> {
+    return this.recipesService.getRecipeByUserId(id)
   }
 
   @Post()
@@ -48,7 +53,7 @@ export class RecipesController {
       }),
     }),
   )
-  async updateRecipe(@Param('id') id: string, @Body() updateRecipeDto: UpdateRecipeDto,  @UploadedFiles() images: Express.Multer.File[],) {
+  async updateRecipe(@Param('id') id: string, @Body() updateRecipeDto: UpdateRecipeDto, @UploadedFiles() images: Express.Multer.File[],) {
     return this.recipesService.updateRecipe(id, updateRecipeDto, images);
   }
 

@@ -1,0 +1,94 @@
+<div class="w-full h-full overflow-auto">
+    <form class="w-full h-full">
+        <form [formGroup]="form" class=" p-4 rounded w-full space-y-4">
+
+            <div class="flex text-text-base flex-col">
+                <label for="title">Titulo: </label>
+                <input formControlName="title" class="p-2 rounded border" id="title"
+                    placeholder="Introduzca un titulo válido" type="text">
+            </div>
+
+            <div class="flex text-text-base flex-col">
+                <label for="description">Descripción: </label>
+                <input formControlName="description" class="p-2 rounded border" id="description"
+                    placeholder="Introduzca una descripción válida" type="text">
+            </div>
+
+            <div class="flex text-text-base flex-col">
+                <label for="ingredients">Ingredientes: </label>
+                <input #ingredientsInput (keydown.enter)="add('ingredients')" 
+                    class="p-2 rounded border" id="ingredients" placeholder="Introduzca unos ingredientes válidos"
+                    type="text">
+                <div class="mt-4 flex flex-wrap space-x-2">
+                    <span *ngFor="let ingredient of ingredients"
+                        class="rounded-full border-secondary border border-solid p-2 cursor-default flex items-center">
+                        {{ingredient.ingredient}}</span>
+                </div>
+            </div>
+
+            <div class="flex text-text-base flex-col">
+                <label for="preparations">Preparación: </label>
+                <input #preparationInput (keydown.enter)="add('preparations')" 
+                    class="p-2 rounded border" id="preparations" placeholder="Introduzca unas preparaciones válidas"
+                    type="text">
+                <div class="mt-4 flex flex-wrap space-x-2">
+                    <span *ngFor="let preparation of preparations"
+                        class="rounded-full border-secondary border border-solid p-2 cursor-default">
+                        {{preparation.preparation}}</span>
+                </div>
+            </div>
+
+            <div class="flex text-text-base flex-col">
+                <label for="category">Categoría: </label>
+                <select class="p-2 rounded border" formControlName="category">
+                    <option value=""></option>
+                </select>
+            </div>
+
+
+            <div class="flex text-text-base flex-col">
+                <label for="hashtags">Hashtags: </label>
+
+                <input #hashtagInput (keydown.enter)="add('hashtags')" class="p-2 rounded border" id="hashtags"
+                    placeholder="Introduzca unos hashtags válidos" type="text" />
+
+                <div class="mt-4 flex flex-wrap space-x-2">
+                    <span *ngFor="let hashtag of hashtags"
+                        class="rounded-full border-secondary border border-solid p-2 cursor-default">
+                        {{ hashtag.hashtag }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex text-text-base flex-col">
+                <label for="principalImage">Selecciona una imagen portada:</label>
+                <input type="file" id="principalImage" (change)="onFilePrincipalSelected($event)" accept="image/*" />
+            </div>
+
+            <div class="flex text-text-base flex-col">
+                <label for="recipeImages">Selecciona imágenes de la receta:</label>
+                <input type="file" id="recipeImages" (change)="onFileRecipeSelected($event)" multiple
+                    accept="image/*" />
+            </div>
+
+            <div *ngIf="selectedRecipeImages.length > 0">
+                <p>Imágenes de recetas seleccionadas:</p>
+                <ul>
+                    <li *ngFor="let img of selectedRecipeImages">{{ img.name }}</li>
+                </ul>
+            </div>
+
+
+            <div class="flex w-full items-center justify-end space-x-2">
+                <div class=" flex justify-end items-center">
+                    <button type="button"
+                        class="px-[16px] h-[32px] rounded-full border-secondary border border-solid text-text-base">Cancelar</button>
+                </div>
+                <div class=" flex justify-end items-center">
+                    <button type="button"
+                        class="px-[16px] h-[32px] rounded-full bg-accent text-text-inverted">Crear</button>
+                </div>
+            </div>
+        </form>
+    </form>
+</div>

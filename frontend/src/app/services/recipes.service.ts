@@ -25,6 +25,10 @@ export class RecipesService {
     return this.http.get<Recipe[]>(this.baseUrl); // si baseUrl no lo incluye ya
   }
 
+  getByUserId(id: string): Observable<Recipe[]> {
+    return this.http.get<Recipe[]>(this.baseUrl + "/user/" + id); // si baseUrl no lo incluye ya
+  }
+
   create(command: CreateRecipe) {
     this.http.post(this.baseUrl, command).pipe(take(1)).subscribe({
       next: (res) => console.log('Usuario creado', res),

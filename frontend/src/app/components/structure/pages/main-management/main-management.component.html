@@ -1,0 +1,4 @@
+<div class="w-full h-[calc(100vh_-_56px)] overflow-auto grid grid-cols-4 gap-4 p-4 bg-primary">
+    <button (click)="addRecipe()" class="border-2 border-dotted h-fit border-secondary">Nueva receta</button>
+    <app-card *ngFor="let item of recipes" [data]="item"></app-card>
+</div>
