@@ -21,6 +21,7 @@ import { MainManagementComponent } from './components/structure/pages/main-manag
 import { AddModalComponent } from './components/structure/pages/main-management/add-modal/add-modal.component';
 import { EditModalComponent } from './components/structure/pages/main-management/edit-modal/edit-modal.component';
 import { DeleteModalComponent } from './components/structure/utilities/delete-modal/delete-modal.component';
+import { CategoryManagementComponent } from './components/structure/pages/category-management/category-management.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { DeleteModalComponent } from './components/structure/utilities/delete-mo
     MainManagementComponent,
     AddModalComponent,
     EditModalComponent,
-    DeleteModalComponent
+    DeleteModalComponent,
+    CategoryManagementComponent
   ],
   imports: [
     BrowserModule,

@@ -34,6 +34,8 @@ export class AddModalComponent implements OnInit, OnDestroy {
   preparationInput!: ElementRef<HTMLInputElement>;
   @ViewChild('ingredientsInput')
   ingredientsnInput!: ElementRef<HTMLInputElement>;
+    confirm!: (result?: any) => void;
+  close!: () => void;
 
   constructor(
     private fb: FormBuilder,
@@ -99,9 +101,7 @@ export class AddModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  close() {
-    this.modalService.close();
-  }
+ 
 
   async create() {
     const user = await this.userService.getByToken(
@@ -125,7 +125,7 @@ export class AddModalComponent implements OnInit, OnDestroy {
     }
 
     this.recipesService.create(formData);
-    this.modalService.close();
+    this.confirm('add')
   }
 
   onFileRecipeSelected(event: Event) {

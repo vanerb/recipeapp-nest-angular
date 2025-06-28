@@ -33,6 +33,9 @@ export class EditModalComponent {
   @Input() id: string = ""
   recipe: Recipe | null = null
 
+   confirm!: (result?: any) => void;
+  close!: () => void;
+
   constructor(
     private fb: FormBuilder,
     private readonly recipesService: RecipesService,
@@ -120,9 +123,7 @@ export class EditModalComponent {
     }
   }
 
-  close() {
-    this.modalService.close();
-  }
+
 
   async update() {
     const user = await this.userService.getByToken(
@@ -146,7 +147,7 @@ export class EditModalComponent {
     }
 
     this.recipesService.update(formData, this.id);
-    this.modalService.close();
+    this.confirm()
   }
 
   onFileRecipeSelected(event: Event) {

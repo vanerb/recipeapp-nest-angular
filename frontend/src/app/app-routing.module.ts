@@ -9,6 +9,7 @@ import { MainComponent } from './components/structure/pages/main/main.component'
 import { ProfileComponent } from './components/structure/pages/profile/profile.component';
 import { MainDetailComponent } from './components/structure/pages/main-detail/main-detail.component';
 import { MainManagementComponent } from './components/structure/pages/main-management/main-management.component';
+import { CategoryManagementComponent } from './components/structure/pages/category-management/category-management.component';
 
 const routes: Routes = [
   { path: '', component: WelcomeComponent, canActivate: [AuthGuard], },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'recipe/:id', component: MainDetailComponent, canActivate: [AuthGuard], },
   { path: 'profile/:id', component: ProfileComponent, canActivate: [AuthGuard], },
   { path: 'management/:id', component: MainManagementComponent, canActivate: [AuthGuard], },
+  { path: 'categories/:id', component: CategoryManagementComponent, canActivate: [AuthGuard], },
 ];
 
 @NgModule({

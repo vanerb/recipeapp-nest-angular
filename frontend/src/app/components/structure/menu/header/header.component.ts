@@ -82,6 +82,16 @@ export class HeaderComponent implements OnInit {
                 await this.selectionMenu();
               }
             },
+             {
+              key: "my-categories",
+              name: "Mis categorias",
+              position: "right",
+              action: async () => {
+                const user = await this.userService.getByToken(this.authService.getToken() ?? '');
+                this.router.navigate(['/categories/' + user.id]);
+                await this.selectionMenu();
+              }
+            },
             {
               key: "logout",
               name: "Cerrar sesión",

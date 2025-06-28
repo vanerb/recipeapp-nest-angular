@@ -36,9 +36,11 @@ export class RecipesService {
     });
   }
 
-  delete(id: string) {
-    this.http.delete(this.baseUrl + "/" + id)
-    return "deleted item: " + id
+  delete(id: string | undefined) {
+    this.http.delete(this.baseUrl + "/" + id).subscribe({
+      next: () => console.log("deleted item:", id),
+      error: (err) => console.error("Error al eliminar:", err)
+    });
   }
 
   update(command: FormData, id: string) {
