@@ -13,21 +13,32 @@ export class ModalComponent {
   styles: { [key: string]: string } = {};
   private componentRef?: ComponentRef<any>;
 
-  open<T>(component: Type<T>, styles: { [key: string]: string } = {}) {
+  open<T>(component: Type<T>, styles: { [key: string]: string } = {}, data: Partial<T> = {}) {
     this.styles = styles;
     this.show = true;
 
-    // Esperar a que el contenido esté en el DOM
-    setTimeout(() => {
-      if (!this.modalContent) {
-        console.error('modalContent no está inicializado todavía.');
-        return;
-      }
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (!this.modalContent) return;
 
-      this.modalContent.clear();
-      this.componentRef = this.modalContent.createComponent(component);
+        this.modalContent.clear();
+        this.componentRef = this.modalContent.createComponent(component);
+
+        // Inyectar datos
+        Object.assign(this.componentRef.instance, data);
+
+        // Inyectar funciones especiales al componente cargado
+        (this.componentRef.instance as any).close = () => {
+          this.close();
+          reject(); // o resolve(false)
+        };
+
+        (this.componentRef.instance as any).confirm = (result?: any) => {
+          this.close();
+          resolve(result); // puede ser undefined, true, o datos
+        };
+      });
     });
-
   }
 
   close() {

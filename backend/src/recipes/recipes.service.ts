@@ -24,7 +24,7 @@ export class RecipesService {
 
     async getAllRecipes(): Promise<Recipe[]> {
         return await this.recipesRepository.find({
-            relations: ['images', 'ingredients', 'hashtags', 'preparations'],
+            relations: ['images', 'category', 'ingredients', 'hashtags', 'preparations'],
         });
     }
 
@@ -32,7 +32,7 @@ export class RecipesService {
      async getRecipeByUserId(id: string): Promise<Recipe[]> {
         return await this.recipesRepository.find({
             where: { user: { id: id }  },
-            relations: ['images', 'ingredients', 'hashtags', 'preparations'],
+            relations: ['images', 'category', 'ingredients', 'hashtags', 'preparations'],
         });
     }
     
@@ -40,7 +40,7 @@ export class RecipesService {
     async getRecipe(id: string): Promise<Recipe[]> {
         return await this.recipesRepository.find({
             where: { id },
-            relations: ['images', 'ingredients', 'hashtags', 'preparations'],
+            relations: ['images', 'category', 'ingredients', 'hashtags', 'preparations'],
         });
     }
 

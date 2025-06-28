@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Type } from '@angular/core';
 import { ModalComponent } from '../components/structure/utilities/modal/modal.component';
 
 @Injectable({
@@ -6,14 +6,18 @@ import { ModalComponent } from '../components/structure/utilities/modal/modal.co
 })
 export class ModalService {
 
-   private modalRef?: ModalComponent;
+  private modalRef?: ModalComponent;
 
   register(modal: ModalComponent) {
     this.modalRef = modal;
   }
 
-  open(component: any, styles: { [key: string]: string } = {}) {
-    this.modalRef?.open(component, styles);
+  open<T>(
+    component: Type<T>,
+    styles: { [key: string]: string } = {},
+    data: Partial<T> = {}
+  ): Promise<any> {
+    return this.modalRef!.open(component, styles, data);
   }
 
   close() {

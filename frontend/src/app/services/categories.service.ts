@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CreateCategory, UpdateCategory } from '../interfaces/categories';
+import { Categories, CreateCategory, UpdateCategory } from '../interfaces/categories';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class CategoriesService {
     }
   
     getAll() {
-      const categories = this.http.get(this.baseUrl)
+      const categories = this.http.get<Categories[]>(this.baseUrl)
       return categories
     }
   

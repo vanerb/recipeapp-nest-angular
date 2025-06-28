@@ -19,6 +19,8 @@ import { ProfileComponent } from './components/structure/pages/profile/profile.c
 import { MainDetailComponent } from './components/structure/pages/main-detail/main-detail.component';
 import { MainManagementComponent } from './components/structure/pages/main-management/main-management.component';
 import { AddModalComponent } from './components/structure/pages/main-management/add-modal/add-modal.component';
+import { EditModalComponent } from './components/structure/pages/main-management/edit-modal/edit-modal.component';
+import { DeleteModalComponent } from './components/structure/utilities/delete-modal/delete-modal.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { AddModalComponent } from './components/structure/pages/main-management/
     ProfileComponent,
     MainDetailComponent,
     MainManagementComponent,
-    AddModalComponent
+    AddModalComponent,
+    EditModalComponent,
+    DeleteModalComponent
   ],
   imports: [
     BrowserModule,

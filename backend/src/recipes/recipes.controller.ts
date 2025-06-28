@@ -6,6 +6,10 @@ import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { ParseJsonArrayPipe } from 'src/common/pipes/parse-json-array.pipe';
+import { Ingredients } from 'src/ingredients/ingredients.entity';
+import { Hashtags } from 'src/hashtags/hashtags.entity';
+import { Preparations } from 'src/preparations/preparations.entity';
 
 @Controller('recipes')
 export class RecipesController {
@@ -37,8 +41,26 @@ export class RecipesController {
       }),
     }),
   )
-  async createRecipe(@Body() createRecipeDto: CreateRecipeDto, @UploadedFiles() images: Express.Multer.File[]): Promise<Recipe> {
-    return this.recipesService.createRecipe(createRecipeDto, images);
+  async createRecipe(
+    @Body('title') title: string,
+    @Body('description') description: string,
+    @Body('userId') userId: string,
+    @Body('categoryId') categoryId: string,
+    @Body('hashtags', ParseJsonArrayPipe) hashtags: Hashtags[],
+    @Body('ingredients', ParseJsonArrayPipe) ingredients: Ingredients[],
+    @Body('preparations', ParseJsonArrayPipe) preparations: Preparations[],
+    @UploadedFiles() images: Express.Multer.File[]): Promise<Recipe> {
+    const dto: CreateRecipeDto = {
+      title,
+      description,
+      userId,
+      categoryId,
+      hashtags,
+      ingredients,
+      preparations,
+    };
+
+    return this.recipesService.createRecipe(dto, images);
   }
 
   @Patch(':id')
@@ -53,8 +75,25 @@ export class RecipesController {
       }),
     }),
   )
-  async updateRecipe(@Param('id') id: string, @Body() updateRecipeDto: UpdateRecipeDto, @UploadedFiles() images: Express.Multer.File[],) {
-    return this.recipesService.updateRecipe(id, updateRecipeDto, images);
+  async updateRecipe(@Param('id') id: string,
+    @Body('title') title: string,
+    @Body('description') description: string,
+    @Body('userId') userId: string,
+    @Body('categoryId') categoryId: string,
+    @Body('hashtags', ParseJsonArrayPipe) hashtags: Hashtags[],
+    @Body('ingredients', ParseJsonArrayPipe) ingredients: Ingredients[],
+    @Body('preparations', ParseJsonArrayPipe) preparations: Preparations[], 
+    @UploadedFiles() images: Express.Multer.File[],) {
+       const dto: UpdateRecipeDto = {
+      title,
+      description,
+      userId,
+      categoryId,
+      hashtags,
+      ingredients,
+      preparations,
+    };
+    return this.recipesService.updateRecipe(id, dto, images);
   }
 
   @Delete(':id')

@@ -29,7 +29,7 @@ export class RecipesService {
     return this.http.get<Recipe[]>(this.baseUrl + "/user/" + id); // si baseUrl no lo incluye ya
   }
 
-  create(command: CreateRecipe) {
+  create(command: FormData) {
     this.http.post(this.baseUrl, command).pipe(take(1)).subscribe({
       next: (res) => console.log('Usuario creado', res),
       error: (err) => console.error('Error', err)
@@ -41,8 +41,11 @@ export class RecipesService {
     return "deleted item: " + id
   }
 
-  update(command: UpdateRecipe) {
-    this.http.patch(this.baseUrl + "/" + command.id, command)
+  update(command: FormData, id: string) {
+    this.http.patch(this.baseUrl + "/" + id, command).pipe(take(1)).subscribe({
+      next: (res) => console.log('Usuario creado', res),
+      error: (err) => console.error('Error', err)
+    });
   }
 
 }

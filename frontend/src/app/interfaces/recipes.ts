@@ -1,3 +1,4 @@
+import { Categories } from "./categories";
 import { AddHashtags, Hashtags } from "./hashtags";
 import { AddIngredients, Ingredients } from "./ingredients";
 import { AddPreparations, Preparations } from "./preparations";
@@ -16,12 +17,12 @@ export interface Recipes {
 export interface CreateRecipe {
     title: string;
     description: string;
-     hashtags: AddHashtags[];
+    hashtags: AddHashtags[];
     ingredients: AddIngredients[];
     preparations: AddPreparations[]
     userId: string;
     categoryId: string;
-    images: File;
+    images: { type: string, file: File }[];
 }
 
 export interface UpdateRecipe {
@@ -33,17 +34,18 @@ export interface UpdateRecipe {
     preparations: AddPreparations[]
     userId: string;
     categoryId: string;
-    images: Image[];
+    images: { type: string, file: File }[];
 }
 
 export interface Recipe {
     id: string;
     title: string;
     description: string;
-    hashtags: string;
+    hashtags: Hashtags[];
     userId: string;
-    categoryId: string;
-    recipeDescription: string;
+    category: Categories;
+    ingredients: Ingredients[];
+    preparations: Preparations[];
     images: Image[];
 }
 

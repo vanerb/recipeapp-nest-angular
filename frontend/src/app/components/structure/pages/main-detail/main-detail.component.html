@@ -4,7 +4,7 @@
             <img (error)="onImageError($event)" class="object-cover rounded"
                 src="http://localhost:3002{{recipe?.images?.[0]?.url}}">
         </div>
-        <div class=" w-full h-full">
+        <div class=" w-full h-full space-y-2">
             <div class="w-full flex justify-center items-center">
                 <span class="text-3xl">{{recipe?.title}}</span>
             </div>
@@ -14,11 +14,24 @@
             </div>
 
              <div class="w-full flex justify-center items-center">
-                <span class="text-base">{{recipe?.recipeDescription}}</span>
+                <ul class="list-disc">
+                    <li *ngFor="let ingredient of recipe?.ingredients">{{ ingredient.ingredient }}</li>
+                </ul>
+            </div>
+             <div class="w-full flex justify-center items-center">
+                 <ol class="list-decimal">
+                    <li *ngFor="let preparation of recipe?.preparations">{{ preparation.preparation }}</li>
+                </ol>
             </div>
             <div class="w-full flex justify-center items-center">
-                <span class="text-base">{{recipe?.hashtags}}</span>
+                <span *ngFor="let hashtag of recipe?.hashtags" class="text-base">#{{hashtag?.hashtag}}</span>
             </div>
+
+            <div class="w-full flex flex-wrap space-x-2 justify-center space-y-2">
+                 <img *ngFor="let image of recipe?.images" (error)="onImageError($event)" class="object-cover w-32 h-32 rounded"
+                src="http://localhost:3002{{image.url}}">
+            </div>
+
         </div>
 
     </div>
