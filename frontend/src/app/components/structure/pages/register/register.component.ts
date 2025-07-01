@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../../services/auth.service';
-import { UsersService } from '../../../../services/users.service';
-import { CreateUser } from '../../../../interfaces/users';
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {AuthService} from '../../../../services/auth.service';
+import {UsersService} from '../../../../services/users.service';
+import {CreateUser} from '../../../../interfaces/users';
 
 @Component({
   selector: 'app-register',
@@ -26,10 +26,9 @@ export class RegisterComponent {
   }
 
 
-
   register() {
     console.log(this.form.value)
-    if(this.form.get('password')?.value !== this.form.get('repeatPassword')?.value){
+    if (this.form.get('password')?.value !== this.form.get('repeatPassword')?.value) {
       return
     }
     console.log("LLEGO AQUI")
@@ -42,7 +41,14 @@ export class RegisterComponent {
 
     console.log(command)
 
-    this.userService.create(command)
+    this.userService.create(command).subscribe({
+      next: (user) => {
+
+      },
+      error: (err) => {
+
+      }
+    });
 
   }
 }

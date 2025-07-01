@@ -15,7 +15,7 @@ export class RecipesService {
 
   async get(id: string): Promise<Recipe> {
     const recipes = await firstValueFrom(
-      this.http.get<Recipe[]>(this.baseUrl + "/" + id).pipe(take(1))
+      this.http.get<Recipe[]>(this.baseUrl + "/" + id)
     );
     return recipes[0];  // Devuelves el único elemento del array
   }
@@ -29,15 +29,15 @@ export class RecipesService {
   }
 
   create(command: FormData): Observable<Recipe> {
-    return this.http.post<Recipe>(this.baseUrl, command).pipe(take(1));
+    return this.http.post<Recipe>(this.baseUrl, command)
   }
 
   delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`).pipe(take(1));
+    return this.http.delete<void>(`${this.baseUrl}/${id}`)
   }
 
   update(command: FormData, id: string): Observable<Recipe> {
-    return this.http.patch<Recipe>(`${this.baseUrl}/${id}`, command).pipe(take(1));
+    return this.http.patch<Recipe>(`${this.baseUrl}/${id}`, command)
   }
 }
 

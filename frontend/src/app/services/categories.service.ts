@@ -15,7 +15,7 @@ export class CategoriesService {
 
 
   get(id: string) {
-    return this.http.get(this.baseUrl + "/" + id).pipe(take(1))
+    return this.http.get(this.baseUrl + "/" + id)
   }
 
   getByUserId(id: string) {
@@ -31,10 +31,10 @@ export class CategoriesService {
   }
 
   delete(id: string) {
-    this.http.delete(this.baseUrl + "/" + id).pipe(take(1));
+    this.http.delete(this.baseUrl + "/" + id)
   }
 
   update(command: UpdateCategory) {
-    this.http.patch(this.baseUrl + "/" + command.id, command).pipe(take(1));
+    this.http.patch(this.baseUrl + "/" + command.id, command)
   }
 }

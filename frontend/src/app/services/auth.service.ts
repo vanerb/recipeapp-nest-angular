@@ -31,23 +31,7 @@ export class AuthService {
   }
 
   login(command: Login) {
-    this.http.post<any>("http://localhost:3002/users/login", command).subscribe({
-      next: async (res) => {
-        if (res.access_token) {
-          this.setToken(res.access_token)
-          await this.router.navigate(['/']);
-
-          await this.sleep(0)
-
-          window.location.reload()
-
-        }
-
-      },
-      error: (error) => {
-        this.removeToken()
-      }
-    })
+    return this.http.post<any>("http://localhost:3002/users/login", command)
   }
 
 
@@ -57,7 +41,5 @@ export class AuthService {
     window.location.reload()
   }
 
-  sleep(ms: number | undefined) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+
 }

@@ -21,7 +21,7 @@
                id="ingredients" placeholder="Introduzca unos ingredientes válidos" type="text">
         <div class="mt-4 flex flex-wrap space-x-2">
                         <span *ngFor="let ingredient of ingredients; let i = index"
-                              class="rounded-full space-x-2 border-secondary border border-solid px-[16px] cursor-default">
+                              class="rounded-full space-x-2 mt-2 border-secondary border border-solid px-[16px] cursor-default">
                             <i (click)="delete(i, 'ingredients')" class="bi bi-x-circle cursor-pointer"></i>
                           {{ ingredient.ingredient }}</span>
         </div>
@@ -33,7 +33,7 @@
                id="preparations" placeholder="Introduzca unas preparaciones válidas" type="text">
         <div class="mt-4 flex flex-wrap space-x-2">
                         <span *ngFor="let preparation of preparations; let i = index"
-                              class="rounded-full space-x-2 border-secondary border border-solid px-[16px] cursor-default">
+                              class="rounded-full space-x-2 mt-2 border-secondary border border-solid px-[16px] cursor-default">
                             <i (click)="delete(i, 'preparations')" class="bi bi-x-circle cursor-pointer"></i>
                           {{ preparation.preparation }}</span>
         </div>
@@ -56,7 +56,7 @@
 
         <div class="mt-4 flex flex-wrap space-x-2">
                         <span *ngFor="let hashtag of hashtags; let i = index"
-                              class="rounded-full space-x-2 border-secondary border border-solid px-[16px] cursor-default">
+                              class="rounded-full space-x-2 mt-2 border-secondary border border-solid px-[16px] cursor-default">
                             <i (click)="delete(i, 'hashtags')" class="bi bi-x-circle cursor-pointer"></i> {{
                             hashtag.hashtag
                           }}

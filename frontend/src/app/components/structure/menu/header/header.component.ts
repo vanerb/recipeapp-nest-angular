@@ -1,11 +1,12 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AuthService } from '../../../../services/auth.service';
-import { Header } from '../../../../interfaces/header';
-import { ActivatedRoute, Router } from '@angular/router';
-import { log } from 'console';
-import { UsersService } from '../../../../services/users.service';
-import { User } from '../../../../interfaces/users';
+import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {AuthService} from '../../../../services/auth.service';
+import {Header} from '../../../../interfaces/header';
+import {ActivatedRoute, Router} from '@angular/router';
+import {log} from 'console';
+import {UsersService} from '../../../../services/users.service';
+import {User} from '../../../../interfaces/users';
 import {firstValueFrom} from "rxjs";
+import {UtilitiesService} from "../../../../services/utilities.service";
 
 @Component({
   selector: 'app-header',
@@ -22,7 +23,8 @@ export class HeaderComponent implements OnInit {
     private readonly authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private readonly userService: UsersService
+    private readonly userService: UsersService,
+    private readonly utilitiesService: UtilitiesService
   ) {
 
   }
@@ -36,7 +38,7 @@ export class HeaderComponent implements OnInit {
           name: "Inicio",
           position: "left",
           action: async () => {
-            this.router.navigate(['/']);
+            await this.router.navigate(['/']);
             await this.selectionMenu();
           }
         },
@@ -45,7 +47,7 @@ export class HeaderComponent implements OnInit {
           name: "Recetas",
           position: "left",
           action: async () => {
-            this.router.navigate(['/recipes']);
+            await this.router.navigate(['/recipes']);
             await this.selectionMenu();
           }
         },
@@ -54,7 +56,7 @@ export class HeaderComponent implements OnInit {
           name: "Contacto",
           position: "left",
           action: async () => {
-            this.router.navigate(['/contact']);
+            await this.router.navigate(['/contact']);
             await this.selectionMenu();
           }
         },
@@ -69,7 +71,7 @@ export class HeaderComponent implements OnInit {
               position: "right",
               action: async () => {
                 const user = await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
-                this.router.navigate(['/profile/' + user.id]);
+                await this.router.navigate(['/profile/' + user.id]);
                 await this.selectionMenu();
               }
             },
@@ -79,17 +81,17 @@ export class HeaderComponent implements OnInit {
               position: "right",
               action: async () => {
                 const user = await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
-                this.router.navigate(['/management/' + user.id]);
+                await this.router.navigate(['/management/' + user.id]);
                 await this.selectionMenu();
               }
             },
-             {
+            {
               key: "my-categories",
               name: "Mis categorias",
               position: "right",
               action: async () => {
-                const user =  await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
-                this.router.navigate(['/categories/' + user.id]);
+                const user = await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
+                await this.router.navigate(['/categories/' + user.id]);
                 await this.selectionMenu();
               }
             },
@@ -98,8 +100,8 @@ export class HeaderComponent implements OnInit {
               name: "Cerrar sesión",
               position: "right",
               action: async () => {
-                this.authService.logout();
-                this.router.navigate(['/login']);
+                await this.authService.logout();
+                await this.router.navigate(['/login']);
                 await this.selectionMenu();
               }
             }
@@ -112,16 +114,12 @@ export class HeaderComponent implements OnInit {
     this.selectionMenu()
 
 
-
-
-
   }
 
   getMenu(pos: string) {
     if (pos === "right") {
       return this.menu.filter(el => el.position === "right")
-    }
-    else {
+    } else {
       return this.menu.filter(el => el.position === "left")
     }
 
@@ -129,7 +127,7 @@ export class HeaderComponent implements OnInit {
 
 
   async selectionMenu() {
-    await this.sleep(0)
+    await this.utilitiesService.sleep(0)
     let item = this.router.url.split("/")[1]
 
     console.log(item)
@@ -161,7 +159,5 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  sleep(ms: number | undefined) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+
 }

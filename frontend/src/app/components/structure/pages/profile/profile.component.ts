@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit {
   form: FormGroup;
 
   formPassword: FormGroup
-  user?: User
+  user: User | null = null
   id: string = ""
 
   constructor(

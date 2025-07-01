@@ -32,7 +32,7 @@
         <app-separator class="w-full"></app-separator>
         <div class="flex flex-wrap justify-start items-start space-x-2">
           <span *ngFor="let hashtag of recipe?.hashtags"
-                class="text-base rounded-full border border-secondary border-solid px-[16px]">#{{ hashtag?.hashtag }}</span>
+                class="text-base mt-2 rounded-full border border-secondary border-solid px-[16px]">#{{ hashtag?.hashtag }}</span>
         </div>
 
       </div>
@@ -42,7 +42,7 @@
         <app-separator class="w-full"></app-separator>
         <div class="flex flex-wrap justify-start items-start space-x-2">
           <img *ngFor="let image of recipe?.images" (error)="onImageError($event)"
-               class="object-cover w-32 h-32 rounded"
+               class="object-cover w-32 h-32 rounded mt-2"
                src="http://localhost:3002{{image.url}}">
         </div>
       </div>
