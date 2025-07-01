@@ -16,6 +16,7 @@ import { UsersService } from '../../../../../services/users.service';
 import { AuthService } from '../../../../../services/auth.service';
 import { Categories } from '../../../../../interfaces/categories';
 import { CategoriesService } from '../../../../../services/categories.service';
+import {firstValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-add-modal',
@@ -66,6 +67,8 @@ export class AddModalComponent implements OnInit, OnDestroy {
     if (type === 'ingredients') {
       const input = this.ingredientsnInput.nativeElement;
       const valor = input.value.trim();
+
+      console.log(input)
       if (valor) {
         this.ingredients.push({ ingredient: valor });
       }
@@ -101,12 +104,10 @@ export class AddModalComponent implements OnInit, OnDestroy {
     }
   }
 
- 
+
 
   async create() {
-    const user = await this.userService.getByToken(
-      this.authService.getToken() ?? ''
-    );
+    const user =  await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
 
     const formData = new FormData();
     const value = this.form.value;
@@ -124,8 +125,15 @@ export class AddModalComponent implements OnInit, OnDestroy {
       formData.append('images', file);
     }
 
-    this.recipesService.create(formData);
-    this.confirm('add')
+    this.recipesService.create(formData).subscribe({
+      next: (recipe) => {
+        this.confirm('add')
+      },
+      error: (err) => {
+        console.error(err)
+      }
+    });;
+
   }
 
   onFileRecipeSelected(event: Event) {

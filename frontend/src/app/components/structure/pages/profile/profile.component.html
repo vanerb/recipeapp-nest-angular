@@ -1,1 +1,74 @@
-<p>profile works!</p>
+<div class="w-full h-[calc(100vh_-_56px)] overflow-auto bg-primary">
+  <div class="w-full max-h-[100px] flex rounded bg-secondary justify-center ">
+    <img class="object-cover"
+         src="assets/edit-profile.jpg">
+  </div>
+  <div class=" h-fit flex flex-col justify-center items-center">
+    <div class="w-[800px] h-fit">
+      <form [formGroup]="form" enctype="multipart/form-data" class=" p-4 rounded w-full h-fit space-y-4">
+
+        <h1 class="text-xl w-full ">Perfil</h1>
+        <app-separator class="w-full"></app-separator>
+        <div class="h-[calc(100%_-_60px)]  space-y-4 flex flex-col overflow-auto">
+          <div class="flex text-text-base flex-col">
+            <label for="name">Nombre: </label>
+            <input formControlName="name" class="p-2 rounded border" id="name"
+                   placeholder="Introduzca su nombre" type="text">
+          </div>
+
+
+
+          <div class="flex w-full items-center justify-end space-x-2 h-[60px]">
+            <div class=" flex justify-end items-center">
+              <button type="button" (click)="close()"
+                      class="px-[16px] h-[32px] rounded-full border-secondary border border-solid text-text-base">
+                Cancelar
+              </button>
+            </div>
+            <div class=" flex justify-end items-center">
+              <button type="button" (click)="updateProfile()"
+                      class="px-[16px] h-[32px] rounded-full bg-accent text-text-inverted">Actualizar
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+
+      <form [formGroup]="formPassword" enctype="multipart/form-data" class=" p-4 rounded w-full h-fit space-y-4">
+
+        <div class="h-[calc(100%_-_60px)]  space-y-4 flex flex-col overflow-auto">
+          <h1 class="text-xl w-full ">Cambiar contraseña</h1>
+          <app-separator class="w-full"></app-separator>
+          <div class="flex text-text-base flex-col">
+            <label for="password">Contraseña: </label>
+            <input formControlName="password" class="p-2 rounded border" id="password"
+                   type="password">
+          </div>
+          <div class="flex text-text-base flex-col">
+            <label for="repeatPassword">Repetir contraseña: </label>
+            <input formControlName="repeatPassword" class="p-2 rounded border" id="repeatPassword"
+                   type="password">
+          </div>
+
+
+          <div class="flex w-full items-center justify-end space-x-2 h-[60px]">
+            <div class=" flex justify-end items-center">
+              <button type="button" (click)="close()"
+                      class="px-[16px] h-[32px] rounded-full border-secondary border border-solid text-text-base">
+                Cancelar
+              </button>
+            </div>
+            <div class=" flex justify-end items-center">
+              <button type="button" (click)="updatePassword()"
+                      class="px-[16px] h-[32px] rounded-full bg-accent text-text-inverted">Actualizar
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+</div>

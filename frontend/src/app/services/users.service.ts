@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { CreateUser, UpdateUser, User } from '../interfaces/users';
-import { firstValueFrom, Observable, take } from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {CreateUser, UpdateUser, User, Users} from '../interfaces/users';
+import {firstValueFrom, Observable, take} from 'rxjs';
+import {Recipe} from "../interfaces/recipes";
 
 @Injectable({
   providedIn: 'root'
@@ -14,39 +15,26 @@ export class UsersService {
 
 
   get(id: string) {
-    const user = this.http.get(this.baseUrl + "/" + id)
-    return user
+    return this.http.get<User>(this.baseUrl + "/" + id).pipe(take(1))
   }
 
   getByToken(token: string) {
-    return firstValueFrom(
-      this.http.get<User>(this.baseUrl + "/token/" + token).pipe(take(1))
-    );
+    return this.http.get<User>(this.baseUrl + "/token/" + token).pipe(take(1))
   }
 
   getAll() {
-    const users = this.http.get(this.baseUrl)
-    return users
+    return this.http.get<User[]>(this.baseUrl)
   }
 
   create(command: CreateUser) {
-    this.http.post(this.baseUrl + '/create', command).pipe(take(1)).subscribe({
-      next: (res) => console.log('Usuario creado', res),
-      error: (err) => console.error('Error', err)
-    });
+    this.http.post(this.baseUrl + '/create', command).pipe(take(1))
   }
 
   delete(id: string) {
-    this.http.delete(this.baseUrl + "/" + id).pipe(take(1)).subscribe({
-      next: (res) => console.log('Usuario eliminado', res),
-      error: (err) => console.error('Error', err)
-    });
+    this.http.delete(this.baseUrl + "/" + id).pipe(take(1))
   }
 
-  update(command: UpdateUser) {
-    this.http.patch(this.baseUrl + "/" + command.id, command).pipe(take(1)).subscribe({
-      next: (res) => console.log('Usuario actualizado', res),
-      error: (err) => console.error('Error', err)
-    });
+  update(id: string | undefined, command: UpdateUser){
+    return this.http.patch(this.baseUrl + "/" + id, command)
   }
 }

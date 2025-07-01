@@ -22,5 +22,7 @@ export interface CreateUser {
 }
 
 export interface UpdateUser {
-    id: string;
+  name?: string;
+  email?: string;
+  password?: string;
 }

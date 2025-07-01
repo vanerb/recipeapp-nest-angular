@@ -11,6 +11,7 @@ import { AuthService } from '../../../../../services/auth.service';
 import { CategoriesService } from '../../../../../services/categories.service';
 import { ActivatedRoute } from '@angular/router';
 import { Recipe } from '../../../../../interfaces/recipes';
+import {firstValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-edit-modal',
@@ -66,12 +67,12 @@ export class EditModalComponent {
 
     this.recipe = await this.recipesService.get(this.id)
 
-    this.form.get('title')?.setValue(this.recipe.title)
-    this.form.get('description')?.setValue(this.recipe.description)
-    this.ingredients = this.recipe.ingredients
-    this.preparations = this.recipe.preparations
-    this.hashtags = this.recipe.hashtags
-    this.form.get('category')?.setValue(this.recipe.category.id)
+    this.form.get('title')?.setValue(this.recipe.title ?? '')
+    this.form.get('description')?.setValue(this.recipe.description ?? '')
+    this.ingredients = this.recipe.ingredients ?? []
+    this.preparations = this.recipe.preparations ?? []
+    this.hashtags = this.recipe.hashtags ?? []
+    this.form.get('category')?.setValue(this.recipe?.category?.id)
     this.recipe.images.map(async el => {
       const file = await this.urlToFile('http://localhost:3002' + el.url, 'imagen.jpg', 'image/jpeg');
       this.selectedRecipeImages.push(file)
@@ -88,6 +89,7 @@ export class EditModalComponent {
     if (type === 'ingredients') {
       const input = this.ingredientsnInput.nativeElement;
       const valor = input.value.trim();
+      console.log(input.value)
       if (valor) {
         this.ingredients.push({ ingredient: valor });
       }
@@ -126,9 +128,7 @@ export class EditModalComponent {
 
 
   async update() {
-    const user = await this.userService.getByToken(
-      this.authService.getToken() ?? ''
-    );
+    const user =  await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
 
     const formData = new FormData();
     const value = this.form.value;
@@ -146,8 +146,15 @@ export class EditModalComponent {
       formData.append('images', file);
     }
 
-    this.recipesService.update(formData, this.id);
-    this.confirm()
+    this.recipesService.update(formData, this.id).subscribe({
+      next: (recipe) => {
+        this.confirm('update')
+      },
+      error: (err) => {
+        console.error(err)
+      }
+    });;;
+
   }
 
   onFileRecipeSelected(event: Event) {

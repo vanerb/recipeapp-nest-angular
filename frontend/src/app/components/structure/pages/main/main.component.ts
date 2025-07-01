@@ -30,13 +30,9 @@ export class MainComponent implements OnInit {
   }
 
   async update(data: { type: string, item: any | null }) {
-      
-  
       if (data.type === 'details') {
         this.router.navigate(['/recipe/' + data.item.id]);
       }
-  
-     
     }
 
 }

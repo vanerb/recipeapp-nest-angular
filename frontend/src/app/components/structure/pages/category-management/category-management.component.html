@@ -1,1 +1,42 @@
-<p>category-management works!</p>
+<div class="w-ful h-full space-y-2">
+    <h1 class="text-xl text-center">Categorias</h1>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Nombre
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Creado en
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actualizado en
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Acciones
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                    <td *ngFor="let item of categories" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{
+                        item.name }}</td>
+                    <td *ngFor="let item of categories" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{
+                        item.createdAt }}</td>
+                    <td *ngFor="let item of categories" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{
+                        item.updatedAt }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
+                        <button><i class="bi bi-pencil"></i></button>
+                        <button> <i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { Category } from './categories.entity';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -6,24 +14,35 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 
 @Controller('categories')
 export class CategoriesController {
-    constructor(private readonly categoriesService: CategoriesService) { }
-    @Get()
-    getAllRecipes(): Promise<Category[]> {
-        return this.categoriesService.getAllCategories()
-    }
+  constructor(private readonly categoriesService: CategoriesService) {}
 
-    @Post()
-    async createRecipe(@Body() createRecipeDto: CreateCategoryDto): Promise<Category> {
-        return this.categoriesService.createCategory(createRecipeDto);
-    }
+  @Get()
+  getAllCategories(): Promise<Category[]> {
+    return this.categoriesService.getAllCategories();
+  }
 
-    @Patch(':id')
-    async updateRecipe(@Param('id') id: string, @Body() updateRecipeDto: UpdateCategoryDto) {
-        return this.categoriesService.updateCategory(id, updateRecipeDto);
-    }
+  @Get('byUserId/:id')
+  getByUserId(@Param('id') id: string): Promise<Category[]> {
+    return this.categoriesService.getByUserId(id);
+  }
 
-    @Delete(':id')
-    async deleteRecipe(@Param('id') id: string) {
-        return this.categoriesService.deleteCategory(id);
-    }
+  @Post()
+  async createCategory(
+    @Body() createRecipeDto: CreateCategoryDto,
+  ): Promise<Category> {
+    return this.categoriesService.createCategory(createRecipeDto);
+  }
+
+  @Patch(':id')
+  async updateCategory(
+    @Param('id') id: string,
+    @Body() updateRecipeDto: UpdateCategoryDto,
+  ) {
+    return this.categoriesService.updateCategory(id, updateRecipeDto);
+  }
+
+  @Delete(':id')
+  async deleteCategory(@Param('id') id: string) {
+    return this.categoriesService.deleteCategory(id);
+  }
 }

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { log } from 'console';
 import { UsersService } from '../../../../services/users.service';
 import { User } from '../../../../interfaces/users';
+import {firstValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-header',
@@ -67,7 +68,7 @@ export class HeaderComponent implements OnInit {
               name: "Perfil",
               position: "right",
               action: async () => {
-                const user = await this.userService.getByToken(this.authService.getToken() ?? '');
+                const user = await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
                 this.router.navigate(['/profile/' + user.id]);
                 await this.selectionMenu();
               }
@@ -77,7 +78,7 @@ export class HeaderComponent implements OnInit {
               name: "Mis recetas",
               position: "right",
               action: async () => {
-                const user = await this.userService.getByToken(this.authService.getToken() ?? '');
+                const user = await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
                 this.router.navigate(['/management/' + user.id]);
                 await this.selectionMenu();
               }
@@ -87,7 +88,7 @@ export class HeaderComponent implements OnInit {
               name: "Mis categorias",
               position: "right",
               action: async () => {
-                const user = await this.userService.getByToken(this.authService.getToken() ?? '');
+                const user =  await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
                 this.router.navigate(['/categories/' + user.id]);
                 await this.selectionMenu();
               }

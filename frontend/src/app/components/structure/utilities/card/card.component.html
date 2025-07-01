@@ -1,18 +1,18 @@
 <div
-    class="rounded border space-y-2 border-header-secondary border-solid flex flex-col items-center p-4 bg-secondary h-full">
-    <div class="w-full max-h-[100px] flex rounded">
-        <img (error)="onImageError($event)" class="object-cover rounded w-full"
-            src="http://localhost:3002{{data?.images?.[0]?.url}}">
-    </div>
-    <span class="text-xl text-text-base">{{data?.title}}</span>
-    <span class="text-m text-text-muted">{{ data?.description }}</span>
+  class="rounded border space-y-2 border-header-secondary border-solid flex flex-col items-center p-4 bg-secondary h-full">
+  <div class="w-full max-h-[100px] flex rounded">
+    <img (error)="onImageError($event)" class="object-cover rounded w-full"
+         src="http://localhost:3002{{data?.images?.[0]?.url}}">
+  </div>
+  <span class="text-xl text-text-base">{{ data?.title }}</span>
+  <span class="text-m text-text-muted">{{ data?.description }}</span>
 
-    <!-- Este div crece para empujar el botón abajo -->
-    <div class="flex-grow w-full flex items-end space-x-2">
-        <button (click)="viewDetails(data)" class="w-full h-[40px] bg-accent rounded text-text-inverted">Ver</button>
-        <button *ngIf="editMode" (click)="edit(data?.id)" class="w-12 h-[40px] bg-accent rounded text-text-inverted"><i
-                class="bi bi-pencil"></i></button>
-        <button  *ngIf="editMode"  (click)="delete(data)" class="w-12 h-[40px] bg-accent rounded text-text-inverted"><i
-                class="bi bi-trash"></i></button>
-    </div>
+  <!-- Este div crece para empujar el botón abajo -->
+  <div class="flex-grow w-full flex items-end space-x-2">
+    <button (click)="viewDetails(data)" class="w-full h-[40px] bg-accent rounded text-text-inverted">Ver</button>
+    <button *ngIf="editMode" (click)="edit(data)" class="w-12 h-[40px] bg-accent rounded text-text-inverted"><i
+      class="bi bi-pencil"></i></button>
+    <button *ngIf="editMode" (click)="delete(data)" class="w-12 h-[40px] bg-accent rounded text-text-inverted"><i
+      class="bi bi-trash"></i></button>
+  </div>
 </div>

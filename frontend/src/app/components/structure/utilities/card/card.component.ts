@@ -32,6 +32,7 @@ export class CardComponent {
   }
 
   edit(item: any) {
+    console.log(item)
     this.action?.emit({ type: "update", item: item })
   }
 

@@ -22,6 +22,8 @@ import { AddModalComponent } from './components/structure/pages/main-management/
 import { EditModalComponent } from './components/structure/pages/main-management/edit-modal/edit-modal.component';
 import { DeleteModalComponent } from './components/structure/utilities/delete-modal/delete-modal.component';
 import { CategoryManagementComponent } from './components/structure/pages/category-management/category-management.component';
+import { WarningModalComponent } from './components/structure/utilities/warning-modal/warning-modal.component';
+import { SeparatorComponent } from './components/structure/utilities/separator/separator.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { CategoryManagementComponent } from './components/structure/pages/catego
     AddModalComponent,
     EditModalComponent,
     DeleteModalComponent,
-    CategoryManagementComponent
+    CategoryManagementComponent,
+    WarningModalComponent,
+    SeparatorComponent
   ],
   imports: [
     BrowserModule,

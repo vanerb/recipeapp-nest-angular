@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
 import { RecipesService } from './recipes.service';
 import { Recipe } from './recipes.entity';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
@@ -13,20 +23,21 @@ import { Preparations } from 'src/preparations/preparations.entity';
 
 @Controller('recipes')
 export class RecipesController {
-  constructor(private readonly recipesService: RecipesService) { }
+  constructor(private readonly recipesService: RecipesService) {}
+
   @Get()
   getAllRecipes(): Promise<Recipe[]> {
-    return this.recipesService.getAllRecipes()
+    return this.recipesService.getAllRecipes();
   }
 
   @Get(':id')
   getRecipe(@Param('id') id: string): Promise<Recipe[]> {
-    return this.recipesService.getRecipe(id)
+    return this.recipesService.getRecipe(id);
   }
 
   @Get('user/:id')
   getRecipeByUserId(@Param('id') id: string): Promise<Recipe[]> {
-    return this.recipesService.getRecipeByUserId(id)
+    return this.recipesService.getRecipeByUserId(id);
   }
 
   @Post()
@@ -35,7 +46,8 @@ export class RecipesController {
       storage: diskStorage({
         destination: './uploads/recipes',
         filename: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
           cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
         },
       }),
@@ -49,7 +61,8 @@ export class RecipesController {
     @Body('hashtags', ParseJsonArrayPipe) hashtags: Hashtags[],
     @Body('ingredients', ParseJsonArrayPipe) ingredients: Ingredients[],
     @Body('preparations', ParseJsonArrayPipe) preparations: Preparations[],
-    @UploadedFiles() images: Express.Multer.File[]): Promise<Recipe> {
+    @UploadedFiles() images: Express.Multer.File[],
+  ): Promise<Recipe> {
     const dto: CreateRecipeDto = {
       title,
       description,
@@ -69,22 +82,25 @@ export class RecipesController {
       storage: diskStorage({
         destination: './uploads/recipes',
         filename: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
           cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
         },
       }),
     }),
   )
-  async updateRecipe(@Param('id') id: string,
+  async updateRecipe(
+    @Param('id') id: string,
     @Body('title') title: string,
     @Body('description') description: string,
     @Body('userId') userId: string,
     @Body('categoryId') categoryId: string,
     @Body('hashtags', ParseJsonArrayPipe) hashtags: Hashtags[],
     @Body('ingredients', ParseJsonArrayPipe) ingredients: Ingredients[],
-    @Body('preparations', ParseJsonArrayPipe) preparations: Preparations[], 
-    @UploadedFiles() images: Express.Multer.File[],) {
-       const dto: UpdateRecipeDto = {
+    @Body('preparations', ParseJsonArrayPipe) preparations: Preparations[],
+    @UploadedFiles() images: Express.Multer.File[],
+  ) {
+    const dto: UpdateRecipeDto = {
       title,
       description,
       userId,

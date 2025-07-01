@@ -35,7 +35,7 @@ export class AuthService {
       next: async (res) => {
         if (res.access_token) {
           this.setToken(res.access_token)
-          this.router.navigate(['/']);
+          await this.router.navigate(['/']);
 
           await this.sleep(0)
 
@@ -51,9 +51,9 @@ export class AuthService {
   }
 
 
-  logout() {
+  async logout() {
     this.removeToken()
-    this.router.navigate(['/login']);
+    await this.router.navigate(['/login']);
     window.location.reload()
   }
 

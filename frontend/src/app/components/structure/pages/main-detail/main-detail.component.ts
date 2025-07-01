@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RecipesService } from '../../../../services/recipes.service';
 import { Recipe } from '../../../../interfaces/recipes';
 import { ActivatedRoute } from '@angular/router';
+import {firstValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-main-detail',
