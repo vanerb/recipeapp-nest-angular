@@ -1,10 +1,10 @@
-<div class="w-full h-[calc(100vh_-_56px)] overflow-auto bg-primary">
+<app-main-container>
   <div class="w-full max-h-[100px] flex rounded bg-secondary justify-center ">
     <img class="object-cover"
          src="assets/edit-profile.jpg">
   </div>
   <div class=" h-fit flex flex-col justify-center items-center">
-    <div class="w-[800px] h-fit">
+    <div class="w-full  h-fit">
       <form [formGroup]="form" enctype="multipart/form-data" class=" p-4 rounded w-full h-fit space-y-4">
 
         <h1 class="text-xl w-full ">Perfil</h1>
@@ -15,7 +15,6 @@
             <input formControlName="name" class="p-2 rounded border" id="name"
                    placeholder="Introduzca su nombre" type="text">
           </div>
-
 
 
           <div class="flex w-full items-center justify-end space-x-2 h-[60px]">
@@ -71,4 +70,4 @@
 
   </div>
 
-</div>
+</app-main-container>

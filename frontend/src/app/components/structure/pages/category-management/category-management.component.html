@@ -1,42 +1,62 @@
-<div class="w-ful h-full space-y-2">
-    <h1 class="text-xl text-center">Categorias</h1>
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th scope="col"
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nombre
-                    </th>
-                    <th scope="col"
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Creado en
-                    </th>
-                    <th scope="col"
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actualizado en
-                    </th>
-                    <th scope="col"
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Acciones
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                <tr>
-                    <td *ngFor="let item of categories" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{
-                        item.name }}</td>
-                    <td *ngFor="let item of categories" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{
-                        item.createdAt }}</td>
-                    <td *ngFor="let item of categories" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{
-                        item.updatedAt }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
-                        <button><i class="bi bi-pencil"></i></button>
-                        <button> <i class="bi bi-trash"></i></button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+<div class="w-full h-[calc(100vh_-_56px)] flex flex-col items-center overflow-auto bg-primary ">
+  <div class="w-full max-h-[100px] flex rounded bg-secondary justify-center ">
+    <img class="object-cover"
+         src="assets/admin-categories.jpg">
+  </div>
+  <div class="w-full p-4 space-y-2">
+
+    <div>
+      <h1 class="text-xl text-center mb-2 mt-2">Categorias</h1>
+      <app-separator class="w-full"></app-separator>
     </div>
+    <div class="w-full overflow-x-auto flex flex-col justify-center items-center space-y-2">
+      <div class="w-full flex justify-end items-center">
+        <button class="px-[16px] bg-accent rounded text-text-inverted">Nuevo</button>
+      </div>
+      <table class=" w-full  divide-y divide-gray-200">
+        <thead class="bg-gray-100">
+        <tr>
+          <th scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Nombre
+          </th>
+          <th scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Creado en
+          </th>
+          <th scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Actualizado en
+          </th>
+          <th scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Acciones
+          </th>
+        </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+        <tr>
+          <td *ngFor="let item of categories" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{
+              item.name
+            }}
+          </td>
+          <td *ngFor="let item of categories" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{
+              item.createdAt
+            }}
+          </td>
+          <td *ngFor="let item of categories" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{
+              item.updatedAt
+            }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
+            <button class="w-8 h-8 bg-accent rounded text-text-inverted"><i class="bi bi-pencil"></i></button>
+            <button class="w-8 h-8 bg-accent rounded text-text-inverted"><i class="bi bi-trash"></i></button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 
 </div>

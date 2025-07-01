@@ -1,4 +1,19 @@
-<div class="w-full h-[calc(100vh_-_56px)] overflow-auto grid grid-cols-4 gap-4 p-4 bg-primary grid-rows-[300px] auto-rows-[300px]">
-    <button (click)="addRecipe()" class="h-full flex items-center justify-center border-2 border-dotted border-secondary">Nueva receta</button>
-    <app-card [editMode]="true" (action)="update($event)" *ngFor="let item of recipes" [data]="item"></app-card>
-</div>
+<app-main-container class="flex flex-col">
+  <div class="w-full max-h-[100px] flex rounded bg-secondary justify-center ">
+    <img class="object-cover"
+         src="assets/admin-recipes.jpg">
+  </div>
+  <div class="w-full  p-4 space-y-4">
+    <div class="w-full">
+      <h1 class="text-xl text-center">Recetas</h1>
+      <app-separator class="w-full"></app-separator>
+    </div>
+
+    <div class="w-full h-full grid grid-cols-4 gap-4  grid-rows-[300px] auto-rows-[300px]">
+      <button (click)="addRecipe()"
+              class="h-full flex items-center justify-center border-2 border-dotted border-secondary">Nueva receta
+      </button>
+      <app-card [editMode]="true" (action)="update($event)" *ngFor="let item of recipes" [data]="item"></app-card>
+    </div>
+  </div>
+</app-main-container>

@@ -1,3 +1,6 @@
-<div class="w-full h-[calc(100vh_-_56px)] overflow-auto grid grid-cols-4 gap-4 p-4 bg-primary grid-rows-[300px] auto-rows-[300px]">
+<app-main-container>
+  <div class="w-full h-full grid grid-cols-4 gap-4 p-4  grid-rows-[300px] auto-rows-[300px]">
     <app-card (action)="update($event)" *ngFor="let item of recipes" [data]="item"></app-card>
-</div>
+  </div>
+</app-main-container>
+
