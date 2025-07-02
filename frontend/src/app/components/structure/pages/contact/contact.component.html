@@ -1,1 +1,38 @@
-<app-main-container></app-main-container>
+<app-main-container>
+  <div class="w-full max-h-[100px] flex rounded bg-secondary justify-center ">
+    <img class="object-cover"
+         src="assets/contact.jpg">
+  </div>
+  <div class=" h-fit flex flex-col justify-center items-center">
+    <div class="w-full  h-fit">
+      <form [formGroup]="form" enctype="multipart/form-data" class=" p-4 rounded w-full h-fit space-y-4">
+
+        <h1 class="text-xl w-full text-center">Contacto</h1>
+        <app-separator class="w-full"></app-separator>
+        <div class="h-[calc(100%_-_60px)]  space-y-4 flex flex-col overflow-auto">
+          <div class="flex text-text-base flex-col">
+            <label for="email">Correo: </label>
+            <input formControlName="email" class="p-2 rounded border" id="email"
+                   placeholder="Introduzca su correo" type="email">
+          </div>
+          <div class="flex text-text-base flex-col">
+            <label for="content">Contenido: </label>
+            <textarea rows="10" formControlName="content" class="p-2 rounded border" id="content"
+                      placeholder="Exponga su duda" type="text"></textarea>
+          </div>
+
+
+          <div class="flex w-full items-center justify-end space-x-2 h-[60px]">
+
+            <div class=" flex justify-end items-center">
+              <button type="button" (click)="send()"
+                      class="px-[16px] h-[32px] rounded-full bg-accent text-text-inverted">Enviar
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</app-main-container>

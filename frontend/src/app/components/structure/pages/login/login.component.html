@@ -13,11 +13,17 @@
 
                 <div class="flex text-text-base flex-col">
                     <label for="password">Contraseña: </label>
-                    <input formControlName="password" class="p-2 rounded" id="paswsword" placeholder="Introduzca su contraseña" type="password">
+                    <input formControlName="password" class="p-2 rounded" id="password" placeholder="Introduzca su contraseña" type="password">
                 </div>
 
-                <div class="w-full flex justify-end items-center">
+                <div class="w-full flex justify-between items-center">
+                  <div>
+                    <span>Si no tienes cuenta puedes registrarte <a class="text-text-accent" [routerLink]="'/register'">aquí</a></span>
+                  </div>
+                  <div class="flex justify-end items-center">
                     <button type="button" (click)="login()" class="px-[16px] h-[32px] rounded-full bg-accent text-text-inverted">Entrar</button>
+                  </div>
+
                 </div>
 
             </form>

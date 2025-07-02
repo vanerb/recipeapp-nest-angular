@@ -42,8 +42,9 @@ export class RegisterComponent {
     console.log(command)
 
     this.userService.create(command).subscribe({
-      next: (user) => {
+      next: async (user) => {
 
+        await this.router.navigate(['/login'])
       },
       error: (err) => {
 
