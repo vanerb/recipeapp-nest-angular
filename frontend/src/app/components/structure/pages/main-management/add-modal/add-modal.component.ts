@@ -1,21 +1,14 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AddIngredients } from '../../../../../interfaces/ingredients';
-import { AddPreparations } from '../../../../../interfaces/preparations';
-import { AddHashtags } from '../../../../../interfaces/hashtags';
-import { RecipesService } from '../../../../../services/recipes.service';
-import { CreateRecipe } from '../../../../../interfaces/recipes';
-import { ModalService } from '../../../../../services/modal.service';
-import { UsersService } from '../../../../../services/users.service';
-import { AuthService } from '../../../../../services/auth.service';
-import { Categories } from '../../../../../interfaces/categories';
-import { CategoriesService } from '../../../../../services/categories.service';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild,} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {AddIngredients} from '../../../../../interfaces/ingredients';
+import {AddPreparations} from '../../../../../interfaces/preparations';
+import {AddHashtags} from '../../../../../interfaces/hashtags';
+import {RecipesService} from '../../../../../services/recipes.service';
+import {ModalService} from '../../../../../services/modal.service';
+import {UsersService} from '../../../../../services/users.service';
+import {AuthService} from '../../../../../services/auth.service';
+import {Category} from '../../../../../interfaces/categories';
+import {CategoriesService} from '../../../../../services/categories.service';
 import {firstValueFrom} from "rxjs";
 
 @Component({
@@ -29,7 +22,7 @@ export class AddModalComponent implements OnInit, OnDestroy {
   preparations: AddPreparations[] = [];
   hashtags: AddHashtags[] = [];
   selectedRecipeImages: File[] = [];
-  categories: Categories[] = [];
+  categories: Category[] = [];
   @ViewChild('hashtagInput') hashtagInput!: ElementRef<HTMLInputElement>;
   @ViewChild('preparationInput')
   preparationInput!: ElementRef<HTMLInputElement>;

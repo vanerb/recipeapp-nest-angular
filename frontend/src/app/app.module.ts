@@ -25,6 +25,8 @@ import { CategoryManagementComponent } from './components/structure/pages/catego
 import { WarningModalComponent } from './components/structure/utilities/warning-modal/warning-modal.component';
 import { SeparatorComponent } from './components/structure/utilities/separator/separator.component';
 import { MainContainerComponent } from './components/structure/utilities/main-container/main-container.component';
+import { EditCategoryModalComponent } from './components/structure/pages/category-management/edit-category-modal/edit-category-modal.component';
+import { AddCategoryModalComponent } from './components/structure/pages/category-management/add-category-modal/add-category-modal.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,9 @@ import { MainContainerComponent } from './components/structure/utilities/main-co
     CategoryManagementComponent,
     WarningModalComponent,
     SeparatorComponent,
-    MainContainerComponent
+    MainContainerComponent,
+    EditCategoryModalComponent,
+    AddCategoryModalComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Categories, CreateCategory, UpdateCategory} from '../interfaces/categories';
-import {take} from "rxjs";
+import {Category, CreateCategory, UpdateCategory} from '../interfaces/categories';
 
 @Injectable({
   providedIn: 'root'
@@ -19,22 +18,22 @@ export class CategoriesService {
   }
 
   getByUserId(id: string) {
-    return this.http.get<Categories[]>(this.baseUrl + "/byUserId/" + id);
+    return this.http.get<Category[]>(this.baseUrl + "/byUserId/" + id);
   }
 
   getAll() {
-    return this.http.get<Categories[]>(this.baseUrl)
+    return this.http.get<Category[]>(this.baseUrl)
   }
 
   create(command: CreateCategory) {
-    this.http.post(this.baseUrl, command)
+    return this.http.post(this.baseUrl, command)
   }
 
   delete(id: string) {
-    this.http.delete(this.baseUrl + "/" + id)
+    return this.http.delete(this.baseUrl + "/" + id)
   }
 
-  update(command: UpdateCategory) {
-    this.http.patch(this.baseUrl + "/" + command.id, command)
+  update(command: UpdateCategory, id: string | undefined) {
+   return  this.http.patch(this.baseUrl + "/" + id, command)
   }
 }

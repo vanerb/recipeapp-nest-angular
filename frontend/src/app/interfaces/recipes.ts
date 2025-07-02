@@ -1,7 +1,7 @@
-import { Categories } from "./categories";
-import { AddHashtags, Hashtags } from "./hashtags";
-import { AddIngredients, Ingredients } from "./ingredients";
-import { AddPreparations, Preparations } from "./preparations";
+import {Category} from "./categories";
+import {AddHashtags, Hashtags} from "./hashtags";
+import {AddIngredients, Ingredients} from "./ingredients";
+import {AddPreparations, Preparations} from "./preparations";
 
 export interface Recipes {
     id: string;
@@ -43,7 +43,7 @@ export interface Recipe {
     description: string;
     hashtags: Hashtags[];
     userId: string;
-    category: Categories;
+    category: Category;
     ingredients: Ingredients[];
     preparations: Preparations[];
     images: Image[];

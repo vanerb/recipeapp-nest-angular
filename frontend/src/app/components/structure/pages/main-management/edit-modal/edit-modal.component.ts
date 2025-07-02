@@ -1,16 +1,16 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { AddIngredients } from '../../../../../interfaces/ingredients';
-import { AddPreparations } from '../../../../../interfaces/preparations';
-import { AddHashtags } from '../../../../../interfaces/hashtags';
-import { Categories } from '../../../../../interfaces/categories';
-import { RecipesService } from '../../../../../services/recipes.service';
-import { ModalService } from '../../../../../services/modal.service';
-import { UsersService } from '../../../../../services/users.service';
-import { AuthService } from '../../../../../services/auth.service';
-import { CategoriesService } from '../../../../../services/categories.service';
-import { ActivatedRoute } from '@angular/router';
-import { Recipe } from '../../../../../interfaces/recipes';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {AddIngredients} from '../../../../../interfaces/ingredients';
+import {AddPreparations} from '../../../../../interfaces/preparations';
+import {AddHashtags} from '../../../../../interfaces/hashtags';
+import {Category} from '../../../../../interfaces/categories';
+import {RecipesService} from '../../../../../services/recipes.service';
+import {ModalService} from '../../../../../services/modal.service';
+import {UsersService} from '../../../../../services/users.service';
+import {AuthService} from '../../../../../services/auth.service';
+import {CategoriesService} from '../../../../../services/categories.service';
+import {ActivatedRoute} from '@angular/router';
+import {Recipe} from '../../../../../interfaces/recipes';
 import {firstValueFrom} from "rxjs";
 
 @Component({
@@ -24,7 +24,7 @@ export class EditModalComponent {
   preparations: AddPreparations[] = [];
   hashtags: AddHashtags[] = [];
   selectedRecipeImages: File[] = [];
-  categories: Categories[] = [];
+  categories: Category[] = [];
   @ViewChild('hashtagInput') hashtagInput!: ElementRef<HTMLInputElement>;
   @ViewChild('preparationInput')
   preparationInput!: ElementRef<HTMLInputElement>;
