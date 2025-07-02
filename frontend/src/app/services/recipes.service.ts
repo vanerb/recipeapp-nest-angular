@@ -28,6 +28,10 @@ export class RecipesService {
     return this.http.get<Recipe[]>(`${this.baseUrl}/user/${id}`);
   }
 
+  getByCategoryId(id: string): Observable<Recipe[]> {
+    return this.http.get<Recipe[]>(`${this.baseUrl}/category/${id}`);
+  }
+
   create(command: FormData): Observable<Recipe> {
     return this.http.post<Recipe>(this.baseUrl, command)
   }
