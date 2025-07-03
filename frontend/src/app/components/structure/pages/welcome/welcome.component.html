@@ -1,1 +1,125 @@
-<app-main-container></app-main-container>
+<app-main-container>
+  <div class="w-full flex flex-col justify-center items-center">
+    <div class="w-full max-h-[100px] flex rounded bg-secondary justify-center ">
+      <img class="object-cover"
+           src="assets/banner-main.jpg">
+    </div>
+
+
+    <div class="w-[800px] h-full p-4 space-y-8">
+      <div class="space-y-2">
+        <div class="w-full text-center font-bold text-xl">
+          <h1>🌟 Bienvenido a Recetas Creativas</h1>
+          <app-separator class="w-full"></app-separator>
+        </div>
+        <div>
+          <p>
+            ¿Alguna vez has preparado un platillo tan original que todos a tu alrededor quedaron sorprendidos? ¿Te
+            apasiona experimentar en la cocina, mezclar sabores, romper reglas y crear recetas que no se encuentran en
+            ningún libro tradicional? Entonces has llegado al lugar perfecto.
+          </p>
+          <p>
+            Recetas Creativas es más que una simple página de cocina. Es una comunidad viva y en constante crecimiento
+            donde personas como tú comparten sus creaciones culinarias más atrevidas, originales y deliciosas. Aquí
+            celebramos la creatividad gastronómica, la pasión por la buena comida y el deseo de compartir con otros lo que
+            nace en tu cocina.
+          </p>
+        </div>
+      </div>
+
+
+      <div class="space-y-2">
+        <div class="w-full text-center font-bold text-xl">
+          <h1>🍽️ ¿Qué puedes hacer en nuestra web?</h1>
+          <app-separator class="w-full"></app-separator>
+        </div>
+        <div>
+          <ul class="list-disc">
+            <li>Sube tus propias recetas: Comparte tus ideas únicas, ya sea un postre inspirado en tu infancia o una
+              fusión inesperada de cocinas del mundo. Cada receta tiene su espacio aquí.
+            </li>
+            <li>Explora recetas únicas: Descubre platillos sorprendentes, con ingredientes inusuales o presentaciones
+              espectaculares. Desde cocina vegana experimental hasta snacks reinventados.
+            </li>
+            <li>Conecta con otros cocineros creativos: Comenta, guarda tus recetas favoritas y conoce a otros amantes de
+              la cocina que comparten tu misma pasión.
+            </li>
+            <li>Conecta con otros cocineros creativos: Comenta, guarda tus recetas favoritas y conoce a otros amantes de
+              la cocina que comparten tu misma pasión.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="w-full text-center font-bold text-xl">
+          <h1>🎯 Nuestra misión</h1>
+          <app-separator class="w-full"></app-separator>
+        </div>
+        <div>
+          <p>
+            Queremos romper con la idea de que la cocina debe seguir reglas estrictas o fórmulas intocables. En Recetas
+            Creativas creemos que la cocina es un arte, una forma de expresión y una manera de conectar con el mundo.
+            Nuestra misión es ofrecerte un espacio libre, inclusivo y divertido donde cualquier persona —sin importar su
+            nivel de experiencia— pueda compartir su visión culinaria.
+          </p>
+
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="w-full text-center font-bold text-xl">
+          <h1>📸 Más que recetas, experiencias</h1>
+          <app-separator class="w-full"></app-separator>
+        </div>
+        <div>
+          <p>
+            No se trata solo de ingredientes y pasos. Aquí cada receta cuenta una historia: el origen de una idea, un
+            recuerdo familiar reinterpretado, una noche de improvisación que resultó en algo increíble. Acompaña tus
+            creaciones con fotos, anécdotas, consejos y detalles que las hagan únicas. ¡Queremos conocer lo que hay detrás
+            de tu plato!
+          </p>
+
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="w-full text-center font-bold text-xl">
+          <h1>🚀 Únete a la revolución culinaria</h1>
+          <app-separator class="w-full"></app-separator>
+        </div>
+        <div>
+          <p>
+            Cada día, cientos de personas publican sus creaciones, exploran nuevas formas de cocinar y se animan a
+            experimentar sin miedo. Tú puedes ser parte de esto. No importa si eres chef profesional, aficionado con
+            talento o simplemente alguien curioso con ganas de jugar con los sabores: este es tu espacio.
+          </p>
+
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="w-full text-center font-bold text-xl">
+          <h1>💬 ¿Estás listo para inspirar al mundo con tu cocina?</h1>
+          <app-separator class="w-full"></app-separator>
+        </div>
+        <div>
+          <p>
+            Crea una cuenta, sube tu primera receta y empieza a formar parte de la comunidad. Comparte, comenta, prueba,
+            reinventa. La cocina creativa te espera.
+          </p>
+
+        </div>
+      </div>
+
+      <div *ngIf="!isLogedIn" class="w-full flex justify-between justify-center items-center space-x-2">
+        <button (click)="login()" class="rounded bg-accent w-full text-text-inverted">Iniciar sesión</button>
+
+        <button (click)="register()" class="rounded bg-accent w-full text-text-inverted">Registrarse</button>
+      </div>
+
+
+    </div>
+  </div>
+
+</app-main-container>

@@ -7,7 +7,7 @@
     <div class="w-full  h-fit">
       <form [formGroup]="form" enctype="multipart/form-data" class=" p-4 rounded w-full h-fit space-y-4">
 
-        <h1 class="text-xl w-full ">Perfil</h1>
+        <h1 class="text-xl w-full text-center">Perfil</h1>
         <app-separator class="w-full"></app-separator>
         <div class="h-[calc(100%_-_60px)]  space-y-4 flex flex-col overflow-auto">
           <div class="flex text-text-base flex-col">
@@ -37,8 +37,11 @@
       <form [formGroup]="formPassword" enctype="multipart/form-data" class=" p-4 rounded w-full h-fit space-y-4">
 
         <div class="h-[calc(100%_-_60px)]  space-y-4 flex flex-col overflow-auto">
-          <h1 class="text-xl w-full ">Cambiar contraseña</h1>
-          <app-separator class="w-full"></app-separator>
+          <div class="w-full text-center">
+            <h1 class="text-xl w-full ">Cambiar contraseña</h1>
+            <app-separator class="w-full"></app-separator>
+          </div>
+
           <div class="flex text-text-base flex-col">
             <label for="password">Contraseña: </label>
             <input formControlName="password" class="p-2 rounded border" id="password"

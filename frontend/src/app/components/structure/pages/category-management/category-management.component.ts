@@ -6,7 +6,6 @@ import {UsersService} from "../../../../services/users.service";
 import {AuthService} from "../../../../services/auth.service";
 import {DeleteModalComponent} from "../../utilities/delete-modal/delete-modal.component";
 import {ModalService} from "../../../../services/modal.service";
-import {EditModalComponent} from "../main-management/edit-modal/edit-modal.component";
 import {EditCategoryModalComponent} from "./edit-category-modal/edit-category-modal.component";
 import {UtilitiesService} from "../../../../services/utilities.service";
 import {AddCategoryModalComponent} from "./add-category-modal/add-category-modal.component";
