@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AddIngredients} from '../../../../../interfaces/ingredients';
 import {AddPreparations} from '../../../../../interfaces/preparations';
 import {AddHashtags} from '../../../../../interfaces/hashtags';
@@ -12,6 +12,9 @@ import {CategoriesService} from '../../../../../services/categories.service';
 import {ActivatedRoute} from '@angular/router';
 import {Recipe} from '../../../../../interfaces/recipes';
 import {firstValueFrom} from "rxjs";
+import {User} from "../../../../../interfaces/users";
+import {UtilitiesService} from "../../../../../services/utilities.service";
+import {WarningModalComponent} from "../../../utilities/warning-modal/warning-modal.component";
 
 @Component({
   selector: 'app-edit-modal',
@@ -19,6 +22,7 @@ import {firstValueFrom} from "rxjs";
   styleUrl: './edit-modal.component.css'
 })
 export class EditModalComponent {
+  @Input() user: User | any
   form: FormGroup;
   ingredients: AddIngredients[] = [];
   preparations: AddPreparations[] = [];
@@ -34,7 +38,7 @@ export class EditModalComponent {
   @Input() id: string = ""
   recipe: Recipe | null = null
 
-   confirm!: (result?: any) => void;
+  confirm!: (result?: any) => void;
   close!: () => void;
 
   constructor(
@@ -44,19 +48,23 @@ export class EditModalComponent {
     private readonly userService: UsersService,
     private readonly authService: AuthService,
     private readonly categoryService: CategoriesService,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly utilitiesService: UtilitiesService,
   ) {
     this.form = this.fb.group({
-      title: [''],
-      description: [''],
-      userId: [''],
-      category: [''],
-      hashtags: this.fb.control([]),
-      ingredients: this.fb.control([]),
-      preparations: this.fb.control([]),
+      title: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+      userId: ['', [Validators.required]],
+      category: ['', [Validators.required]],
+      hashtags: this.fb.control([], [this.utilitiesService.emptyArray]),
+      ingredients: this.fb.control([], [this.utilitiesService.emptyArray]),
+      preparations: this.fb.control([], [this.utilitiesService.emptyArray]),
+      images: this.fb.control([], [this.utilitiesService.emptyArray]),
     });
   }
-  ngOnDestroy(): void { }
+
+  ngOnDestroy(): void {
+  }
 
   async ngOnInit(): Promise<void> {
     console.log(this.id)
@@ -65,24 +73,32 @@ export class EditModalComponent {
       this.categories = el;
     })
 
+    this.form.get('userId')?.setValue(this.user.id)
+
     this.recipe = await this.recipesService.get(this.id)
 
     this.form.get('title')?.setValue(this.recipe.title ?? '')
     this.form.get('description')?.setValue(this.recipe.description ?? '')
+
     this.ingredients = this.recipe.ingredients ?? []
     this.preparations = this.recipe.preparations ?? []
     this.hashtags = this.recipe.hashtags ?? []
+
+    this.form.get('ingredients')?.setValue(this.ingredients)
+    this.form.get('preparations')?.setValue(this.preparations)
+    this.form.get('hashtags')?.setValue(this.hashtags)
     this.form.get('category')?.setValue(this.recipe?.category?.id)
     this.recipe.images.map(async el => {
       const file = await this.urlToFile('http://localhost:3002' + el.url, 'imagen.jpg', 'image/jpeg');
       this.selectedRecipeImages.push(file)
     })
+    this.form.get('images')?.setValue(this.selectedRecipeImages)
   }
 
   async urlToFile(url: string, filename: string, mimeType: string): Promise<File> {
     const response = await fetch(url);
     const blob = await response.blob();
-    return new File([blob], filename, { type: mimeType });
+    return new File([blob], filename, {type: mimeType});
   }
 
   add(type: string) {
@@ -91,21 +107,24 @@ export class EditModalComponent {
       const valor = input.value.trim();
       console.log(input.value)
       if (valor) {
-        this.ingredients.push({ ingredient: valor });
+        this.ingredients.push({ingredient: valor});
+        this.form.get('ingredients')?.setValue(this.ingredients);
       }
       input.value = '';
     } else if (type === 'preparations') {
       const input = this.preparationInput.nativeElement;
       const valor = input.value.trim();
       if (valor) {
-        this.preparations.push({ preparation: valor });
+        this.preparations.push({preparation: valor});
+        this.form.get('preparations')?.setValue(this.preparations);
       }
       input.value = '';
     } else if (type === 'hashtags') {
       const input = this.hashtagInput.nativeElement;
       const valor = input.value.trim();
       if (valor) {
-        this.hashtags.push({ hashtag: valor });
+        this.hashtags.push({hashtag: valor});
+        this.form.get('hashtags')?.setValue(this.hashtags);
       }
       input.value = '';
     }
@@ -114,35 +133,53 @@ export class EditModalComponent {
   delete(pos: number, type: string) {
     if (type === 'ingredients') {
       this.ingredients.splice(pos, 1);
+      this.form.get('ingredients')?.setValue(this.ingredients);
 
     } else if (type === 'preparations') {
       this.preparations.splice(pos, 1);
+      this.form.get('preparations')?.setValue(this.preparations);
 
     } else if (type === 'hashtags') {
       this.hashtags.splice(pos, 1);
-    }else if(type === 'images'){
+      this.form.get('hashtags')?.setValue(this.hashtags);
+    } else if (type === 'images') {
       this.selectedRecipeImages.splice(pos, 1)
+      this.form.get('images')?.setValue(this.selectedRecipeImages)
     }
   }
 
 
-
   async update() {
-    const user =  await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
+
+    if (!this.form.valid) {
+      this.modalService.open(WarningModalComponent, {
+          width: '450px',
+        },
+        {
+          title: "Aviso",
+          message: "Hay errores en el formulario, reviselo."
+        }).then(async () => {
+
+      })
+
+      console.log(this.form)
+      return
+    }
+
 
     const formData = new FormData();
     const value = this.form.value;
 
     formData.append('title', value.title);
     formData.append('description', value.description);
-    formData.append('userId', user.id);
+    formData.append('userId', value.userId);
     formData.append('category', value.category);
 
-    formData.append('hashtags', JSON.stringify(this.hashtags));
-    formData.append('ingredients', JSON.stringify(this.ingredients));
-    formData.append('preparations', JSON.stringify(this.preparations));
+    formData.append('hashtags', JSON.stringify(value.hashtags));
+    formData.append('ingredients', JSON.stringify(value.ingredients));
+    formData.append('preparations', JSON.stringify(value.preparations));
 
-    for (const file of this.selectedRecipeImages) {
+    for (const file of value.images) {
       formData.append('images', file);
     }
 
@@ -153,7 +190,9 @@ export class EditModalComponent {
       error: (err) => {
         console.error(err)
       }
-    });;;
+    });
+    ;
+    ;
 
   }
 
@@ -175,6 +214,7 @@ export class EditModalComponent {
         this.selectedRecipeImages = [...uniqueNewFiles];
       }
     }
+    this.form.get('images')?.setValue(this.selectedRecipeImages)
   }
 
   onFilePrincipalSelected(event: Event) {
@@ -195,5 +235,6 @@ export class EditModalComponent {
       // Inserta la imagen principal en la primera posición
       this.selectedRecipeImages.unshift(principalFile);
     }
+    this.form.get('images')?.setValue(this.selectedRecipeImages)
   }
 }

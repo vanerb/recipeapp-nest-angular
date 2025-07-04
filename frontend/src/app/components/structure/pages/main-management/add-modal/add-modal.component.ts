@@ -1,5 +1,5 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild,} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild,} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AddIngredients} from '../../../../../interfaces/ingredients';
 import {AddPreparations} from '../../../../../interfaces/preparations';
 import {AddHashtags} from '../../../../../interfaces/hashtags';
@@ -10,6 +10,9 @@ import {AuthService} from '../../../../../services/auth.service';
 import {Category} from '../../../../../interfaces/categories';
 import {CategoriesService} from '../../../../../services/categories.service';
 import {firstValueFrom} from "rxjs";
+import {UtilitiesService} from "../../../../../services/utilities.service";
+import {WarningModalComponent} from "../../../utilities/warning-modal/warning-modal.component";
+import {User} from "../../../../../interfaces/users";
 
 @Component({
   selector: 'app-add-modal',
@@ -17,6 +20,7 @@ import {firstValueFrom} from "rxjs";
   styleUrl: './add-modal.component.css',
 })
 export class AddModalComponent implements OnInit, OnDestroy {
+  @Input() user: User | any
   form: FormGroup;
   ingredients: AddIngredients[] = [];
   preparations: AddPreparations[] = [];
@@ -28,7 +32,7 @@ export class AddModalComponent implements OnInit, OnDestroy {
   preparationInput!: ElementRef<HTMLInputElement>;
   @ViewChild('ingredientsInput')
   ingredientsnInput!: ElementRef<HTMLInputElement>;
-    confirm!: (result?: any) => void;
+  confirm!: (result?: any) => void;
   close!: () => void;
 
   constructor(
@@ -37,23 +41,31 @@ export class AddModalComponent implements OnInit, OnDestroy {
     private readonly modalService: ModalService,
     private readonly userService: UsersService,
     private readonly authService: AuthService,
-    private readonly categoryService: CategoriesService
+    private readonly categoryService: CategoriesService,
+    private readonly utilitiesService: UtilitiesService
   ) {
     this.form = this.fb.group({
-      title: [''],
-      description: [''],
-      userId: [''],
-      category: [''],
-      hashtags: this.fb.control([]),
-      ingredients: this.fb.control([]),
-      preparations: this.fb.control([]),
+      title: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+      userId: ['', [Validators.required]],
+      category: ['', [Validators.required]],
+      hashtags: this.fb.control([], [this.utilitiesService.emptyArray]),
+      ingredients: this.fb.control([], [this.utilitiesService.emptyArray]),
+      preparations: this.fb.control([], [this.utilitiesService.emptyArray]),
+      images: this.fb.control([], [this.utilitiesService.emptyArray]),
     });
   }
-  ngOnDestroy(): void { }
+
+  ngOnDestroy(): void {
+  }
+
   ngOnInit(): void {
-    this.categoryService.getAll().subscribe((el) => {
+    console.log("USERRR", this.user)
+    this.categoryService.getByUserId(this.user.id).subscribe((el) => {
       this.categories = el;
     });
+
+    this.form.get('userId')?.setValue(this.user.id)
   }
 
   add(type: string) {
@@ -63,21 +75,24 @@ export class AddModalComponent implements OnInit, OnDestroy {
 
       console.log(input)
       if (valor) {
-        this.ingredients.push({ ingredient: valor });
+        this.ingredients.push({ingredient: valor});
+        this.form.get('ingredients')?.setValue(this.ingredients);
       }
       input.value = '';
     } else if (type === 'preparations') {
       const input = this.preparationInput.nativeElement;
       const valor = input.value.trim();
       if (valor) {
-        this.preparations.push({ preparation: valor });
+        this.preparations.push({preparation: valor});
+        this.form.get('preparations')?.setValue(this.preparations);
       }
       input.value = '';
     } else if (type === 'hashtags') {
       const input = this.hashtagInput.nativeElement;
       const valor = input.value.trim();
       if (valor) {
-        this.hashtags.push({ hashtag: valor });
+        this.hashtags.push({hashtag: valor});
+        this.form.get('hashtags')?.setValue(this.hashtags);
       }
       input.value = '';
     }
@@ -86,35 +101,52 @@ export class AddModalComponent implements OnInit, OnDestroy {
   delete(pos: number, type: string) {
     if (type === 'ingredients') {
       this.ingredients.splice(pos, 1);
+      this.form.get('ingredients')?.setValue(this.ingredients);
 
     } else if (type === 'preparations') {
       this.preparations.splice(pos, 1);
+      this.form.get('preparations')?.setValue(this.preparations);
 
     } else if (type === 'hashtags') {
       this.hashtags.splice(pos, 1);
-    }else if(type === 'images'){
+      this.form.get('hashtags')?.setValue(this.hashtags);
+    } else if (type === 'images') {
       this.selectedRecipeImages.splice(pos, 1)
+      this.form.get('images')?.setValue(this.selectedRecipeImages);
     }
   }
 
 
-
   async create() {
-    const user =  await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
+    if (!this.form.valid) {
+      this.modalService.open(WarningModalComponent, {
+          width: '450px',
+        },
+        {
+          title: "Aviso",
+          message: "Hay errores en el formulario, reviselo."
+        }).then(async () => {
+
+      })
+
+      console.log(this.form)
+      return
+    }
+
 
     const formData = new FormData();
     const value = this.form.value;
 
     formData.append('title', value.title);
     formData.append('description', value.description);
-    formData.append('userId', user.id);
+    formData.append('userId', value.userId);
     formData.append('category', value.category);
 
-    formData.append('hashtags', JSON.stringify(this.hashtags));
-    formData.append('ingredients', JSON.stringify(this.ingredients));
-    formData.append('preparations', JSON.stringify(this.preparations));
+    formData.append('hashtags', JSON.stringify(value.hashtags));
+    formData.append('ingredients', JSON.stringify(value.ingredients));
+    formData.append('preparations', JSON.stringify(value.preparations));
 
-    for (const file of this.selectedRecipeImages) {
+    for (const file of value.images) {
       formData.append('images', file);
     }
 
@@ -125,7 +157,8 @@ export class AddModalComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error(err)
       }
-    });;
+    });
+    ;
 
   }
 
@@ -147,6 +180,8 @@ export class AddModalComponent implements OnInit, OnDestroy {
         this.selectedRecipeImages = [...uniqueNewFiles];
       }
     }
+
+    this.form.get('images')?.setValue(this.selectedRecipeImages)
   }
 
   onFilePrincipalSelected(event: Event) {
@@ -167,5 +202,6 @@ export class AddModalComponent implements OnInit, OnDestroy {
       // Inserta la imagen principal en la primera posición
       this.selectedRecipeImages.unshift(principalFile);
     }
+    this.form.get('images')?.setValue(this.selectedRecipeImages)
   }
 }

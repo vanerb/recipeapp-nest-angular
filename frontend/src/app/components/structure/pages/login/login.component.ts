@@ -22,10 +22,14 @@ export class LoginComponent {
   }
 
 
-  login() {
+  async login() {
     const command: Login = {
       email: this.form.get('email')?.value,
       password: this.form.get('password')?.value
+    }
+
+    if (this.authService.isAuthenticated()) {
+      await this.authService.logout()
     }
 
     this.authService.login(command).subscribe({
@@ -37,7 +41,6 @@ export class LoginComponent {
           await this.utilitiesService.sleep(0)
 
           window.location.reload()
-
         }
 
       },

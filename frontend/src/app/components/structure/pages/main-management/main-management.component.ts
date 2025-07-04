@@ -31,11 +31,17 @@ export class MainManagementComponent {
     await this.updateItems()
   }
 
-  addRecipe() {
+  async getUser() {
+    const user = await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
+    return user
+  }
+
+  async addRecipe() {
     this.modalService.open(AddModalComponent, {
-      width: '90%',
-      height: '90%'
-    }).then(async () => {
+        width: '90%',
+        height: '90%'
+      },
+      {user: await this.getUser()}).then(async () => {
       await this.update({type: 'add', item: null})
     })
       .catch(() => {
@@ -47,11 +53,13 @@ export class MainManagementComponent {
   async update(data: { type: string, item: any | null }) {
     if (data.type === 'update') {
       console.log(data)
+
+
       this.modalService.open(EditModalComponent, {
           width: '90%',
           height: '90%'
         },
-        {id: data.item.id}).then(async () => {
+        {id: data.item.id, user:  await this.getUser()}).then(async () => {
         await this.updateItems()
       })
         .catch(() => {

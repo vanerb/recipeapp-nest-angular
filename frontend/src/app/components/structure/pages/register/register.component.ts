@@ -14,7 +14,7 @@ export class RegisterComponent {
 
   form: FormGroup
 
-  constructor(private readonly userService: UsersService, private fb: FormBuilder, private router: Router) {
+  constructor(private readonly userService: UsersService, private fb: FormBuilder, private router: Router, private readonly authService: AuthService) {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       subname: ['', [Validators.required]],
@@ -26,21 +26,20 @@ export class RegisterComponent {
   }
 
 
-  register() {
+  async register() {
     console.log(this.form.value)
     if (this.form.get('password')?.value !== this.form.get('repeatPassword')?.value) {
       return
     }
-    console.log("LLEGO AQUI")
     const command: CreateUser = {
       name: this.form.get('name')?.value + " " + this.form.get('subname')?.value,
       email: this.form.get('email')?.value,
       password: this.form.get('password')?.value,
       token: ""
     }
-
-    console.log(command)
-
+    if (this.authService.isAuthenticated()) {
+      await this.authService.logout()
+    }
     this.userService.create(command).subscribe({
       next: async (user) => {
 

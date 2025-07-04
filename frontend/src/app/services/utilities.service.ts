@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {AbstractControl, ValidationErrors} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root'
@@ -26,4 +27,18 @@ export class UtilitiesService {
 
     return formatted
   }
+
+  emptyArray(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+
+    // Verificamos que sea un array y tenga al menos un elemento
+    if (Array.isArray(value) && value.length === 0) {
+      return { arrayVacio: true };
+    }
+
+    return null;
+  }
+
+
+
 }

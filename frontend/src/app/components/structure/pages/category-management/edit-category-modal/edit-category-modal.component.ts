@@ -1,7 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Category, UpdateCategory} from "../../../../../interfaces/categories";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CategoriesService} from "../../../../../services/categories.service";
+import {WarningModalComponent} from "../../../utilities/warning-modal/warning-modal.component";
+import {ModalService} from "../../../../../services/modal.service";
 
 @Component({
   selector: 'app-edit-category-modal',
@@ -15,9 +17,9 @@ export class EditCategoryModalComponent implements OnInit {
   confirm!: (result?: any) => void;
   close!: () => void;
 
-  constructor(private fb: FormBuilder, private readonly categoriesService: CategoriesService) {
+  constructor(private fb: FormBuilder, private readonly categoriesService: CategoriesService, private readonly modalService: ModalService,) {
     this.form = this.fb.group({
-      name: [''],
+      name: ['', [Validators.required]],
     });
   }
 
@@ -27,6 +29,20 @@ export class EditCategoryModalComponent implements OnInit {
 
 
   update() {
+    if (!this.form.valid) {
+      this.modalService.open(WarningModalComponent, {
+          width: '450px',
+        },
+        {
+          title: "Aviso",
+          message: "Hay errores en el formulario, reviselo."
+        }).then(async () => {
+
+      })
+      return
+    }
+
+
     const command: UpdateCategory = {
       name: this.form.get('name')?.value
     }
