@@ -13,6 +13,7 @@ import {User} from "../../../../interfaces/users";
 import {RecipesService} from "../../../../services/recipes.service";
 import {Recipe} from "../../../../interfaces/recipes";
 import {WarningModalComponent} from "../../utilities/warning-modal/warning-modal.component";
+import {LoaderComponent} from "../../utilities/loader/loader.component";
 
 @Component({
   selector: 'app-category-management',
@@ -84,7 +85,10 @@ export class CategoryManagementComponent implements OnInit {
       }
     });
 
+     this.modalService.open(LoaderComponent)
     await this.utilitiesService.sleep(1000)
+    this.modalService.close()
+
     console.log(recipesAll)
 
     if (recipesAll.length === 0) {
