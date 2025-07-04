@@ -1,4 +1,4 @@
-<div class="modal-backdrop" *ngIf="show" (click)="close()">
+<div class="modal-backdrop" *ngIf="show" >
   <div class="modal" [ngStyle]="styles" (click)="$event.stopPropagation()">
     <ng-template #modalContent></ng-template>
   </div>
