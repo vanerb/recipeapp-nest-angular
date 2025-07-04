@@ -19,6 +19,9 @@ backend/yarn-error.log*
 backend/pnpm-debug.log*
 backend/*.log
 
+#images
+backend/uploads
+
 # Archivos de TypeScript generados
 backend/*.tsbuildinfo
 
