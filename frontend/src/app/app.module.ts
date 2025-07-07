@@ -28,6 +28,7 @@ import { MainContainerComponent } from './components/structure/utilities/main-co
 import { EditCategoryModalComponent } from './components/structure/pages/category-management/edit-category-modal/edit-category-modal.component';
 import { AddCategoryModalComponent } from './components/structure/pages/category-management/add-category-modal/add-category-modal.component';
 import { LoaderComponent } from './components/structure/utilities/loader/loader.component';
+import { ManagementComponent } from './components/structure/pages/management/management.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { LoaderComponent } from './components/structure/utilities/loader/loader.
     MainContainerComponent,
     EditCategoryModalComponent,
     AddCategoryModalComponent,
-    LoaderComponent
+    LoaderComponent,
+    ManagementComponent
   ],
   imports: [
     BrowserModule,

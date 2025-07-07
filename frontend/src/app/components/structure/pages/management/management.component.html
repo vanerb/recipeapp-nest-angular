@@ -1,0 +1,61 @@
+<app-main-container>
+  <div class="w-full h-full">
+    <div class="grid grid-cols-3 gap-4 w-full p-4">
+      <div
+        class="rounded border space-y-2 border-header-secondary border-solid flex flex-col items-center p-4 bg-secondary h-full">
+        <div class="w-full h-full flex flex-col justify-center items-center text-header-text">
+          <div class="w-full flex justify-center items-center">
+            <i class="bi bi-person-circle text-[48px]"></i>
+          </div>
+          <div class="w-full flex justify-center items-center">
+            <span>Mi Perfil</span>
+          </div>
+          <div class="w-full">
+            <button (click)="redirect('profile')"
+              class="bg-accent rounded px-[16px] w-full text-text-inverted mt-4 flex justify-center items-center space-x-2">
+              <span>Entrar</span>
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded border space-y-2 border-header-secondary border-solid flex flex-col items-center p-4 bg-secondary h-full">
+        <div class="w-full h-full flex flex-col justify-center items-center text-header-text">
+          <div class="w-full flex justify-center items-center">
+            <i class="bi bi-list-ol text-[48px]"></i>
+          </div>
+          <div class="w-full flex justify-center items-center">
+            <span>Mis recetas</span>
+          </div>
+          <div class="w-full">
+            <button (click)="redirect('recipes')"
+              class="bg-accent rounded px-[16px] w-full text-text-inverted mt-4 flex justify-center items-center space-x-2">
+              <span>Entrar</span>
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded border space-y-2 border-header-secondary border-solid flex flex-col items-center p-4 bg-secondary h-full">
+        <div class="w-full h-full flex flex-col justify-center items-center text-header-text">
+          <div class="w-full flex justify-center items-center">
+            <i class="bi bi-bookmark-plus text-[48px]"></i>
+          </div>
+          <div class="w-full flex justify-center items-center">
+            <span>Mis Categorias</span>
+          </div>
+          <div class="w-full">
+            <button (click)="redirect('categories')"
+              class="bg-accent rounded px-[16px] w-full text-text-inverted mt-4 flex justify-center items-center space-x-2">
+              <span>Entrar</span>
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</app-main-container>

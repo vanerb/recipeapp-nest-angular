@@ -64,34 +64,17 @@ export class HeaderComponent implements OnInit {
           key: "profile",
           name: "Mi perfil",
           position: "right",
+          action: async () => {
+            await this.router.navigate(['/my-panel']);
+            await this.selectionMenu();
+          },
           children: [
             {
-              key: "profile-page",
-              name: "Perfil",
+              key: "my-panel",
+              name: "Administración",
               position: "right",
               action: async () => {
-                const user = await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
-                await this.router.navigate(['/profile/' + user.id]);
-                await this.selectionMenu();
-              }
-            },
-            {
-              key: "my-recipes",
-              name: "Mis recetas",
-              position: "right",
-              action: async () => {
-                const user = await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
-                await this.router.navigate(['/management/' + user.id]);
-                await this.selectionMenu();
-              }
-            },
-            {
-              key: "my-categories",
-              name: "Mis categorias",
-              position: "right",
-              action: async () => {
-                const user = await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
-                await this.router.navigate(['/categories/' + user.id]);
+                await this.router.navigate(['/my-panel/']);
                 await this.selectionMenu();
               }
             },
@@ -143,6 +126,15 @@ export class HeaderComponent implements OnInit {
         this.selected = this.menu.find(el => el.key === "contact")?.name ?? ""
         return
       case "profile":
+        this.selected = this.menu.find(el => el.key === "profile")?.name ?? ""
+        return
+      case "management":
+        this.selected = this.menu.find(el => el.key === "profile")?.name ?? ""
+        return
+      case "categories":
+        this.selected = this.menu.find(el => el.key === "profile")?.name ?? ""
+        return
+      case "my-panel":
         this.selected = this.menu.find(el => el.key === "profile")?.name ?? ""
         return
       case "":

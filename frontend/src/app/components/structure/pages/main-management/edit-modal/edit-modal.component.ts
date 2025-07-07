@@ -216,25 +216,4 @@ export class EditModalComponent {
     }
     this.form.get('images')?.setValue(this.selectedRecipeImages)
   }
-
-  onFilePrincipalSelected(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (target.files && target.files.length > 0) {
-      const principalFile = target.files[0];
-
-      // Elimina si ya existía ese archivo
-      this.selectedRecipeImages = this.selectedRecipeImages.filter(
-        (file) => file.name !== principalFile.name
-      );
-
-      // Elimina cualquier otra imagen que esté en la posición 0 (si asumimos que la portada va ahí)
-      this.selectedRecipeImages = this.selectedRecipeImages.filter(
-        (file, index) => index !== 0
-      );
-
-      // Inserta la imagen principal en la primera posición
-      this.selectedRecipeImages.unshift(principalFile);
-    }
-    this.form.get('images')?.setValue(this.selectedRecipeImages)
-  }
 }

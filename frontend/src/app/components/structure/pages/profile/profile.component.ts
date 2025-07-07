@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {RecipesService} from "../../../../services/recipes.service";
 import {ModalService} from "../../../../services/modal.service";
 import {UsersService} from "../../../../services/users.service";
@@ -33,7 +33,7 @@ export class ProfileComponent implements OnInit {
     private readonly route: ActivatedRoute
   ) {
     this.form = this.fb.group({
-      name: [''],
+      name: ['', [Validators.required]],
     });
 
     this.formPassword = this.fb.group({
@@ -99,6 +99,20 @@ export class ProfileComponent implements OnInit {
   }
 
   async updateProfile() {
+    if (!this.form.valid) {
+      this.modalService.open(WarningModalComponent, {
+          width: '450px',
+        },
+        {
+          title: "Aviso",
+          message: "Hay errores en el formulario, reviselo."
+        }).then(async () => {
+
+      })
+
+      console.log(this.form)
+      return
+    }
     const command: UpdateUser = {
       name: this.form.get('name')?.value
     }
