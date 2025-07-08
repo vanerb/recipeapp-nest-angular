@@ -10,6 +10,8 @@ import {UpdateUser, User} from "../../../../interfaces/users";
 import {firstValueFrom} from "rxjs";
 import {DeleteModalComponent} from "../../utilities/delete-modal/delete-modal.component";
 import {WarningModalComponent} from "../../utilities/warning-modal/warning-modal.component";
+import {UtilitiesService} from "../../../../services/utilities.service";
+import {LoaderComponent} from "../../utilities/loader/loader.component";
 
 @Component({
   selector: 'app-profile',
@@ -30,7 +32,8 @@ export class ProfileComponent implements OnInit {
     private readonly userService: UsersService,
     private readonly authService: AuthService,
     private readonly categoryService: CategoriesService,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly utilitiesService: UtilitiesService
   ) {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
@@ -50,6 +53,8 @@ export class ProfileComponent implements OnInit {
   async updatePassword() {
     if (this.formPassword.get('password')?.value === this.formPassword.get('repeatPassword')?.value) {
       if (this.formPassword.get('password')?.value !== '') {
+        this.modalService.open(LoaderComponent, {}, {text: 'Actualizando contraseña...'})
+        await this.utilitiesService.sleep(1000)
         const command: UpdateUser = {
           password: this.formPassword.get('password')?.value
         }
@@ -95,6 +100,7 @@ export class ProfileComponent implements OnInit {
           this.modalService.close()
         });
     }
+    this.modalService.close()
 
   }
 
@@ -113,6 +119,10 @@ export class ProfileComponent implements OnInit {
       console.log(this.form)
       return
     }
+
+    this.modalService.open(LoaderComponent, {}, {text: 'Editando perfil...'})
+    await this.utilitiesService.sleep(1000)
+
     const command: UpdateUser = {
       name: this.form.get('name')?.value
     }
@@ -124,6 +134,8 @@ export class ProfileComponent implements OnInit {
         console.error(err)
       }
     });
+
+    this.modalService.close()
   }
 
   async ngOnInit() {

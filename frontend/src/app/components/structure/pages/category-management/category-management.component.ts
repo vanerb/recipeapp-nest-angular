@@ -85,7 +85,7 @@ export class CategoryManagementComponent implements OnInit {
       }
     });
 
-     this.modalService.open(LoaderComponent)
+    this.modalService.open(LoaderComponent, {}, {text: 'Cargando...'})
     await this.utilitiesService.sleep(1000)
     this.modalService.close()
 
