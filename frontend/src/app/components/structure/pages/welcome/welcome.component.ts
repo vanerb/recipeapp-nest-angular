@@ -1,27 +1,47 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
-import {AuthService} from "../../../../services/auth.service";
+import { Component, OnInit } from '@angular/core';
+import { forkJoin } from 'rxjs';
+import { Category } from '../../../../interfaces/categories';
+import { Post } from '../../../../interfaces/posts';
+import { Recipe } from '../../../../interfaces/recipes';
+import { AuthService } from '../../../../services/auth.service';
+import { CategoriesService } from '../../../../services/categories.service';
+import { PostsService } from '../../../../services/posts.service';
+import { RecipesService } from '../../../../services/recipes.service';
 
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.component.html',
-  styleUrl: './welcome.component.css'
 })
 export class WelcomeComponent implements OnInit {
+  topRecipes: Recipe[] = [];
+  posts: Post[] = [];
+  categories: Category[] = [];
+  loading = true;
+  failed = false;
 
-  isLogedIn: boolean = false;
-  constructor(private readonly router: Router, private readonly authService: AuthService) {
-  }
-
-  async login() {
-    await this.router.navigate(['login']);
-  }
-
-  async register(){
-    await this.router.navigate(['register']);
-  }
+  constructor(
+    readonly authService: AuthService,
+    private readonly recipesService: RecipesService,
+    private readonly postsService: PostsService,
+    private readonly categoriesService: CategoriesService,
+  ) {}
 
   ngOnInit() {
-    this.isLogedIn = this.authService.isAuthenticated()
+    forkJoin({
+      recipes: this.recipesService.getAll({ sort: 'top' }),
+      posts: this.postsService.getAll(),
+      categories: this.categoriesService.getAll(),
+    }).subscribe({
+      next: ({ recipes, posts, categories }) => {
+        this.topRecipes = recipes.slice(0, 3);
+        this.posts = posts.slice(0, 3);
+        this.categories = categories;
+        this.loading = false;
+      },
+      error: () => {
+        this.failed = true;
+        this.loading = false;
+      },
+    });
   }
 }

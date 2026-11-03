@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, BeforeInsert, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { User } from 'src/users/users.entity';
 import { Recipe } from 'src/recipes/recipes.entity';
 
@@ -11,8 +18,8 @@ export class Category {
   @Column()
   name: string;
 
-  @ManyToOne(() => User, (user) => user.categories)
-  user: User;
+  @ManyToOne(() => User, (user) => user.categories, { onDelete: 'SET NULL' })
+  user: User | null;
 
   @OneToMany(() => Recipe, (recipes) => recipes.category)
   recipe: Recipe[];
@@ -22,5 +29,4 @@ export class Category {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
 }

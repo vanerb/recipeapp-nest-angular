@@ -1,45 +1,96 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Login } from '../interfaces/auth';
 import { Router } from '@angular/router';
+import { BehaviorSubject, firstValueFrom, Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { CreateUser, CurrentUser, Login } from '../interfaces/users';
+import { safeStorage } from './safe-storage';
+
+const TOKEN_KEY = 'auth_token';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
+  private readonly baseUrl = `${environment.apiUrl}/users`;
+  private readonly userSubject = new BehaviorSubject<CurrentUser | null>(null);
+  readonly user$ = this.userSubject.asObservable();
 
-  constructor(private readonly http: HttpClient, private router: Router) { }
+  constructor(
+    private readonly http: HttpClient,
+    private readonly router: Router,
+  ) {}
 
-  setToken(token: string) {
-    localStorage.setItem("auth_token", token)
+  get user(): CurrentUser | null {
+    return this.userSubject.value;
   }
 
   getToken(): string | null {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return localStorage.getItem('auth_token');
-    }
-    return null;
+    return safeStorage.get(TOKEN_KEY);
   }
-
-  removeToken() {
-    localStorage.removeItem('auth_token')
-  }
-
 
   isAuthenticated(): boolean {
-    return this.getToken() !== null;
+    return this.userSubject.value !== null;
   }
 
-  login(command: Login) {
-    return this.http.post<any>("http://localhost:3002/users/login", command)
+  isAdmin(): boolean {
+    return this.userSubject.value?.role === 'admin';
   }
 
+  // Recupera la sesión guardada antes de pintar la primera ruta
+  async restoreSession(): Promise<void> {
+    if (!this.getToken()) {
+      return;
+    }
+    try {
+      await this.loadUser();
+    } catch {
+      this.clearSession();
+    }
+  }
+
+  private loadUser(): Promise<CurrentUser> {
+    return firstValueFrom(
+      this.http
+        .get<CurrentUser>(`${this.baseUrl}/me`)
+        .pipe(tap((user) => this.userSubject.next(user))),
+    );
+  }
+
+  async login(command: Login): Promise<CurrentUser> {
+    const { access_token } = await firstValueFrom(
+      this.http.post<{ access_token: string }>(
+        `${this.baseUrl}/login`,
+        command,
+      ),
+    );
+    safeStorage.set(TOKEN_KEY, access_token);
+    return this.loadUser();
+  }
+
+  async register(command: CreateUser): Promise<CurrentUser> {
+    await firstValueFrom(this.http.post(`${this.baseUrl}/create`, command));
+    return this.login({ email: command.email, password: command.password });
+  }
+
+  updateProfile(command: FormData): Observable<CurrentUser> {
+    return this.http
+      .patch<CurrentUser>(`${this.baseUrl}/me`, command)
+      .pipe(tap((user) => this.userSubject.next(user)));
+  }
+
+  async deleteAccount(): Promise<void> {
+    await firstValueFrom(this.http.delete(`${this.baseUrl}/me`));
+    await this.logout();
+  }
+
+  clearSession() {
+    safeStorage.remove(TOKEN_KEY);
+    this.userSubject.next(null);
+  }
 
   async logout() {
-    this.removeToken()
-    await this.router.navigate(['/login']);
-    window.location.reload()
+    this.clearSession();
+    await this.router.navigate(['/']);
   }
-
-
 }

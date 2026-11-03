@@ -1,58 +1,43 @@
-import {Category} from "./categories";
-import {AddHashtags, Hashtags} from "./hashtags";
-import {AddIngredients, Ingredients} from "./ingredients";
-import {AddPreparations, Preparations} from "./preparations";
+import { Category } from './categories';
+import { PublicUser } from './users';
 
-export interface Recipes {
-    id: string;
-    title: string;
-    description: string;
-    hashtags: string;
-    userId: string;
-    categoryId: string;
-    recipeDescription: string;
-    images: File;
-}
-
-export interface CreateRecipe {
-    title: string;
-    description: string;
-    hashtags: AddHashtags[];
-    ingredients: AddIngredients[];
-    preparations: AddPreparations[]
-    userId: string;
-    categoryId: string;
-    images: { type: string, file: File }[];
-}
-
-export interface UpdateRecipe {
-    id: string;
-    title: string;
-    description: string;
-    hashtags: AddHashtags[];
-    ingredients: AddIngredients[];
-    preparations: AddPreparations[]
-    userId: string;
-    categoryId: string;
-    images: { type: string, file: File }[];
+export interface RecipeImage {
+  id: string;
+  url: string;
 }
 
 export interface Recipe {
-    id: string;
-    title: string;
-    description: string;
-    hashtags: Hashtags[];
-    userId: string;
-    category: Category;
-    ingredients: Ingredients[];
-    preparations: Preparations[];
-    images: Image[];
+  id: string;
+  title: string;
+  description: string;
+  hashtags: { id: string; hashtag: string }[];
+  ingredients: { id: string; ingredient: string }[];
+  preparations: { id: string; preparation: string }[];
+  images: RecipeImage[];
+  category: Category | null;
+  user: PublicUser;
+  averageRating: number;
+  ratingsCount: number;
+  commentsCount: number;
+  createdAt: string;
 }
 
-export interface Image {
-    id: string,
-    url: string,
-    path: string,
-    createdAt: string,
-    updatedAt: string
+export interface RecipeFilters {
+  search?: string;
+  categoryId?: string;
+  hashtag?: string;
+  sort?: 'recent' | 'top';
+}
+
+export interface RatingSummary {
+  averageRating: number;
+  ratingsCount: number;
+  myRating: number | null;
+}
+
+export interface RecipeComment {
+  id: string;
+  text: string;
+  createdAt: string;
+  user: PublicUser;
 }

@@ -6,33 +6,28 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { RecipesService } from './recipes.service';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { CurrentUser } from 'src/common/auth/current-user.decorator';
+import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
+import { imageUpload } from 'src/common/uploads';
+import { User } from 'src/users/users.entity';
+import { RecipeFilters, RecipesService } from './recipes.service';
 import { Recipe } from './recipes.entity';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { ParseJsonArrayPipe } from 'src/common/pipes/parse-json-array.pipe';
-import { Ingredients } from 'src/ingredients/ingredients.entity';
-import { Hashtags } from 'src/hashtags/hashtags.entity';
-import { Preparations } from 'src/preparations/preparations.entity';
 
 @Controller('recipes')
 export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
   @Get()
-  getAllRecipes(): Promise<Recipe[]> {
-    return this.recipesService.getAllRecipes();
-  }
-
-  @Get(':id')
-  getRecipe(@Param('id') id: string): Promise<Recipe[]> {
-    return this.recipesService.getRecipe(id);
+  getAllRecipes(@Query() filters: RecipeFilters): Promise<Recipe[]> {
+    return this.recipesService.getAllRecipes(filters);
   }
 
   @Get('user/:id')
@@ -40,85 +35,37 @@ export class RecipesController {
     return this.recipesService.getRecipeByUserId(id);
   }
 
-  @Get('category/:id')
-  getRecipeByCategoryId(@Param('id') id: string): Promise<Recipe[]> {
-    return this.recipesService.getRecipeByCategoryId(id);
+  @Get(':id')
+  getRecipe(@Param('id') id: string): Promise<Recipe> {
+    return this.recipesService.getRecipe(id);
   }
 
   @Post()
-  @UseInterceptors(
-    FilesInterceptor('images', 10, {
-      storage: diskStorage({
-        destination: './uploads/recipes',
-        filename: (req, file, cb) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
-          cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
-        },
-      }),
-    }),
-  )
-  async createRecipe(
-    @Body('title') title: string,
-    @Body('description') description: string,
-    @Body('userId') userId: string,
-    @Body('categoryId') categoryId: string,
-    @Body('hashtags', ParseJsonArrayPipe) hashtags: Hashtags[],
-    @Body('ingredients', ParseJsonArrayPipe) ingredients: Ingredients[],
-    @Body('preparations', ParseJsonArrayPipe) preparations: Preparations[],
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FilesInterceptor('images', 10, imageUpload('recipes')))
+  createRecipe(
+    @Body() dto: CreateRecipeDto,
     @UploadedFiles() images: Express.Multer.File[],
+    @CurrentUser() user: User,
   ): Promise<Recipe> {
-    const dto: CreateRecipeDto = {
-      title,
-      description,
-      userId,
-      categoryId,
-      hashtags,
-      ingredients,
-      preparations,
-    };
-
-    return this.recipesService.createRecipe(dto, images);
+    return this.recipesService.createRecipe(dto, images, user);
   }
 
   @Patch(':id')
-  @UseInterceptors(
-    FilesInterceptor('images', 10, {
-      storage: diskStorage({
-        destination: './uploads/recipes',
-        filename: (req, file, cb) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
-          cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
-        },
-      }),
-    }),
-  )
-  async updateRecipe(
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FilesInterceptor('images', 10, imageUpload('recipes')))
+  updateRecipe(
     @Param('id') id: string,
-    @Body('title') title: string,
-    @Body('description') description: string,
-    @Body('userId') userId: string,
-    @Body('categoryId') categoryId: string,
-    @Body('hashtags', ParseJsonArrayPipe) hashtags: Hashtags[],
-    @Body('ingredients', ParseJsonArrayPipe) ingredients: Ingredients[],
-    @Body('preparations', ParseJsonArrayPipe) preparations: Preparations[],
+    @Body() dto: UpdateRecipeDto,
     @UploadedFiles() images: Express.Multer.File[],
-  ) {
-    const dto: UpdateRecipeDto = {
-      title,
-      description,
-      userId,
-      categoryId,
-      hashtags,
-      ingredients,
-      preparations,
-    };
-    return this.recipesService.updateRecipe(id, dto, images);
+    @CurrentUser() user: User,
+  ): Promise<Recipe> {
+    return this.recipesService.updateRecipe(id, dto, images, user);
   }
 
   @Delete(':id')
-  async deleteRecipe(@Param('id') id: string) {
-    return this.recipesService.deleteRecipe(id);
+  @UseGuards(JwtAuthGuard)
+  deleteRecipe(@Param('id') id: string, @CurrentUser() user: User) {
+    return this.recipesService.deleteRecipe(id, user);
   }
 }

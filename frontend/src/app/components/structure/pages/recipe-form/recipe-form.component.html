@@ -1,0 +1,169 @@
+<div class="page max-w-3xl pt-8 sm:pt-12">
+  <h1 class="text-4xl sm:text-5xl">{{ recipeId ? 'Editar receta' : 'Nueva receta' }}</h1>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="save()" class="mt-8 space-y-8" novalidate>
+    <section class="panel space-y-4 p-5 sm:p-7">
+      <h2 class="text-2xl">Lo básico</h2>
+      <div>
+        <label class="label" for="title">Título</label>
+        <input id="title" class="input" maxlength="120" formControlName="title" placeholder="Tortilla de patatas con cebolla caramelizada" />
+        <p *ngIf="form.get('title')?.touched && form.get('title')?.invalid" class="field-error">Ponle un título.</p>
+      </div>
+      <div>
+        <label class="label" for="description">Descripción</label>
+        <textarea id="description" rows="3" class="input" maxlength="255" formControlName="description" placeholder="¿Qué hace especial a este plato?"></textarea>
+        <p *ngIf="form.get('description')?.touched && form.get('description')?.invalid" class="field-error">Cuenta algo sobre el plato.</p>
+      </div>
+      <div>
+        <label class="label" for="category">Categoría</label>
+        <select id="category" class="input" formControlName="categoryId">
+          <option value="" disabled>Elige una categoría</option>
+          <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+        </select>
+        <p *ngIf="form.get('categoryId')?.touched && form.get('categoryId')?.invalid" class="field-error">Elige una categoría.</p>
+        <button *ngIf="!creatingCategory" type="button" class="mt-2 font-medium text-herb underline underline-offset-4" (click)="creatingCategory = true">
+          ¿No está la tuya? Crear categoría
+        </button>
+        <div *ngIf="creatingCategory" class="mt-2 flex gap-2">
+          <label for="new-category" class="sr-only">Nombre de la nueva categoría</label>
+          <input
+            #newCategory
+            id="new-category"
+            class="input"
+            maxlength="40"
+            placeholder="Nombre de la categoría"
+            (keydown.enter)="$event.preventDefault(); createCategory(newCategory)"
+          />
+          <button type="button" class="btn-outline shrink-0" (click)="createCategory(newCategory)">Crear</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel p-5 sm:p-7">
+      <h2 class="text-2xl">Ingredientes</h2>
+      <ul *ngIf="ingredients.length" class="mt-3 divide-y divide-line">
+        <li *ngFor="let ingredient of ingredients; let index = index; let last = last" class="flex items-center gap-1 py-1.5">
+          <span class="min-w-0 flex-1 break-words">{{ ingredient }}</span>
+          <button type="button" class="icon-btn" [disabled]="index === 0" [class.opacity-30]="index === 0" aria-label="Subir ingrediente" (click)="move('ingredients', index, -1)">
+            <i class="bi bi-arrow-up" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="icon-btn" [disabled]="last" [class.opacity-30]="last" aria-label="Bajar ingrediente" (click)="move('ingredients', index, 1)">
+            <i class="bi bi-arrow-down" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="icon-btn text-tomato" aria-label="Quitar ingrediente" (click)="remove('ingredients', index)">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
+        </li>
+      </ul>
+      <div class="mt-3 flex gap-2">
+        <label for="ingredient-input" class="sr-only">Añadir ingrediente</label>
+        <input
+          #ingredientInput
+          id="ingredient-input"
+          class="input"
+          maxlength="255"
+          placeholder="200 g de harina"
+          (keydown.enter)="$event.preventDefault(); add('ingredients', ingredientInput)"
+        />
+        <button type="button" class="btn-outline shrink-0" (click)="add('ingredients', ingredientInput)">Añadir</button>
+      </div>
+      <p *ngIf="submitted && !ingredients.length" class="field-error">Añade al menos un ingrediente.</p>
+    </section>
+
+    <section class="panel p-5 sm:p-7">
+      <h2 class="text-2xl">Preparación</h2>
+      <ol *ngIf="preparations.length" class="mt-3 divide-y divide-line">
+        <li *ngFor="let step of preparations; let index = index; let last = last" class="flex items-start gap-1 py-2">
+          <span class="w-7 shrink-0 font-display text-xl italic text-tomato" aria-hidden="true">{{ index + 1 }}</span>
+          <span class="min-w-0 flex-1 break-words">{{ step }}</span>
+          <button type="button" class="icon-btn" [disabled]="index === 0" [class.opacity-30]="index === 0" aria-label="Subir paso" (click)="move('preparations', index, -1)">
+            <i class="bi bi-arrow-up" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="icon-btn" [disabled]="last" [class.opacity-30]="last" aria-label="Bajar paso" (click)="move('preparations', index, 1)">
+            <i class="bi bi-arrow-down" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="icon-btn text-tomato" aria-label="Quitar paso" (click)="remove('preparations', index)">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
+        </li>
+      </ol>
+      <div class="mt-3">
+        <label for="step-input" class="sr-only">Añadir paso</label>
+        <textarea
+          #stepInput
+          id="step-input"
+          rows="2"
+          class="input"
+          maxlength="255"
+          placeholder="Describe el siguiente paso"
+          (keydown.enter)="$event.preventDefault(); add('preparations', stepInput)"
+        ></textarea>
+        <div class="mt-2 flex justify-end">
+          <button type="button" class="btn-outline" (click)="add('preparations', stepInput)">Añadir paso</button>
+        </div>
+      </div>
+      <p *ngIf="submitted && !preparations.length" class="field-error">Añade al menos un paso.</p>
+    </section>
+
+    <section class="panel p-5 sm:p-7">
+      <h2 class="text-2xl">Fotos</h2>
+      <p class="mt-1 text-muted">La primera será la portada. Hasta 10 imágenes de 5 MB como máximo.</p>
+      <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div *ngFor="let image of existingImages; let index = index" class="relative aspect-[4/3] overflow-hidden rounded-xl">
+          <img appImgFallback [src]="image.url | media" alt="" class="h-full w-full object-cover" />
+          <span *ngIf="index === 0" class="absolute bottom-1.5 left-1.5 rounded-full bg-ink/80 px-2 text-sm text-paper">Portada</span>
+          <button type="button" class="absolute right-1.5 top-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-ink/80 text-paper" aria-label="Quitar imagen" (click)="removeExistingImage(image)">
+            <i class="bi bi-x-lg text-sm" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div *ngFor="let image of newImages; let index = index" class="relative aspect-[4/3] overflow-hidden rounded-xl">
+          <img [src]="image.preview" alt="" class="h-full w-full object-cover" />
+          <span *ngIf="index === 0 && !existingImages.length" class="absolute bottom-1.5 left-1.5 rounded-full bg-ink/80 px-2 text-sm text-paper">Portada</span>
+          <button type="button" class="absolute right-1.5 top-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-ink/80 text-paper" aria-label="Quitar imagen" (click)="removeNewImage(index)">
+            <i class="bi bi-x-lg text-sm" aria-hidden="true"></i>
+          </button>
+        </div>
+        <label for="images" class="flex aspect-[4/3] cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-ink/30 text-muted transition-colors hover:border-ink">
+          <i class="bi bi-plus-lg text-2xl" aria-hidden="true"></i>
+          <span>Añadir fotos</span>
+        </label>
+      </div>
+      <input id="images" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif" class="sr-only" (change)="onImages($event)" />
+      <p *ngIf="imageError" class="field-error">{{ imageError }}</p>
+      <p *ngIf="submitted && imageCount === 0 && !imageError" class="field-error">Añade al menos una foto.</p>
+    </section>
+
+    <section class="panel p-5 sm:p-7">
+      <h2 class="text-2xl">Etiquetas <span class="font-sans text-base font-normal text-muted">(opcional)</span></h2>
+      <div *ngIf="hashtags.length" class="mt-3 flex flex-wrap gap-2">
+        <button *ngFor="let tag of hashtags; let index = index" type="button" class="chip" [attr.aria-label]="'Quitar etiqueta ' + tag" (click)="remove('hashtags', index)">
+          #{{ tag }}
+          <i class="bi bi-x-lg text-xs" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="mt-3 flex gap-2">
+        <label for="tag-input" class="sr-only">Añadir etiqueta</label>
+        <input
+          #tagInput
+          id="tag-input"
+          class="input"
+          maxlength="40"
+          placeholder="vegano"
+          (keydown.enter)="$event.preventDefault(); add('hashtags', tagInput)"
+        />
+        <button type="button" class="btn-outline shrink-0" (click)="add('hashtags', tagInput)">Añadir</button>
+      </div>
+    </section>
+
+    <p *ngIf="error" class="rounded-lg bg-tomato-soft px-3 py-2 text-tomato" role="alert">{{ error }}</p>
+
+    <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+      <a [routerLink]="recipeId ? ['/recipe', recipeId] : ['/my-panel']" class="btn-outline">Cancelar</a>
+      <button type="submit" class="btn-primary" [disabled]="saving">
+        {{ saving ? 'Guardando…' : recipeId ? 'Guardar cambios' : 'Publicar receta' }}
+      </button>
+    </div>
+  </form>
+</div>

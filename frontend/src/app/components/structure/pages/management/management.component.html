@@ -1,61 +1,85 @@
-<app-main-container>
-  <div class="w-full h-full">
-    <div class="grid grid-cols-3 gap-4 w-full p-4">
-      <div
-        class="rounded border space-y-2 border-header-secondary border-solid flex flex-col items-center p-4 bg-secondary h-full">
-        <div class="w-full h-full flex flex-col justify-center items-center text-header-text">
-          <div class="w-full flex justify-center items-center">
-            <i class="bi bi-person-circle text-[48px]"></i>
-          </div>
-          <div class="w-full flex justify-center items-center">
-            <span>Mi Perfil</span>
-          </div>
-          <div class="w-full">
-            <button (click)="redirect('profile')"
-              class="bg-accent rounded px-[16px] w-full text-text-inverted mt-4 flex justify-center items-center space-x-2">
-              <span>Entrar</span>
-              <i class="bi bi-arrow-right"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        class="rounded border space-y-2 border-header-secondary border-solid flex flex-col items-center p-4 bg-secondary h-full">
-        <div class="w-full h-full flex flex-col justify-center items-center text-header-text">
-          <div class="w-full flex justify-center items-center">
-            <i class="bi bi-list-ol text-[48px]"></i>
-          </div>
-          <div class="w-full flex justify-center items-center">
-            <span>Mis recetas</span>
-          </div>
-          <div class="w-full">
-            <button (click)="redirect('recipes')"
-              class="bg-accent rounded px-[16px] w-full text-text-inverted mt-4 flex justify-center items-center space-x-2">
-              <span>Entrar</span>
-              <i class="bi bi-arrow-right"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        class="rounded border space-y-2 border-header-secondary border-solid flex flex-col items-center p-4 bg-secondary h-full">
-        <div class="w-full h-full flex flex-col justify-center items-center text-header-text">
-          <div class="w-full flex justify-center items-center">
-            <i class="bi bi-bookmark-plus text-[48px]"></i>
-          </div>
-          <div class="w-full flex justify-center items-center">
-            <span>Mis Categorias</span>
-          </div>
-          <div class="w-full">
-            <button (click)="redirect('categories')"
-              class="bg-accent rounded px-[16px] w-full text-text-inverted mt-4 flex justify-center items-center space-x-2">
-              <span>Entrar</span>
-              <i class="bi bi-arrow-right"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
+<div class="page pt-8 sm:pt-12">
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <h1 class="text-4xl sm:text-5xl">Mi panel</h1>
+    <a routerLink="/recipes/new" class="btn-primary">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      Nueva receta
+    </a>
   </div>
-</app-main-container>
+
+  <div class="mt-6 flex gap-6 border-b border-line" role="tablist">
+    <button type="button" role="tab" class="tab" [class.tab-active]="tab === 'recipes'" [attr.aria-selected]="tab === 'recipes'" (click)="tab = 'recipes'">
+      Mis recetas <span class="text-muted">{{ recipes.length }}</span>
+    </button>
+    <button type="button" role="tab" class="tab" [class.tab-active]="tab === 'categories'" [attr.aria-selected]="tab === 'categories'" (click)="tab = 'categories'">
+      Mis categorías <span class="text-muted">{{ categories.length }}</span>
+    </button>
+  </div>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <div *ngIf="!loading && tab === 'recipes'" class="mt-6">
+    <ul *ngIf="recipes.length; else noRecipes" class="divide-y divide-line">
+      <li *ngFor="let recipe of recipes" class="flex items-center gap-4 py-4">
+        <img appImgFallback [src]="recipe.images[0]?.url | media" alt="" class="h-16 w-20 shrink-0 rounded-lg object-cover sm:h-20 sm:w-28" />
+        <div class="min-w-0 flex-1">
+          <a [routerLink]="['/recipe', recipe.id]" class="block truncate font-display text-xl hover:underline">{{ recipe.title }}</a>
+          <p class="flex flex-wrap items-center gap-x-3 text-[0.9375rem] text-muted">
+            <span>{{ recipe.category?.name ?? 'Sin categoría' }}</span>
+            <span *ngIf="recipe.ratingsCount > 0">
+              <i class="bi bi-star-fill text-saffron" aria-hidden="true"></i>
+              {{ recipe.averageRating | number: '1.1-1' : 'es' }}
+            </span>
+            <span>{{ recipe.commentsCount }} {{ recipe.commentsCount === 1 ? 'comentario' : 'comentarios' }}</span>
+          </p>
+        </div>
+        <a [routerLink]="['/recipe', recipe.id, 'edit']" class="icon-btn" [attr.aria-label]="'Editar ' + recipe.title">
+          <i class="bi bi-pencil" aria-hidden="true"></i>
+        </a>
+        <button type="button" class="icon-btn text-tomato" [attr.aria-label]="'Eliminar ' + recipe.title" (click)="removeRecipe(recipe)">
+          <i class="bi bi-trash3" aria-hidden="true"></i>
+        </button>
+      </li>
+    </ul>
+    <ng-template #noRecipes>
+      <app-empty-state title="Tu recetario está vacío" text="Sube la primera: esa que siempre te piden.">
+        <a routerLink="/recipes/new" class="btn-primary">Subir receta</a>
+      </app-empty-state>
+    </ng-template>
+  </div>
+
+  <div *ngIf="!loading && tab === 'categories'" class="mt-6 max-w-2xl">
+    <p class="text-muted">Las categorías son compartidas: cualquiera puede usarlas en sus recetas, pero solo tú editas las que has creado.</p>
+
+    <form class="mt-4 flex gap-2" (ngSubmit)="addCategory()">
+      <label for="new-category" class="sr-only">Nueva categoría</label>
+      <input id="new-category" class="input" maxlength="40" placeholder="Nombre de la categoría" [formControl]="newCategory" />
+      <button type="submit" class="btn-primary shrink-0" [disabled]="!newCategory.value.trim()">Añadir</button>
+    </form>
+
+    <ul *ngIf="categories.length; else noCategories" class="mt-4 divide-y divide-line">
+      <li *ngFor="let category of categories" class="flex min-h-[60px] items-center gap-2 py-2">
+        <ng-container *ngIf="editingId === category.id; else readCategory">
+          <form class="flex flex-1 gap-2" (ngSubmit)="saveCategory(category)">
+            <label [attr.for]="'edit-' + category.id" class="sr-only">Nombre de la categoría</label>
+            <input [id]="'edit-' + category.id" class="input" maxlength="40" [formControl]="editingName" />
+            <button type="submit" class="btn-primary shrink-0">Guardar</button>
+            <button type="button" class="btn-ghost shrink-0" (click)="editingId = null">Cancelar</button>
+          </form>
+        </ng-container>
+        <ng-template #readCategory>
+          <span class="min-w-0 flex-1 truncate">{{ category.name }}</span>
+          <button type="button" class="icon-btn" [attr.aria-label]="'Editar ' + category.name" (click)="startEditing(category)">
+            <i class="bi bi-pencil" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="icon-btn text-tomato" [attr.aria-label]="'Eliminar ' + category.name" (click)="removeCategory(category)">
+            <i class="bi bi-trash3" aria-hidden="true"></i>
+          </button>
+        </ng-template>
+      </li>
+    </ul>
+    <ng-template #noCategories>
+      <p class="mt-5 text-muted">Aún no has creado ninguna categoría.</p>
+    </ng-template>
+  </div>
+</div>

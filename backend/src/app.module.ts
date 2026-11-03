@@ -1,56 +1,41 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from './users/users.module';
-import { RecipesModule } from './recipes/recipes.module';
-import { User } from './users/users.entity';
-import { Recipe } from './recipes/recipes.entity';
-import { UsersController } from './users/users.controller';
-import { RecipesController } from './recipes/recipes.controller';
-import { UsersService } from './users/users.service';
-import { CategoriesService } from './categories/categories.service';
-import { CategoriesController } from './categories/categories.controller';
+import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AdminModule } from './admin/admin.module';
 import { CategoriesModule } from './categories/categories.module';
-import { Category } from './categories/categories.entity';
-import { ImagesModule } from './images/images.module';
-import { ImagesController } from './images/images.controller';
-import { ImagesService } from './images/images.service';
-import { Image } from './images/images.entity';
-import { RecipesService } from './recipes/recipes.service';
-import { Preparations } from './preparations/preparations.entity';
-import { PreparationsModule } from './preparations/preparations.module';
-import { PreparationsController } from './preparations/preparations.controller';
-import { PreparationsService } from './preparations/preparations.service';
-import { Ingredients } from './ingredients/ingredients.entity';
-import { IngredientsModule } from './ingredients/ingredients.module';
-import { IngredientsController } from './ingredients/ingredients.controller';
-import { IngredientsService } from './ingredients/ingredients.service';
-import { Hashtags } from './hashtags/hashtags.entity';
+import { CommentsModule } from './comments/comments.module';
+import { databaseOptions } from './database.config';
+import { PostsModule } from './posts/posts.module';
+import { RatingsModule } from './ratings/ratings.module';
+import { RecipesModule } from './recipes/recipes.module';
+import { UsersModule } from './users/users.module';
+
+function jwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret && process.env.NODE_ENV === 'production') {
+    throw new Error('JWT_SECRET es obligatorio en producción');
+  }
+  return secret || 'dev-secret';
+}
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      port: +(process.env.DB_PORT || 3306),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
-      entities: [User, Recipe, Category, Image, Preparations, Ingredients, Hashtags],
-      synchronize: true, // Solo para desarrollo
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRoot(databaseOptions()),
+    // Se registra aquí, después de ConfigModule, para que lea JWT_SECRET del .env
+    JwtModule.register({
+      global: true,
+      secret: jwtSecret(),
+      signOptions: { expiresIn: '7d' },
     }),
-    TypeOrmModule.forFeature([User, Recipe, Category, Image, Preparations, Ingredients]),
-    UsersModule, // <-- Asegúrate de agregar esto
+    UsersModule,
     RecipesModule,
     CategoriesModule,
-    ImagesModule,
-    PreparationsModule,
-    IngredientsModule
+    CommentsModule,
+    RatingsModule,
+    PostsModule,
+    AdminModule,
   ],
-  controllers: [UsersController, RecipesController, CategoriesController, ImagesController, PreparationsController, IngredientsController],
-  providers:[UsersService, RecipesService, CategoriesService, ImagesService, PreparationsService, IngredientsService],
 })
 export class AppModule {}

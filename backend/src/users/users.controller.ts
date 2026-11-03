@@ -1,40 +1,66 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CurrentUser } from 'src/common/auth/current-user.decorator';
+import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
+import { imageUpload } from 'src/common/uploads';
 import { UsersService } from './users.service';
 import { User } from './users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginDto } from './dto/login.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
-
-  @Get()
-  getAllUsers(): Promise<User[]> {
-    return this.usersService.getAllUsers()
-  }
-
-  @Get('token/:token')
-  getUserByToken(@Param('token') token: string): Promise<User | null> {
-    return this.usersService.getUserByToken(token)
-  }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post('create')
-  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+  createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
   }
 
-  @Patch(':id')
-  async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.updateUser(id, updateUserDto);
-  }
-
-  @Delete(':id')
-  async deleteUser(@Param('id') id: string) {
-    return this.usersService.deleteUser(id);
-  }
-
   @Post('login')
-  login(@Body() body: { email: string; password: string }) {
+  @HttpCode(200)
+  login(@Body() body: LoginDto) {
     return this.usersService.login(body.email, body.password);
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  me(@CurrentUser() user: User) {
+    return this.usersService.toPrivate(user);
+  }
+
+  @Patch('me')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('avatar', imageUpload('avatars')))
+  updateMe(
+    @CurrentUser() user: User,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() avatar?: Express.Multer.File,
+  ) {
+    return this.usersService.updateUser(user, updateUserDto, avatar);
+  }
+
+  @Delete('me')
+  @UseGuards(JwtAuthGuard)
+  deleteMe(@CurrentUser() user: User) {
+    return this.usersService.deleteOwnAccount(user);
+  }
+
+  @Get(':id')
+  getProfile(@Param('id') id: string) {
+    return this.usersService.getProfile(id);
   }
 }

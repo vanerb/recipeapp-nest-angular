@@ -1,11 +1,8 @@
-import { IsEmail, IsNotEmpty, IsString, IsStrongPassword, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
+  @MaxLength(40)
   name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  userId: string;
 }

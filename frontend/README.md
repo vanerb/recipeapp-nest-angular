@@ -1,27 +1,64 @@
-# Frontend
+# Recetas Creativas: web
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.3.
+Web con Angular 17 y Tailwind CSS. Para la visión general del proyecto, consulta el [README principal](../README.md).
 
-## Development server
+## Puesta en marcha
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```bash
+npm install
+npm start
+```
 
-## Code scaffolding
+La web queda en `http://localhost:4200` y espera la API en `http://localhost:3002`. Esa dirección se cambia en [environment.ts](src/environments/environment.ts).
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Scripts
 
-## Build
+| Comando | Qué hace |
+| --- | --- |
+| `npm start` | Servidor de desarrollo, conectado a la API |
+| `npm run build` | Versión de producción, conectada a la API |
+| `npm run start:demo` | Servidor de desarrollo de la demo, sin API |
+| `npm run build:demo` | Versión estática de la demo |
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Las builds se generan en `dist/frontend/browser`.
 
-## Running unit tests
+## Estructura
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```text
+src/app/
+  components/structure/
+    menu/        Cabecera y pie
+    pages/       Una carpeta por página
+    utilities/   Tarjetas, estrellas, avatar, modales y avisos
+  demo/          API simulada de la demo
+  guards/        Protección de rutas con sesión y de administración
+  interfaces/    Tipos de los datos de la API
+  services/      Llamadas a la API, sesión, modales y avisos
+src/assets/demo/ Datos e ilustraciones de ejemplo
+```
 
-## Running end-to-end tests
+## Páginas
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+| Ruta | Página | Acceso |
+| --- | --- | --- |
+| `/` | Inicio | Público |
+| `/recipes` | Búsqueda de recetas | Público |
+| `/recipe/:id` | Detalle, valoración y comentarios | Público |
+| `/community` | Publicaciones | Público |
+| `/profile/:id` | Perfil de un usuario | Público |
+| `/login`, `/register` | Acceso y registro | Público |
+| `/recipes/new`, `/recipe/:id/edit` | Crear y editar recetas | Con sesión |
+| `/my-panel` | Mis recetas y categorías | Con sesión |
+| `/settings` | Perfil, contraseña y baja | Con sesión |
+| `/admin` | Panel de administración | Administración |
 
-## Further help
+## La demo
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+La build de demo sustituye `environment.ts` por [environment.demo.ts](src/environments/environment.demo.ts). Con esa configuración, [DemoApiInterceptor](src/app/demo/demo-api.interceptor.ts) responde a las llamadas a la API dentro del navegador:
+
+- Parte de [seed.json](src/assets/demo/seed.json), el mismo archivo que usa el seed del backend.
+- Guarda los cambios solo en el `localStorage` de cada visitante.
+- No guarda ni comprueba contraseñas.
+- Usa rutas con `#`, porque un hosting estático no reescribe las URL.
+
+El flujo [demo.yml](../.github/workflows/demo.yml) la publica en GitHub Pages con cada push a `master`. Antes hay que activar *Settings > Pages > Source: GitHub Actions* en el repositorio.

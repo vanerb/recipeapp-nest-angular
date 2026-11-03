@@ -1,125 +1,96 @@
-<app-main-container>
-  <div class="w-full flex flex-col justify-center items-center">
-    <div class="w-full max-h-[100px] flex rounded bg-secondary justify-center ">
-      <img class="object-cover"
-           src="assets/banner-main.jpg">
-    </div>
-
-
-    <div class="w-[800px] h-full p-4 space-y-8">
-      <div class="space-y-2">
-        <div class="w-full text-center font-bold text-xl">
-          <h1>🌟 Bienvenido a Recetas Creativas</h1>
-          <app-separator class="w-full"></app-separator>
-        </div>
-        <div>
-          <p>
-            ¿Alguna vez has preparado un platillo tan original que todos a tu alrededor quedaron sorprendidos? ¿Te
-            apasiona experimentar en la cocina, mezclar sabores, romper reglas y crear recetas que no se encuentran en
-            ningún libro tradicional? Entonces has llegado al lugar perfecto.
-          </p>
-          <p>
-            Recetas Creativas es más que una simple página de cocina. Es una comunidad viva y en constante crecimiento
-            donde personas como tú comparten sus creaciones culinarias más atrevidas, originales y deliciosas. Aquí
-            celebramos la creatividad gastronómica, la pasión por la buena comida y el deseo de compartir con otros lo que
-            nace en tu cocina.
-          </p>
-        </div>
-      </div>
-
-
-      <div class="space-y-2">
-        <div class="w-full text-center font-bold text-xl">
-          <h1>🍽️ ¿Qué puedes hacer en nuestra web?</h1>
-          <app-separator class="w-full"></app-separator>
-        </div>
-        <div>
-          <ul class="list-disc">
-            <li>Sube tus propias recetas: Comparte tus ideas únicas, ya sea un postre inspirado en tu infancia o una
-              fusión inesperada de cocinas del mundo. Cada receta tiene su espacio aquí.
-            </li>
-            <li>Explora recetas únicas: Descubre platillos sorprendentes, con ingredientes inusuales o presentaciones
-              espectaculares. Desde cocina vegana experimental hasta snacks reinventados.
-            </li>
-            <li>Conecta con otros cocineros creativos: Comenta, guarda tus recetas favoritas y conoce a otros amantes de
-              la cocina que comparten tu misma pasión.
-            </li>
-            <li>Conecta con otros cocineros creativos: Comenta, guarda tus recetas favoritas y conoce a otros amantes de
-              la cocina que comparten tu misma pasión.
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <div class="w-full text-center font-bold text-xl">
-          <h1>🎯 Nuestra misión</h1>
-          <app-separator class="w-full"></app-separator>
-        </div>
-        <div>
-          <p>
-            Queremos romper con la idea de que la cocina debe seguir reglas estrictas o fórmulas intocables. En Recetas
-            Creativas creemos que la cocina es un arte, una forma de expresión y una manera de conectar con el mundo.
-            Nuestra misión es ofrecerte un espacio libre, inclusivo y divertido donde cualquier persona —sin importar su
-            nivel de experiencia— pueda compartir su visión culinaria.
-          </p>
-
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <div class="w-full text-center font-bold text-xl">
-          <h1>📸 Más que recetas, experiencias</h1>
-          <app-separator class="w-full"></app-separator>
-        </div>
-        <div>
-          <p>
-            No se trata solo de ingredientes y pasos. Aquí cada receta cuenta una historia: el origen de una idea, un
-            recuerdo familiar reinterpretado, una noche de improvisación que resultó en algo increíble. Acompaña tus
-            creaciones con fotos, anécdotas, consejos y detalles que las hagan únicas. ¡Queremos conocer lo que hay detrás
-            de tu plato!
-          </p>
-
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <div class="w-full text-center font-bold text-xl">
-          <h1>🚀 Únete a la revolución culinaria</h1>
-          <app-separator class="w-full"></app-separator>
-        </div>
-        <div>
-          <p>
-            Cada día, cientos de personas publican sus creaciones, exploran nuevas formas de cocinar y se animan a
-            experimentar sin miedo. Tú puedes ser parte de esto. No importa si eres chef profesional, aficionado con
-            talento o simplemente alguien curioso con ganas de jugar con los sabores: este es tu espacio.
-          </p>
-
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <div class="w-full text-center font-bold text-xl">
-          <h1>💬 ¿Estás listo para inspirar al mundo con tu cocina?</h1>
-          <app-separator class="w-full"></app-separator>
-        </div>
-        <div>
-          <p>
-            Crea una cuenta, sube tu primera receta y empieza a formar parte de la comunidad. Comparte, comenta, prueba,
-            reinventa. La cocina creativa te espera.
-          </p>
-
-        </div>
-      </div>
-
-      <div *ngIf="!isLogedIn" class="w-full flex justify-between justify-center items-center space-x-2">
-        <button (click)="login()" class="rounded bg-accent w-full text-text-inverted">Iniciar sesión</button>
-
-        <button (click)="register()" class="rounded bg-accent w-full text-text-inverted">Registrarse</button>
-      </div>
-
-
+<section class="page grid items-center gap-8 pb-12 pt-8 lg:grid-cols-[1fr_1.1fr] lg:gap-14 lg:pb-16 lg:pt-14">
+  <div>
+    <p class="eyebrow">Una comunidad de cocina casera</p>
+    <h1 class="mt-3 text-[2.75rem] sm:text-6xl">
+      Las recetas que de verdad se <em class="font-normal text-herb">cocinan</em> en casa.
+    </h1>
+    <p class="mt-5 max-w-lg text-lg text-muted">
+      Sube tus platos, valora los de otras personas con estrellas y enseña cómo te han quedado.
+      Cada foto de la comunidad te lleva directa a su receta.
+    </p>
+    <div class="mt-7 flex flex-wrap gap-3">
+      <a routerLink="/recipes" class="btn-primary">Explorar recetas</a>
+      <a [routerLink]="(authService.user$ | async) ? '/recipes/new' : '/register'" class="btn-outline">
+        Compartir la mía
+      </a>
     </div>
   </div>
+  <div class="relative">
+    <img
+      src="assets/hero.webp"
+      alt="Mesa de madera vista desde arriba con una tabla de carne, patatas, salsas y ensalada"
+      class="aspect-[4/3] w-full rounded-3xl object-cover object-top lg:aspect-[5/4]"
+    />
+    <a
+      *ngIf="topRecipes[0] as best"
+      [routerLink]="['/recipe', best.id]"
+      class="panel absolute -bottom-5 left-3 right-3 block p-4 shadow-lift transition-transform hover:-translate-y-0.5 sm:left-auto sm:right-5 sm:w-80"
+    >
+      <span class="text-sm font-medium text-tomato">La mejor valorada</span>
+      <span class="mt-0.5 block font-display text-xl leading-tight">{{ best.title }}</span>
+      <span class="mt-1.5 flex items-center gap-2 text-[0.9375rem]">
+        <app-stars [value]="best.averageRating"></app-stars>
+        <span class="text-muted">{{ best.ratingsCount }} valoraciones</span>
+      </span>
+    </a>
+  </div>
+</section>
 
-</app-main-container>
+<app-loader *ngIf="loading"></app-loader>
+
+<div *ngIf="failed" class="page">
+  <app-empty-state
+    icon="bi-plug"
+    title="No hemos podido cargar las recetas"
+    text="Comprueba que la API está en marcha y recarga la página."
+  ></app-empty-state>
+</div>
+
+<ng-container *ngIf="!loading && !failed">
+  <section *ngIf="categories.length" class="page pt-6" aria-label="Categorías">
+    <div class="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:px-0">
+      <a
+        *ngFor="let category of categories"
+        routerLink="/recipes"
+        [queryParams]="{ category: category.id }"
+        class="chip"
+        >{{ category.name }}</a
+      >
+    </div>
+  </section>
+
+  <section *ngIf="topRecipes.length" class="page mt-12">
+    <div class="flex items-end justify-between gap-4 border-b border-line pb-4">
+      <h2 class="text-3xl sm:text-4xl">Lo que más gusta</h2>
+      <a routerLink="/recipes" [queryParams]="{ sort: 'top' }" class="shrink-0 font-medium text-herb hover:underline">Ver todas</a>
+    </div>
+    <div class="recipe-grid mt-8">
+      <app-card *ngFor="let recipe of topRecipes" [data]="recipe"></app-card>
+    </div>
+  </section>
+
+  <section *ngIf="posts.length" class="mt-16 bg-herb-soft/60 py-14">
+    <div class="page">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-3xl sm:text-4xl">Recién salido de la cocina</h2>
+          <p class="mt-1 text-muted">Lo que la comunidad ha preparado estos días.</p>
+        </div>
+        <a routerLink="/community" class="shrink-0 font-medium text-herb hover:underline">Ver más</a>
+      </div>
+      <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <app-post-card *ngFor="let post of posts" [post]="post"></app-post-card>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="(authService.user$ | async) === null" class="page mt-16">
+    <div class="rounded-3xl bg-herb px-6 py-12 text-center text-paper sm:px-12">
+      <h2 class="text-3xl text-paper sm:text-4xl">¿Qué vas a cocinar hoy?</h2>
+      <p class="mx-auto mt-2 max-w-lg text-paper/85">
+        Crea tu cuenta para guardar tus recetas en tu perfil, valorar las de otras personas y publicar tus platos.
+      </p>
+      <a routerLink="/register" class="btn mt-6 bg-paper text-ink hover:bg-white">Crear cuenta gratis</a>
+    </div>
+  </section>
+</ng-container>

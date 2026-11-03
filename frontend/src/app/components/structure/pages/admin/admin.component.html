@@ -1,1 +1,146 @@
-<p>admin works!</p>
+<div class="page pt-8 sm:pt-12">
+  <h1 class="text-4xl sm:text-5xl">Administración</h1>
+  <p class="mt-2 max-w-2xl text-lg text-muted">Gestiona las cuentas y modera cualquier contenido de la comunidad.</p>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <div *ngIf="failed" class="mt-8">
+    <app-empty-state icon="bi-plug" title="No hemos podido cargar el panel" text="Comprueba que la API está en marcha y recarga la página."></app-empty-state>
+  </div>
+
+  <ng-container *ngIf="!loading && !failed">
+    <dl *ngIf="stats as data" class="mt-6 flex flex-wrap gap-x-8 gap-y-2 border-y border-line py-4">
+      <div class="flex items-baseline gap-1.5">
+        <dd class="font-display text-2xl">{{ data.ratings }}</dd>
+        <dt class="text-muted">valoraciones</dt>
+      </div>
+      <div class="flex items-baseline gap-1.5">
+        <dd class="font-display text-2xl" [class.text-tomato]="data.blockedUsers > 0">{{ data.blockedUsers }}</dd>
+        <dt class="text-muted">{{ data.blockedUsers === 1 ? 'cuenta bloqueada' : 'cuentas bloqueadas' }}</dt>
+      </div>
+    </dl>
+
+    <div class="-mx-4 mt-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+      <div class="flex min-w-max gap-5 border-b border-line" role="tablist">
+        <button
+          *ngFor="let item of tabs"
+          type="button"
+          role="tab"
+          class="tab"
+          [class.tab-active]="tab === item.key"
+          [attr.aria-selected]="tab === item.key"
+          (click)="selectTab(item.key)"
+        >
+          {{ item.label }} <span class="text-muted">{{ item.count }}</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="relative mt-5 max-w-md">
+      <i class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" aria-hidden="true"></i>
+      <input type="search" class="input pl-10" placeholder="Filtrar esta lista" aria-label="Filtrar esta lista" [(ngModel)]="query" />
+    </div>
+
+    <ul *ngIf="tab === 'users'" class="mt-3 divide-y divide-line">
+      <li *ngFor="let user of filteredUsers" class="flex flex-col gap-3 py-4 md:flex-row md:items-center">
+        <a [routerLink]="['/profile', user.id]" class="flex min-w-0 flex-1 items-center gap-3">
+          <app-avatar [user]="user" [size]="44"></app-avatar>
+          <span class="min-w-0">
+            <span class="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <span class="font-medium">{{ user.name }}</span>
+              <span *ngIf="isMe(user)" class="rounded-full bg-paper px-2 text-sm text-muted">Tú</span>
+              <span *ngIf="user.role === 'admin'" class="rounded-full bg-herb-soft px-2 text-sm text-herb">Administración</span>
+              <span *ngIf="user.isBlocked" class="rounded-full bg-tomato-soft px-2 text-sm text-tomato">Bloqueada</span>
+            </span>
+            <span class="block truncate text-[0.9375rem] text-muted">{{ user.email }}</span>
+            <span class="block text-sm text-muted">
+              {{ user.recipesCount }} {{ user.recipesCount === 1 ? 'receta' : 'recetas' }} ·
+              {{ user.postsCount }} {{ user.postsCount === 1 ? 'publicación' : 'publicaciones' }} ·
+              se unió {{ user.createdAt | timeAgo }}
+            </span>
+          </span>
+        </a>
+        <div *ngIf="!isMe(user)" class="flex flex-wrap gap-2">
+          <button type="button" class="btn-outline" (click)="toggleAdmin(user)">
+            {{ user.role === 'admin' ? 'Quitar admin' : 'Hacer admin' }}
+          </button>
+          <button type="button" class="btn-outline" (click)="toggleBlock(user)">
+            {{ user.isBlocked ? 'Desbloquear' : 'Bloquear' }}
+          </button>
+          <button type="button" class="btn-ghost text-tomato" (click)="removeUser(user)">Eliminar</button>
+        </div>
+      </li>
+    </ul>
+
+    <ul *ngIf="tab === 'recipes'" class="mt-3 divide-y divide-line">
+      <li *ngFor="let recipe of filteredRecipes" class="flex items-center gap-4 py-4">
+        <img appImgFallback [src]="recipe.images[0]?.url | media" alt="" class="h-16 w-20 shrink-0 rounded-lg object-cover" />
+        <div class="min-w-0 flex-1">
+          <a [routerLink]="['/recipe', recipe.id]" class="block truncate font-display text-xl hover:underline">{{ recipe.title }}</a>
+          <p class="truncate text-[0.9375rem] text-muted">
+            <a [routerLink]="['/profile', recipe.user.id]" class="hover:underline">{{ recipe.user.name }}</a>
+            · {{ recipe.category?.name ?? 'Sin categoría' }} · {{ recipe.createdAt | timeAgo }}
+          </p>
+        </div>
+        <a [routerLink]="['/recipe', recipe.id, 'edit']" class="icon-btn shrink-0" [attr.aria-label]="'Editar ' + recipe.title">
+          <i class="bi bi-pencil" aria-hidden="true"></i>
+        </a>
+        <button type="button" class="icon-btn shrink-0 text-tomato" [attr.aria-label]="'Eliminar ' + recipe.title" (click)="removeRecipe(recipe)">
+          <i class="bi bi-trash3" aria-hidden="true"></i>
+        </button>
+      </li>
+    </ul>
+
+    <ul *ngIf="tab === 'posts'" class="mt-3 divide-y divide-line">
+      <li *ngFor="let post of filteredPosts" class="flex items-center gap-4 py-4">
+        <img appImgFallback [src]="post.image | media" alt="" class="h-16 w-20 shrink-0 rounded-lg object-cover" />
+        <div class="min-w-0 flex-1">
+          <p class="line-clamp-2">{{ post.caption }}</p>
+          <p class="truncate text-[0.9375rem] text-muted">
+            <a [routerLink]="['/profile', post.user.id]" class="hover:underline">{{ post.user.name }}</a>
+            · <a [routerLink]="['/recipe', post.recipe.id]" class="hover:underline">{{ post.recipe.title }}</a>
+          </p>
+        </div>
+        <button type="button" class="icon-btn shrink-0 text-tomato" aria-label="Eliminar publicación" (click)="removePost(post)">
+          <i class="bi bi-trash3" aria-hidden="true"></i>
+        </button>
+      </li>
+    </ul>
+
+    <ul *ngIf="tab === 'comments'" class="mt-3 divide-y divide-line">
+      <li *ngFor="let comment of filteredComments" class="flex items-center gap-4 py-4">
+        <div class="min-w-0 flex-1">
+          <p class="break-words">{{ comment.text }}</p>
+          <p class="truncate text-[0.9375rem] text-muted">
+            <a [routerLink]="['/profile', comment.user.id]" class="hover:underline">{{ comment.user.name }}</a>
+            · <a [routerLink]="['/recipe', comment.recipe.id]" class="hover:underline">{{ comment.recipe.title }}</a>
+            · {{ comment.createdAt | timeAgo }}
+          </p>
+        </div>
+        <button type="button" class="icon-btn shrink-0 text-tomato" aria-label="Eliminar comentario" (click)="removeComment(comment)">
+          <i class="bi bi-trash3" aria-hidden="true"></i>
+        </button>
+      </li>
+    </ul>
+
+    <ul *ngIf="tab === 'categories'" class="mt-3 max-w-2xl divide-y divide-line">
+      <li *ngFor="let category of filteredCategories" class="flex min-h-[60px] items-center gap-2 py-2">
+        <form *ngIf="editingId === category.id; else readCategory" class="flex flex-1 gap-2" (ngSubmit)="saveCategory(category)">
+          <label [attr.for]="'admin-edit-' + category.id" class="sr-only">Nombre de la categoría</label>
+          <input [id]="'admin-edit-' + category.id" class="input" maxlength="40" [formControl]="editingName" />
+          <button type="submit" class="btn-primary shrink-0">Guardar</button>
+          <button type="button" class="btn-ghost shrink-0" (click)="editingId = null">Cancelar</button>
+        </form>
+        <ng-template #readCategory>
+          <span class="min-w-0 flex-1 truncate">{{ category.name }}</span>
+          <button type="button" class="icon-btn" [attr.aria-label]="'Editar ' + category.name" (click)="startEditing(category)">
+            <i class="bi bi-pencil" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="icon-btn text-tomato" [attr.aria-label]="'Eliminar ' + category.name" (click)="removeCategory(category)">
+            <i class="bi bi-trash3" aria-hidden="true"></i>
+          </button>
+        </ng-template>
+      </li>
+    </ul>
+  </ng-container>
+</div>

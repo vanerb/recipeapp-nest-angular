@@ -1,47 +1,73 @@
-import {Injectable} from '@angular/core';
-import {CreateRecipe, Recipe, Recipes, UpdateRecipe} from '../interfaces/recipes';
-import {HttpClient} from '@angular/common/http';
-import {firstValueFrom, Observable, take} from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import {
+  RatingSummary,
+  Recipe,
+  RecipeComment,
+  RecipeFilters,
+} from '../interfaces/recipes';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RecipesService {
-  private baseUrl = 'http://localhost:3002/recipes';
+  private readonly baseUrl = `${environment.apiUrl}/recipes`;
 
-  constructor(private readonly http: HttpClient) {
+  constructor(private readonly http: HttpClient) {}
+
+  getAll(filters: RecipeFilters = {}): Observable<Recipe[]> {
+    let params = new HttpParams();
+    for (const [key, value] of Object.entries(filters)) {
+      if (value) {
+        params = params.set(key, value);
+      }
+    }
+    return this.http.get<Recipe[]>(this.baseUrl, { params });
   }
 
-
-  async get(id: string): Promise<Recipe> {
-    const recipes = await firstValueFrom(
-      this.http.get<Recipe[]>(this.baseUrl + "/" + id)
-    );
-    return recipes[0];  // Devuelves el único elemento del array
-  }
-
-  getAll(): Observable<Recipe[]> {
-    return this.http.get<Recipe[]>(this.baseUrl);
+  get(id: string): Observable<Recipe> {
+    return this.http.get<Recipe>(`${this.baseUrl}/${id}`);
   }
 
   getByUserId(id: string): Observable<Recipe[]> {
     return this.http.get<Recipe[]>(`${this.baseUrl}/user/${id}`);
   }
 
-  getByCategoryId(id: string): Observable<Recipe[]> {
-    return this.http.get<Recipe[]>(`${this.baseUrl}/category/${id}`);
-  }
-
   create(command: FormData): Observable<Recipe> {
-    return this.http.post<Recipe>(this.baseUrl, command)
-  }
-
-  delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`)
+    return this.http.post<Recipe>(this.baseUrl, command);
   }
 
   update(command: FormData, id: string): Observable<Recipe> {
-    return this.http.patch<Recipe>(`${this.baseUrl}/${id}`, command)
+    return this.http.patch<Recipe>(`${this.baseUrl}/${id}`, command);
+  }
+
+  delete(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  getComments(id: string): Observable<RecipeComment[]> {
+    return this.http.get<RecipeComment[]>(`${this.baseUrl}/${id}/comments`);
+  }
+
+  addComment(id: string, text: string): Observable<RecipeComment> {
+    return this.http.post<RecipeComment>(`${this.baseUrl}/${id}/comments`, {
+      text,
+    });
+  }
+
+  deleteComment(id: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/comments/${id}`);
+  }
+
+  getRating(id: string): Observable<RatingSummary> {
+    return this.http.get<RatingSummary>(`${this.baseUrl}/${id}/rating`);
+  }
+
+  rate(id: string, value: number): Observable<RatingSummary> {
+    return this.http.put<RatingSummary>(`${this.baseUrl}/${id}/rating`, {
+      value,
+    });
   }
 }
-

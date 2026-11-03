@@ -1,76 +1,72 @@
-<app-main-container>
-  <div class="w-full max-h-[100px] flex rounded bg-secondary justify-center ">
-    <img class="object-cover"
-         src="assets/edit-profile.jpg">
-  </div>
-  <div class=" h-fit flex flex-col justify-center items-center">
-    <div class="w-full  h-fit">
-      <form [formGroup]="form" enctype="multipart/form-data" class=" p-4 rounded w-full h-fit space-y-4">
+<app-loader *ngIf="loading"></app-loader>
 
-        <h1 class="text-xl w-full text-center">Perfil</h1>
-        <app-separator class="w-full"></app-separator>
-        <div class="h-[calc(100%_-_60px)]  space-y-4 flex flex-col overflow-auto">
-          <div class="flex text-text-base flex-col">
-            <label for="name">Nombre: </label>
-            <input formControlName="name" class="p-2 rounded border" id="name"
-                   placeholder="Introduzca su nombre" type="text">
-          </div>
+<div *ngIf="notFound" class="page py-16">
+  <app-empty-state icon="bi-person" title="Este perfil no existe" text="Puede que la cuenta se haya eliminado.">
+    <a routerLink="/recipes" class="btn-primary">Ver recetas</a>
+  </app-empty-state>
+</div>
 
+<div *ngIf="failed" class="page py-16">
+  <app-empty-state icon="bi-plug" title="No hemos podido cargar el perfil" text="Comprueba que la API está en marcha y recarga la página."></app-empty-state>
+</div>
 
-          <div class="flex w-full items-center justify-end space-x-2 h-[60px]">
-            <div class=" flex justify-end items-center">
-              <button type="button" (click)="close()"
-                      class="px-[16px] h-[32px] rounded-full border-secondary border border-solid text-text-base">
-                Cancelar
-              </button>
-            </div>
-            <div class=" flex justify-end items-center">
-              <button type="button" (click)="updateProfile()"
-                      class="px-[16px] h-[32px] rounded-full bg-accent text-text-inverted">Actualizar
-              </button>
-            </div>
-          </div>
+<div *ngIf="!loading && !notFound && !failed && profile as user" class="page pt-8 sm:pt-12">
+  <header class="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
+    <app-avatar [user]="user" [size]="112"></app-avatar>
+    <div class="min-w-0 flex-1">
+      <h1 class="break-words text-4xl sm:text-5xl">{{ user.name }}</h1>
+      <p *ngIf="user.bio" class="mt-2 max-w-2xl text-lg text-muted">{{ user.bio }}</p>
+      <p *ngIf="!user.bio && isMine" class="mt-2 text-muted">
+        Aún no has escrito tu presentación.
+        <a routerLink="/settings" class="font-medium text-herb underline underline-offset-4">Añádela</a>
+      </p>
+      <dl class="mt-4 flex flex-wrap gap-x-8 gap-y-2">
+        <div class="flex items-baseline gap-1.5">
+          <dt class="order-2 text-muted">{{ user.recipesCount === 1 ? 'receta' : 'recetas' }}</dt>
+          <dd class="font-display text-2xl">{{ user.recipesCount }}</dd>
         </div>
-      </form>
-
-
-      <form [formGroup]="formPassword" enctype="multipart/form-data" class=" p-4 rounded w-full h-fit space-y-4">
-
-        <div class="h-[calc(100%_-_60px)]  space-y-4 flex flex-col overflow-auto">
-          <div class="w-full text-center">
-            <h1 class="text-xl w-full ">Cambiar contraseña</h1>
-            <app-separator class="w-full"></app-separator>
-          </div>
-
-          <div class="flex text-text-base flex-col">
-            <label for="password">Contraseña: </label>
-            <input formControlName="password" class="p-2 rounded border" id="password"
-                   type="password">
-          </div>
-          <div class="flex text-text-base flex-col">
-            <label for="repeatPassword">Repetir contraseña: </label>
-            <input formControlName="repeatPassword" class="p-2 rounded border" id="repeatPassword"
-                   type="password">
-          </div>
-
-
-          <div class="flex w-full items-center justify-end space-x-2 h-[60px]">
-            <div class=" flex justify-end items-center">
-              <button type="button" (click)="close()"
-                      class="px-[16px] h-[32px] rounded-full border-secondary border border-solid text-text-base">
-                Cancelar
-              </button>
-            </div>
-            <div class=" flex justify-end items-center">
-              <button type="button" (click)="updatePassword()"
-                      class="px-[16px] h-[32px] rounded-full bg-accent text-text-inverted">Actualizar
-              </button>
-            </div>
-          </div>
+        <div class="flex items-baseline gap-1.5">
+          <dt class="order-2 text-muted">{{ user.postsCount === 1 ? 'publicación' : 'publicaciones' }}</dt>
+          <dd class="font-display text-2xl">{{ user.postsCount }}</dd>
         </div>
-      </form>
+        <div *ngIf="user.averageRating > 0" class="flex items-baseline gap-1.5">
+          <dt class="order-2 text-muted">de nota media</dt>
+          <dd class="font-display text-2xl">{{ user.averageRating | number: '1.1-1' : 'es' }}</dd>
+        </div>
+      </dl>
     </div>
+    <a *ngIf="isMine" routerLink="/settings" class="btn-outline self-start sm:self-center">
+      <i class="bi bi-pencil" aria-hidden="true"></i>
+      Editar perfil
+    </a>
+  </header>
 
+  <div class="mt-10 flex gap-6 border-b border-line" role="tablist">
+    <button type="button" role="tab" class="tab" [class.tab-active]="tab === 'recipes'" [attr.aria-selected]="tab === 'recipes'" (click)="tab = 'recipes'">
+      Recetas
+    </button>
+    <button type="button" role="tab" class="tab" [class.tab-active]="tab === 'posts'" [attr.aria-selected]="tab === 'posts'" (click)="tab = 'posts'">
+      Publicaciones
+    </button>
   </div>
 
-</app-main-container>
+  <div *ngIf="tab === 'recipes'" class="mt-8">
+    <div *ngIf="recipes.length; else noRecipes" class="recipe-grid">
+      <app-card *ngFor="let recipe of recipes" [data]="recipe"></app-card>
+    </div>
+    <ng-template #noRecipes>
+      <app-empty-state title="Todavía no hay recetas" [text]="isMine ? 'Sube la primera: esa que siempre te piden.' : 'Vuelve pronto, seguro que hay algo en el horno.'">
+        <a *ngIf="isMine" routerLink="/recipes/new" class="btn-primary">Subir receta</a>
+      </app-empty-state>
+    </ng-template>
+  </div>
+
+  <div *ngIf="tab === 'posts'" class="mt-8">
+    <div *ngIf="posts.length; else noPosts" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <app-post-card *ngFor="let post of posts" [post]="post" (remove)="removePost($event)"></app-post-card>
+    </div>
+    <ng-template #noPosts>
+      <app-empty-state icon="bi-camera" title="Todavía no hay publicaciones" text="Aquí aparecerán las fotos de sus platos."></app-empty-state>
+    </ng-template>
+  </div>
+</div>

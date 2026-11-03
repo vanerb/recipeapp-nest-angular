@@ -1,49 +1,84 @@
-<div class="w-full h-[56px] bg-header-base border-b border-solid border-header-primary flex justify-between items-center">
-  <!-- Menú izquierdo -->
-  <div class="flex space-x-2 cursor-pointer">
-    <span
-      *ngFor="let item of getMenu('left')"
-      [ngClass]="{'bg-header-secondary text-text-inverted': item.name === selected}"
-      class="cursor-pointer h-full hover:bg-header-secondary hover:text-text-inverted p-4"
-      (click)="item.action?.()"
-    >
-      {{ item.name }}
-    </span>
-  </div>
+<header class="border-b border-line bg-paper/95 backdrop-blur">
+  <div class="page flex h-16 items-center gap-6">
+    <a routerLink="/" class="flex items-center gap-2 font-display text-xl font-medium tracking-tight">
+      <img src="favicon.svg" alt="" class="h-7 w-7" />
+      Recetas Creativas
+    </a>
 
-  <!-- Menú derecho -->
-  <div class="flex space-x-2 cursor-pointer items-center">
-    <ng-container *ngFor="let item of getMenu('right')">
-      <div class="relative group" *ngIf="item.children; else singleItem">
-        <span
-          [ngClass]="{'bg-header-secondary text-text-inverted': item.name === selected}"
-          class="cursor-pointer h-full hover:bg-header-secondary hover:text-text-inverted p-4"
-        >
-          {{ item.name }}
-        </span>
+    <nav class="hidden items-center gap-5 md:flex" aria-label="Principal">
+      <a
+        *ngFor="let link of links"
+        [routerLink]="link.path"
+        routerLinkActive="text-ink border-herb"
+        [routerLinkActiveOptions]="{ exact: link.exact }"
+        class="border-b-2 border-transparent py-1 font-medium text-muted transition-colors hover:text-ink"
+        >{{ link.label }}</a
+      >
+    </nav>
 
-        <!-- Submenú dropdown -->
-        <div class="absolute right-0 mt-2 hidden group-hover:flex flex-col bg-white border border-gray-200 shadow-lg z-50">
-          <span
-            *ngFor="let child of item.children"
-            class="px-4 py-2 hover:bg-header-secondary hover:text-text-inverted"
-            (click)="child.action?.()"
+    <div class="ml-auto flex items-center gap-2">
+      <ng-container *ngIf="authService.user$ | async as user; else guest">
+        <a routerLink="/recipes/new" class="btn-primary hidden sm:inline-flex">
+          <i class="bi bi-plus-lg" aria-hidden="true"></i>
+          Nueva receta
+        </a>
+        <div class="relative hidden md:block">
+          <button
+            type="button"
+            class="flex rounded-full"
+            aria-label="Menú de tu cuenta"
+            aria-haspopup="true"
+            [attr.aria-expanded]="userMenuOpen"
+            (click)="userMenuOpen = !userMenuOpen"
           >
-            {{ child.name }}
-          </span>
+            <app-avatar [user]="user" [size]="40"></app-avatar>
+          </button>
+          <div *ngIf="userMenuOpen" class="panel absolute right-0 mt-2 w-56 p-1.5 shadow-lift">
+            <p class="truncate px-3 py-2 text-sm text-muted">{{ user.email }}</p>
+            <a [routerLink]="['/profile', user.id]" class="block rounded-lg px-3 py-2 hover:bg-paper">Mi perfil</a>
+            <a routerLink="/my-panel" class="block rounded-lg px-3 py-2 hover:bg-paper">Mi panel</a>
+            <a routerLink="/settings" class="block rounded-lg px-3 py-2 hover:bg-paper">Ajustes</a>
+            <a *ngIf="user.role === 'admin'" routerLink="/admin" class="block rounded-lg px-3 py-2 hover:bg-paper">Administración</a>
+            <button type="button" class="block w-full rounded-lg px-3 py-2 text-left hover:bg-paper" (click)="logout()">
+              Cerrar sesión
+            </button>
+          </div>
         </div>
-      </div>
-
-      <!-- Ítem sin submenú -->
-      <ng-template #singleItem>
-        <span
-          [ngClass]="{'bg-header-secondary text-text-inverted': item.name === selected}"
-          class="cursor-pointer h-full hover:bg-header-secondary hover:text-text-inverted p-4"
-          (click)="item.action?.()"
-        >
-          {{ item.name }}
-        </span>
+      </ng-container>
+      <ng-template #guest>
+        <a routerLink="/login" class="btn-ghost hidden sm:inline-flex">Iniciar sesión</a>
+        <a routerLink="/register" class="btn-primary hidden sm:inline-flex">Crear cuenta</a>
       </ng-template>
-    </ng-container>
+
+      <button
+        type="button"
+        class="icon-btn md:hidden"
+        [attr.aria-label]="mobileOpen ? 'Cerrar menú' : 'Abrir menú'"
+        [attr.aria-expanded]="mobileOpen"
+        (click)="mobileOpen = !mobileOpen"
+      >
+        <i class="bi text-2xl" [ngClass]="mobileOpen ? 'bi-x-lg' : 'bi-list'" aria-hidden="true"></i>
+      </button>
+    </div>
   </div>
-</div>
+
+  <nav *ngIf="mobileOpen" class="border-t border-line bg-paper md:hidden" aria-label="Menú móvil">
+    <div class="page flex flex-col py-2">
+      <a *ngFor="let link of links" [routerLink]="link.path" class="rounded-lg px-2 py-2.5 font-medium hover:bg-ink/5">{{ link.label }}</a>
+      <ng-container *ngIf="authService.user$ | async as user; else mobileGuest">
+        <hr class="my-2 border-line" />
+        <a routerLink="/recipes/new" class="rounded-lg px-2 py-2.5 hover:bg-ink/5">Nueva receta</a>
+        <a [routerLink]="['/profile', user.id]" class="rounded-lg px-2 py-2.5 hover:bg-ink/5">Mi perfil</a>
+        <a routerLink="/my-panel" class="rounded-lg px-2 py-2.5 hover:bg-ink/5">Mi panel</a>
+        <a routerLink="/settings" class="rounded-lg px-2 py-2.5 hover:bg-ink/5">Ajustes</a>
+        <a *ngIf="user.role === 'admin'" routerLink="/admin" class="rounded-lg px-2 py-2.5 hover:bg-ink/5">Administración</a>
+        <button type="button" class="rounded-lg px-2 py-2.5 text-left hover:bg-ink/5" (click)="logout()">Cerrar sesión</button>
+      </ng-container>
+      <ng-template #mobileGuest>
+        <hr class="my-2 border-line" />
+        <a routerLink="/login" class="rounded-lg px-2 py-2.5 hover:bg-ink/5">Iniciar sesión</a>
+        <a routerLink="/register" class="rounded-lg px-2 py-2.5 hover:bg-ink/5">Crear cuenta</a>
+      </ng-template>
+    </div>
+  </nav>
+</header>

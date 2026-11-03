@@ -1,0 +1,134 @@
+{
+  "password": "Demo1234!",
+  "users": [
+    { "key": "admin", "name": "Administración", "email": "admin@recetas.test", "role": "admin", "bio": "Cuenta de administración de Recetas Creativas." },
+    { "key": "marta", "name": "Marta Soler", "email": "marta@recetas.test", "bio": "Cocina de mercado y sobremesas largas. Si lleva sofrito, me apunto." },
+    { "key": "diego", "name": "Diego Romero", "email": "diego@recetas.test", "bio": "Panadero de domingo y obseso de las masas. Mi horno no descansa." },
+    { "key": "aiko", "name": "Aiko Tanaka", "email": "aiko@recetas.test", "bio": "Entre Valencia y Osaka. Recetas de casa con caldos sin prisa." },
+    { "key": "nora", "name": "Nora Benali", "email": "nora@recetas.test", "bio": "Especias, verduras y platos para compartir. Cocino para que sobre." }
+  ],
+  "categories": [
+    { "key": "desayunos", "name": "Desayunos", "owner": "nora" },
+    { "key": "principales", "name": "Principales", "owner": "marta" },
+    { "key": "ligeros", "name": "Platos ligeros", "owner": "nora" },
+    { "key": "sopas", "name": "Sopas y cremas", "owner": "aiko" },
+    { "key": "masas", "name": "Masas", "owner": "diego" },
+    { "key": "postres", "name": "Postres", "owner": "diego" }
+  ],
+  "recipes": [
+    {
+      "key": "shakshuka", "title": "Shakshuka de tomate asado", "user": "nora", "category": "desayunos", "hoursAgo": 20,
+      "description": "Huevos pochados en una salsa especiada de tomate y pimiento. Se lleva a la mesa en la misma sartén, con mucho pan.",
+      "images": ["assets/demo/shakshuka.svg", "assets/demo/post-shakshuka.svg"],
+      "hashtags": ["huevos", "especias", "unasarten"],
+      "ingredients": ["6 huevos", "800 g de tomate maduro", "2 pimientos rojos", "1 cebolla", "3 dientes de ajo", "1 cdta de comino", "1 cdta de pimentón dulce", "Cilantro fresco", "Aceite de oliva y sal"],
+      "steps": ["Asa los tomates y los pimientos a 220 °C durante 25 minutos, hasta que la piel se tueste. Pélalos y trocéalos.", "Pocha la cebolla en aceite a fuego medio. Añade el ajo, el comino y el pimentón, y remueve un minuto.", "Incorpora el tomate y el pimiento, sala y deja reducir 15 minutos hasta que la salsa espese.", "Abre huecos en la salsa, casca un huevo en cada uno y tapa hasta que la clara cuaje y la yema siga líquida.", "Termina con cilantro picado y sirve en la sartén con pan tostado."]
+    },
+    {
+      "key": "paella", "title": "Paella de marisco de los domingos", "user": "marta", "category": "principales", "hoursAgo": 50,
+      "description": "La receta de mi familia: sofrito paciente, buen caldo y nada de remover. El socarrat se defiende en la mesa.",
+      "images": ["assets/demo/paella.svg", "assets/demo/post-paella.svg"],
+      "hashtags": ["arroz", "marisco", "domingo"],
+      "ingredients": ["400 g de arroz bomba", "12 gambas rojas", "300 g de sepia", "500 g de mejillones", "1,2 l de caldo de pescado", "2 tomates rallados", "Unas hebras de azafrán", "1 limón", "Aceite de oliva"],
+      "steps": ["Marca las gambas en la paella con aceite caliente y resérvalas.", "Dora la sepia troceada 5 minutos, añade el tomate rallado y sofríe hasta que pierda toda el agua.", "Agrega el arroz, nacara un minuto y vierte el caldo caliente con el azafrán. Reparte bien y no vuelvas a remover.", "Cuece 10 minutos a fuego fuerte y 8 a fuego suave. A mitad de cocción coloca los mejillones y las gambas.", "Sube el fuego el último minuto para el socarrat. Reposa 5 minutos tapada con un paño y sirve con limón."]
+    },
+    {
+      "key": "ramen", "title": "Ramen de miso en casa", "user": "aiko", "category": "sopas", "hoursAgo": 76,
+      "description": "Un caldo reconfortante que sabe a horas de cocina y se prepara en una tarde. El huevo marinado es obligatorio.",
+      "images": ["assets/demo/ramen.svg", "assets/demo/post-ramen.svg"],
+      "hashtags": ["caldo", "japon", "invierno"],
+      "ingredients": ["400 g de fideos ramen", "1,5 l de caldo de pollo", "4 cdas de pasta de miso", "2 cdas de salsa de soja", "4 huevos", "2 cebolletas", "2 láminas de alga nori", "Maíz dulce", "Aceite de sésamo"],
+      "steps": ["Cuece los huevos 6 minutos y medio, enfríalos y márinalos en soja y agua un mínimo de dos horas.", "Calienta el caldo sin que llegue a hervir. Disuelve el miso y la soja en un cazo aparte con un poco de caldo y devuélvelo a la olla.", "Cuece los fideos según el paquete, escúrrelos y repártelos en cuatro boles.", "Vierte el caldo muy caliente sobre los fideos.", "Corona con medio huevo, cebolleta, maíz, nori y unas gotas de aceite de sésamo."]
+    },
+    {
+      "key": "pizza", "title": "Pizza margarita de masa madre", "user": "diego", "category": "masas", "hoursAgo": 100,
+      "description": "Fermentación de 48 horas en la nevera para una masa ligera y con burbujas. Funciona en un horno doméstico.",
+      "images": ["assets/demo/pizza.svg", "assets/demo/post-pizza.svg"],
+      "hashtags": ["masamadre", "horno", "italia"],
+      "ingredients": ["500 g de harina de fuerza", "340 ml de agua", "100 g de masa madre activa", "10 g de sal", "400 g de tomate triturado", "250 g de mozzarella", "Albahaca fresca", "Aceite de oliva virgen extra"],
+      "steps": ["Mezcla la harina con el agua y deja reposar 30 minutos. Añade la masa madre y la sal, y amasa hasta que quede lisa.", "Fermenta 3 horas con dos pliegues y guarda la masa en la nevera 48 horas, bien tapada.", "Divide en cuatro bolas y déjalas atemperar 2 horas. Precalienta el horno al máximo con una piedra o bandeja dentro.", "Estira con las manos, sin rodillo. Cubre con tomate y hornea 6 minutos; añade la mozzarella y hornea 2 más.", "Saca del horno y termina con albahaca y un hilo de aceite."]
+    },
+    {
+      "key": "tarta", "title": "Tarta de queso quemada", "user": "diego", "category": "postres", "hoursAgo": 130,
+      "description": "Tostada por fuera, cremosa por dentro y sin base de galleta. El centro debe temblar cuando sale del horno.",
+      "images": ["assets/demo/tarta.svg", "assets/demo/post-tarta.svg"],
+      "hashtags": ["queso", "sinbase", "horno"],
+      "ingredients": ["1 kg de queso crema", "350 g de azúcar", "6 huevos", "500 ml de nata para montar", "30 g de harina", "Una pizca de sal"],
+      "steps": ["Precalienta el horno a 220 °C y forra un molde de 24 cm con papel de horno arrugado.", "Bate el queso con el azúcar y la sal hasta que quede sin grumos. Añade los huevos de uno en uno.", "Incorpora la nata y la harina tamizada, y mezcla justo hasta integrar.", "Hornea unos 40 minutos, hasta que la superficie esté muy oscura y el centro aún tiemble.", "Deja enfriar a temperatura ambiente y lleva a la nevera al menos 4 horas antes de cortarla."]
+    },
+    {
+      "key": "tacos", "title": "Tacos de coliflor al pastor", "user": "nora", "category": "principales", "hoursAgo": 170,
+      "description": "Todo el sabor del adobo con piña y una coliflor bien tostada. Hasta quienes dudan repiten.",
+      "images": ["assets/demo/tacos.svg"],
+      "hashtags": ["vegano", "mexico", "picante"],
+      "ingredients": ["1 coliflor grande", "12 tortillas de maíz", "3 chiles guajillo", "150 g de piña", "2 dientes de ajo", "1 cdta de orégano", "Zumo de 2 limas", "Cilantro y cebolla morada"],
+      "steps": ["Hidrata los chiles en agua caliente y tritúralos con el ajo, el orégano y el zumo de lima.", "Trocea la coliflor en ramilletes, mézclala con el adobo y hornea 30 minutos a 210 °C, removiendo a mitad.", "Dora la piña en dados en una sartén muy caliente, hasta que caramelice.", "Calienta las tortillas en la sartén seca y rellénalas con la coliflor y la piña.", "Sirve con cebolla morada, cilantro y unas gotas de lima."]
+    },
+    {
+      "key": "gazpacho", "title": "Gazpacho de sandía", "user": "marta", "category": "sopas", "hoursAgo": 210,
+      "description": "El gazpacho de siempre con un punto dulce y muy fresco. Listo en diez minutos para los días de calor.",
+      "images": ["assets/demo/gazpacho.svg"],
+      "hashtags": ["verano", "sinhorno", "vegano"],
+      "ingredients": ["1 kg de tomate pera", "400 g de sandía sin pepitas", "1/2 pepino", "1/2 pimiento verde", "1 diente de ajo", "60 ml de aceite de oliva", "2 cdas de vinagre de Jerez", "Sal"],
+      "steps": ["Trocea el tomate, la sandía, el pepino y el pimiento, y ponlos en el vaso de la batidora con el ajo.", "Tritura a máxima potencia durante 2 minutos.", "Añade el vinagre y la sal, y agrega el aceite en un hilo sin dejar de batir para emulsionar.", "Cuela si lo quieres más fino y enfría en la nevera un mínimo de una hora.", "Sirve bien frío con dados de sandía y pepino por encima."]
+    },
+    {
+      "key": "tortitas", "title": "Tortitas de arándanos y suero", "user": "nora", "category": "desayunos", "hoursAgo": 260,
+      "description": "Esponjosas y con los bordes crujientes. El truco es no batir de más y dejar reposar la masa.",
+      "images": ["assets/demo/tortitas.svg"],
+      "hashtags": ["brunch", "fruta", "dulce"],
+      "ingredients": ["250 g de harina", "2 cdas de azúcar", "2 cdtas de levadura química", "350 ml de suero de leche", "2 huevos", "50 g de mantequilla derretida", "200 g de arándanos", "Sirope de arce"],
+      "steps": ["Mezcla la harina, el azúcar, la levadura y una pizca de sal en un bol.", "En otro bol, bate el suero, los huevos y la mantequilla. Únelo a los secos con pocas vueltas: deben quedar grumos.", "Deja reposar la masa 15 minutos.", "Vierte un cucharón en una sartén con mantequilla a fuego medio y reparte arándanos. Da la vuelta cuando salgan burbujas.", "Apila las tortitas y termina con más arándanos y sirope."]
+    },
+    {
+      "key": "poke", "title": "Poke de salmón y mango", "user": "aiko", "category": "ligeros", "hoursAgo": 320,
+      "description": "Un bol fresco y lleno de texturas para una comida rápida. Marinar el salmón solo diez minutos marca la diferencia.",
+      "images": ["assets/demo/poke.svg"],
+      "hashtags": ["bowl", "pescado", "rapido"],
+      "ingredients": ["300 g de salmón fresco previamente congelado", "250 g de arroz de sushi", "1 mango", "1 aguacate", "1 pepino", "100 g de edamame", "3 cdas de salsa de soja", "1 cda de aceite de sésamo", "Semillas de sésamo"],
+      "steps": ["Cuece el arroz, aderézalo con un poco de vinagre de arroz y déjalo templar.", "Corta el salmón en dados y márinalo 10 minutos con la soja y el aceite de sésamo.", "Corta el mango, el aguacate y el pepino en dados o láminas.", "Pon el arroz en la base de cada bol y coloca los ingredientes por secciones.", "Termina con las semillas de sésamo y el resto de la marinada."]
+    },
+    {
+      "key": "galletas", "title": "Galletas de chocolate y sal", "user": "diego", "category": "postres", "hoursAgo": 400,
+      "description": "Crujientes por el borde y blandas en el centro. Dejar la masa en la nevera una noche cambia el resultado.",
+      "images": ["assets/demo/galletas.svg", "assets/demo/post-galletas.svg"],
+      "hashtags": ["chocolate", "horno", "merienda"],
+      "ingredients": ["225 g de mantequilla", "200 g de azúcar moreno", "100 g de azúcar blanco", "2 huevos", "350 g de harina", "1 cdta de bicarbonato", "300 g de chocolate negro troceado", "Escamas de sal"],
+      "steps": ["Tuesta la mantequilla en un cazo hasta que huela a avellana y deja que se temple.", "Bátela con los dos azúcares y añade los huevos de uno en uno.", "Incorpora la harina con el bicarbonato y después el chocolate. Enfría la masa en la nevera 12 horas.", "Forma bolas, sepáralas bien en la bandeja y hornea 11 minutos a 180 °C.", "Pon unas escamas de sal al sacarlas y déjalas reposar 10 minutos antes de moverlas."]
+    }
+  ],
+  "ratings": [
+    { "recipe": "shakshuka", "user": "marta", "value": 5 }, { "recipe": "shakshuka", "user": "diego", "value": 5 }, { "recipe": "shakshuka", "user": "aiko", "value": 4 },
+    { "recipe": "paella", "user": "nora", "value": 5 }, { "recipe": "paella", "user": "diego", "value": 5 }, { "recipe": "paella", "user": "aiko", "value": 5 },
+    { "recipe": "ramen", "user": "marta", "value": 5 }, { "recipe": "ramen", "user": "nora", "value": 4 },
+    { "recipe": "pizza", "user": "marta", "value": 4 }, { "recipe": "pizza", "user": "aiko", "value": 5 }, { "recipe": "pizza", "user": "nora", "value": 4 },
+    { "recipe": "tarta", "user": "marta", "value": 5 }, { "recipe": "tarta", "user": "nora", "value": 5 }, { "recipe": "tarta", "user": "aiko", "value": 4 },
+    { "recipe": "tacos", "user": "diego", "value": 4 }, { "recipe": "tacos", "user": "marta", "value": 3 },
+    { "recipe": "gazpacho", "user": "nora", "value": 4 }, { "recipe": "gazpacho", "user": "diego", "value": 3 },
+    { "recipe": "tortitas", "user": "aiko", "value": 5 }, { "recipe": "tortitas", "user": "marta", "value": 4 },
+    { "recipe": "poke", "user": "diego", "value": 4 }, { "recipe": "poke", "user": "nora", "value": 5 },
+    { "recipe": "galletas", "user": "aiko", "value": 5 }, { "recipe": "galletas", "user": "nora", "value": 4 }, { "recipe": "galletas", "user": "marta", "value": 5 }
+  ],
+  "comments": [
+    { "recipe": "shakshuka", "user": "marta", "text": "La he hecho este finde con los últimos tomates del huerto. Asarlos antes cambia por completo la salsa.", "hoursAgo": 9 },
+    { "recipe": "shakshuka", "user": "aiko", "text": "Le añadí un poco de feta al final y quedó increíble.", "hoursAgo": 4 },
+    { "recipe": "paella", "user": "diego", "text": "Por fin entiendo lo de no remover. Primer socarrat de mi vida.", "hoursAgo": 30 },
+    { "recipe": "paella", "user": "nora", "text": "¿El caldo lo haces con cabezas de gamba? Huele a gloria solo de leerlo.", "hoursAgo": 22 },
+    { "recipe": "paella", "user": "marta", "text": "Sí, Nora: cabezas de gamba, un puerro y una hora a fuego lento.", "hoursAgo": 21 },
+    { "recipe": "ramen", "user": "marta", "text": "El huevo marinado merece la pena. Dejé los míos toda la noche.", "hoursAgo": 40 },
+    { "recipe": "pizza", "user": "aiko", "text": "Con piedra precalentada y al máximo, la base sale crujiente. Gracias por el truco.", "hoursAgo": 60 },
+    { "recipe": "tarta", "user": "nora", "text": "Parecía poco hecha al sacarla, pero al día siguiente estaba perfecta.", "hoursAgo": 70 },
+    { "recipe": "tarta", "user": "marta", "text": "Me salió menos dorada que la tuya. La próxima vez, cinco minutos más.", "hoursAgo": 55 },
+    { "recipe": "tacos", "user": "diego", "text": "No como carne desde hace poco y estos me han reconciliado con los tacos.", "hoursAgo": 90 },
+    { "recipe": "tortitas", "user": "aiko", "text": "Los grumos dan miedo, pero tenías razón: salen muy esponjosas.", "hoursAgo": 120 },
+    { "recipe": "galletas", "user": "nora", "text": "La noche en la nevera es imprescindible. Probé sin esperar y no tienen nada que ver.", "hoursAgo": 150 }
+  ],
+  "posts": [
+    { "user": "marta", "recipe": "shakshuka", "image": "assets/demo/post-shakshuka.svg", "caption": "Desayuno largo de domingo. Hice la shakshuka de Nora y no quedó ni el pan.", "hoursAgo": 3 },
+    { "user": "aiko", "recipe": "tarta", "image": "assets/demo/post-tarta.svg", "caption": "Mi primera tarta quemada. El centro tembló justo como decía Diego, y he contado los minutos hasta probarla.", "hoursAgo": 11 },
+    { "user": "diego", "recipe": "paella", "image": "assets/demo/post-paella.svg", "caption": "Comida familiar con la paella de Marta. Hubo pelea por el socarrat.", "hoursAgo": 26 },
+    { "user": "nora", "recipe": "ramen", "image": "assets/demo/post-ramen.svg", "caption": "Día de lluvia, ramen de miso y nada más que hacer. Plan perfecto.", "hoursAgo": 48 },
+    { "user": "aiko", "recipe": "pizza", "image": "assets/demo/post-pizza.svg", "caption": "Dos días esperando la masa y cuatro minutos en desaparecer.", "hoursAgo": 80 },
+    { "user": "marta", "recipe": "galletas", "image": "assets/demo/post-galletas.svg", "caption": "Bandeja para el vecindario. Solo llegaron la mitad.", "hoursAgo": 140 }
+  ]
+}

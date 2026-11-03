@@ -1,35 +1,12 @@
-import { IsArray, IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword, IsUUID } from 'class-validator';
-import { Hashtags } from 'src/hashtags/hashtags.entity';
-import { Ingredients } from 'src/ingredients/ingredients.entity';
-import { Preparations } from 'src/preparations/preparations.entity';
+import { Transform } from 'class-transformer';
+import { IsArray, IsOptional, IsString } from 'class-validator';
+import { CreateRecipeDto, parseJson } from './create-recipe.dto';
 
-export class UpdateRecipeDto {
-
-    @IsString()
-    @IsOptional()
-    title: string;
-
-    @IsString()
-    @IsOptional()
-    description: string;
-
-    @IsArray()
-    @IsNotEmpty()
-    hashtags: Hashtags[];
-
-    @IsArray()
-    @IsNotEmpty()
-    ingredients: Ingredients[];
-
-    @IsArray()
-    @IsNotEmpty()
-    preparations: Preparations[];
-
-    @IsString()
-    @IsOptional()
-    userId: string;
-
-    @IsString()
-    @IsOptional()
-    categoryId: string;
+export class UpdateRecipeDto extends CreateRecipeDto {
+  // Imágenes existentes que se conservan; el resto se borran
+  @Transform(parseJson)
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  keepImageIds?: string[];
 }

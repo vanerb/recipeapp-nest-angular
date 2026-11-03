@@ -1,61 +1,183 @@
-<app-main-container>
-  <div class="w-full flex justify-center flex-col items-center">
-    <div class="w-full max-h-[100px] flex rounded bg-secondary justify-center ">
-      <img (error)="onImageError($event)" class="object-cover rounded"
-           src="http://localhost:3002{{recipe?.images?.[0]?.url}}">
+<app-loader *ngIf="loading"></app-loader>
+
+<div *ngIf="notFound" class="page py-16">
+  <app-empty-state icon="bi-signpost-split" title="Esta receta ya no está" text="Puede que su autor o autora la haya eliminado.">
+    <a routerLink="/recipes" class="btn-primary">Ver otras recetas</a>
+  </app-empty-state>
+</div>
+
+<div *ngIf="failed" class="page py-16">
+  <app-empty-state icon="bi-plug" title="No hemos podido cargar la receta" text="Comprueba que la API está en marcha y recarga la página."></app-empty-state>
+</div>
+
+<article *ngIf="!loading && !notFound && !failed && recipe as item" class="page pt-8 sm:pt-12">
+  <header class="max-w-3xl">
+    <a
+      *ngIf="item.category"
+      routerLink="/recipes"
+      [queryParams]="{ category: item.category.id }"
+      class="eyebrow hover:underline"
+      >{{ item.category.name }}</a
+    >
+    <h1 class="mt-2 text-4xl sm:text-6xl">{{ item.title }}</h1>
+    <p class="mt-4 text-lg text-muted">{{ item.description }}</p>
+    <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+      <a [routerLink]="['/profile', item.user.id]" class="flex items-center gap-2.5 hover:underline">
+        <app-avatar [user]="item.user" [size]="36"></app-avatar>
+        <span class="font-medium">{{ item.user.name }}</span>
+      </a>
+      <span class="flex items-center gap-2">
+        <app-stars [value]="item.averageRating"></app-stars>
+        <span *ngIf="item.ratingsCount > 0; else unrated">
+          <span class="font-medium">{{ item.averageRating | number: '1.1-1' : 'es' }}</span>
+          <span class="text-muted"> ({{ item.ratingsCount }})</span>
+        </span>
+        <ng-template #unrated><span class="text-muted">Sin valoraciones</span></ng-template>
+      </span>
+      <button type="button" (click)="commentsAnchor.scrollIntoView()" class="text-muted hover:underline">
+        {{ comments.length }} {{ comments.length === 1 ? 'comentario' : 'comentarios' }}
+      </button>
     </div>
-    <div class=" w-[800px] h-full space-y-4 p-4">
-      <div class="w-full flex justify-center items-center">
-        <span class="text-3xl">{{ recipe?.title }}</span>
-      </div>
+    <div class="mt-5 flex flex-wrap gap-2">
+      <button *ngIf="!isOwner" type="button" class="btn-outline" (click)="cooked()">
+        <i class="bi bi-camera" aria-hidden="true"></i>
+        Lo he cocinado
+      </button>
+      <button *ngIf="isOwner" type="button" class="btn-outline" (click)="sharePost()">
+        <i class="bi bi-camera" aria-hidden="true"></i>
+        Publicar foto
+      </button>
+      <ng-container *ngIf="canManage">
+        <a [routerLink]="['/recipe', item.id, 'edit']" class="btn-outline">
+          <i class="bi bi-pencil" aria-hidden="true"></i>
+          Editar
+        </a>
+        <button type="button" class="btn-ghost text-tomato" (click)="removeRecipe()">
+          <i class="bi bi-trash3" aria-hidden="true"></i>
+          Eliminar
+        </button>
+      </ng-container>
+    </div>
+  </header>
 
-      <div class="w-full flex justify-center items-center">
-        <span class="text-xl">{{ recipe?.description }}</span>
-      </div>
+  <div class="mt-8">
+    <img
+      appImgFallback
+      [src]="item.images[selectedImage]?.url | media"
+      [alt]="item.title"
+      class="aspect-[4/3] max-h-[620px] w-full rounded-3xl bg-line object-cover sm:aspect-[16/10]"
+    />
+    <div *ngIf="item.images.length > 1" class="mt-3 flex gap-2 overflow-x-auto pb-1">
+      <button
+        *ngFor="let image of item.images; let index = index"
+        type="button"
+        class="h-20 w-24 shrink-0 overflow-hidden rounded-xl ring-offset-2 ring-offset-paper"
+        [class.ring-2]="index === selectedImage"
+        [class.ring-herb]="index === selectedImage"
+        [attr.aria-label]="'Ver imagen ' + (index + 1)"
+        (click)="selectedImage = index"
+      >
+        <img appImgFallback [src]="image.url | media" alt="" class="h-full w-full object-cover" />
+      </button>
+    </div>
+  </div>
 
-      <div class="w-full flex flex-col space-y-4 justify-start items-start">
-        <div class="w-full">
-          <h1 class="text-xl w-full ">Ingredientes</h1>
-          <app-separator class="w-full"></app-separator>
-        </div>
-        <ul class="list-disc">
-          <li *ngFor="let ingredient of recipe?.ingredients">{{ ingredient.ingredient }}</li>
+  <div class="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.9fr)] lg:gap-14">
+    <aside>
+      <div class="panel p-6 lg:sticky lg:top-24">
+        <h2 class="text-2xl">Ingredientes</h2>
+        <ul class="mt-4 divide-y divide-line">
+          <li *ngFor="let row of item.ingredients" class="py-2.5">{{ row.ingredient }}</li>
         </ul>
       </div>
-      <div class="w-full flex flex-col space-y-4 justify-start items-start">
-        <div class="w-full">
-          <h1 class="text-xl w-full ">Preparación</h1>
-          <app-separator class="w-full"></app-separator>
-        </div>
-        <ol class="list-decimal">
-          <li *ngFor="let preparation of recipe?.preparations">{{ preparation.preparation }}</li>
-        </ol>
-      </div>
-      <div class="w-full flex flex-col space-y-4 justify-start items-start">
-        <div class="w-full">
-          <h1 class="text-xl w-full ">Hashtags</h1>
-          <app-separator class="w-full"></app-separator>
-        </div>
-        <div class="flex flex-wrap justify-start items-start space-x-2">
-          <span *ngFor="let hashtag of recipe?.hashtags"
-                class="text-base mt-2 rounded-full border border-secondary border-solid px-[16px]">#{{ hashtag?.hashtag }}</span>
-        </div>
+    </aside>
 
+    <div>
+      <h2 class="text-3xl">Preparación</h2>
+      <ol class="mt-6 space-y-7">
+        <li *ngFor="let step of item.preparations; let index = index" class="flex gap-5">
+          <span class="w-9 shrink-0 font-display text-4xl italic leading-none text-tomato" aria-hidden="true">{{ index + 1 }}</span>
+          <p class="pt-0.5 text-lg">{{ step.preparation }}</p>
+        </li>
+      </ol>
+
+      <div *ngIf="item.hashtags.length" class="mt-8 flex flex-wrap gap-x-4 gap-y-1 border-t border-line pt-5">
+        <a *ngFor="let tag of item.hashtags" routerLink="/recipes" [queryParams]="{ hashtag: tag.hashtag }" class="tag">#{{ tag.hashtag }}</a>
       </div>
 
-      <div class="w-full flex flex-col space-y-4  justify-center items-center ">
-        <div class="w-full">
-          <h1 class="text-xl w-full ">Imágenes</h1>
-          <app-separator class="w-full"></app-separator>
-        </div>
-        <div class="flex flex-wrap justify-start items-start space-x-2">
-          <img *ngFor="let image of recipe?.images" (error)="onImageError($event)"
-               class="object-cover w-32 h-32 rounded mt-2"
-               src="http://localhost:3002{{image.url}}">
-        </div>
-      </div>
+      <section class="mt-10 rounded-2xl bg-herb-soft/60 p-6" aria-labelledby="valorar">
+        <h2 id="valorar" class="text-2xl">¿La has probado?</h2>
+        <p *ngIf="isOwner" class="mt-1 text-muted">Esta receta es tuya, así que la valoran otras personas.</p>
+        <ng-container *ngIf="!isOwner">
+          <ng-container *ngIf="authService.user$ | async; else rateGuest">
+            <p class="mt-1 text-muted">
+              {{ myRating ? 'Tu valoración. Puedes cambiarla cuando quieras.' : 'Dale las estrellas que se merece.' }}
+            </p>
+            <div class="-ml-1.5 mt-2">
+              <app-stars [interactive]="true" [value]="myRating ?? 0" [size]="30" (rated)="rate($event)"></app-stars>
+            </div>
+          </ng-container>
+          <ng-template #rateGuest>
+            <p class="mt-1 text-muted">
+              <a routerLink="/login" [queryParams]="{ returnUrl: '/recipe/' + item.id }" class="font-medium text-herb underline underline-offset-4">Inicia sesión</a>
+              para valorarla.
+            </p>
+          </ng-template>
+        </ng-container>
+      </section>
 
+      <section #commentsAnchor id="comentarios" class="mt-10 scroll-mt-24" aria-labelledby="comentarios-titulo">
+        <h2 id="comentarios-titulo" class="text-3xl">
+          Comentarios <span class="font-sans text-xl text-muted">{{ comments.length }}</span>
+        </h2>
+
+        <form *ngIf="authService.user$ | async as user; else commentGuest" class="mt-5 flex gap-3" (ngSubmit)="sendComment()">
+          <app-avatar class="hidden sm:inline-flex" [user]="user" [size]="40"></app-avatar>
+          <div class="flex-1">
+            <label for="comment" class="sr-only">Escribe un comentario</label>
+            <textarea
+              id="comment"
+              rows="3"
+              class="input"
+              maxlength="1000"
+              placeholder="Cuenta qué tal te ha salido o qué cambiarías"
+              [formControl]="commentControl"
+            ></textarea>
+            <div class="mt-2 flex justify-end">
+              <button type="submit" class="btn-primary" [disabled]="commentControl.invalid || !commentControl.value.trim() || sending">
+                {{ sending ? 'Enviando…' : 'Comentar' }}
+              </button>
+            </div>
+          </div>
+        </form>
+        <ng-template #commentGuest>
+          <p class="mt-4 text-muted">
+            <a routerLink="/login" [queryParams]="{ returnUrl: '/recipe/' + item.id }" class="font-medium text-herb underline underline-offset-4">Inicia sesión</a>
+            para dejar un comentario.
+          </p>
+        </ng-template>
+
+        <ul *ngIf="comments.length; else noComments" class="mt-6 divide-y divide-line">
+          <li *ngFor="let comment of comments" class="flex gap-3 py-5">
+            <a [routerLink]="['/profile', comment.user.id]" [attr.aria-label]="'Perfil de ' + comment.user.name">
+              <app-avatar [user]="comment.user" [size]="40"></app-avatar>
+            </a>
+            <div class="min-w-0 flex-1">
+              <p class="flex flex-wrap items-baseline gap-x-2">
+                <a [routerLink]="['/profile', comment.user.id]" class="font-medium hover:underline">{{ comment.user.name }}</a>
+                <span class="text-sm text-muted">{{ comment.createdAt | timeAgo }}</span>
+              </p>
+              <p class="mt-0.5 whitespace-pre-line break-words">{{ comment.text }}</p>
+            </div>
+            <button *ngIf="canDelete(comment)" type="button" class="icon-btn shrink-0 text-muted" aria-label="Eliminar comentario" (click)="removeComment(comment)">
+              <i class="bi bi-trash3" aria-hidden="true"></i>
+            </button>
+          </li>
+        </ul>
+        <ng-template #noComments>
+          <p class="mt-6 text-muted">Todavía no hay comentarios. Puedes ser la primera persona en opinar.</p>
+        </ng-template>
+      </section>
     </div>
-
   </div>
-</app-main-container>
+</article>

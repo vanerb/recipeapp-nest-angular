@@ -1,0 +1,31 @@
+<div class="page pt-8 sm:pt-12">
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-4xl sm:text-5xl">Comunidad</h1>
+      <p class="mt-2 max-w-xl text-lg text-muted">Platos de verdad, recién hechos. Cada foto enlaza a la receta para que puedas cocinarla.</p>
+    </div>
+    <button type="button" class="btn-primary" (click)="newPost()">
+      <i class="bi bi-camera" aria-hidden="true"></i>
+      Publicar un plato
+    </button>
+  </div>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <div *ngIf="!loading" class="mt-8">
+    <app-empty-state
+      *ngIf="failed"
+      icon="bi-plug"
+      title="No hemos podido cargar las publicaciones"
+      text="Comprueba que la API está en marcha y recarga la página."
+    ></app-empty-state>
+    <ng-container *ngIf="!failed">
+      <div *ngIf="posts.length; else empty" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <app-post-card *ngFor="let post of posts" [post]="post" (remove)="remove($event)"></app-post-card>
+      </div>
+      <ng-template #empty>
+        <app-empty-state icon="bi-camera" title="Aún no hay publicaciones" text="Cocina algo rico y comparte la primera foto."></app-empty-state>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>

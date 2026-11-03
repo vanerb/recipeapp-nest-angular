@@ -1,155 +1,53 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {AuthService} from '../../../../services/auth.service';
-import {Header} from '../../../../interfaces/header';
-import {ActivatedRoute, Router} from '@angular/router';
-import {log} from 'console';
-import {UsersService} from '../../../../services/users.service';
-import {User} from '../../../../interfaces/users';
-import {firstValueFrom} from "rxjs";
-import {UtilitiesService} from "../../../../services/utilities.service";
+import { Component, ElementRef, HostListener } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  // En el propio elemento: sticky necesita un contenedor con recorrido, y este es block
+  host: { class: 'sticky top-0 z-30 block' },
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
+  mobileOpen = false;
+  userMenuOpen = false;
 
-  menu: Header[] = []
-  selected: string = ""
-
+  readonly links = [
+    { label: 'Inicio', path: '/', exact: true },
+    { label: 'Recetas', path: '/recipes', exact: false },
+    { label: 'Comunidad', path: '/community', exact: false },
+  ];
 
   constructor(
-    private readonly authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private readonly userService: UsersService,
-    private readonly utilitiesService: UtilitiesService
+    readonly authService: AuthService,
+    router: Router,
+    private readonly host: ElementRef<HTMLElement>,
   ) {
-
+    router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => this.closeMenus());
   }
 
-
-  async ngOnInit() {
-    if (this.authService.isAuthenticated()) {
-      this.menu = [
-        {
-          key: "init",
-          name: "Inicio",
-          position: "left",
-          action: async () => {
-            await this.router.navigate(['/']);
-            await this.selectionMenu();
-          }
-        },
-        {
-          key: "recipes",
-          name: "Recetas",
-          position: "left",
-          action: async () => {
-            await this.router.navigate(['/recipes']);
-            await this.selectionMenu();
-          }
-        },
-        {
-          key: "contact",
-          name: "Contacto",
-          position: "left",
-          action: async () => {
-            await this.router.navigate(['/contact']);
-            await this.selectionMenu();
-          }
-        },
-        {
-          key: "profile",
-          name: "Mi perfil",
-          position: "right",
-          action: async () => {
-            await this.router.navigate(['/my-panel']);
-            await this.selectionMenu();
-          },
-          children: [
-            {
-              key: "my-panel",
-              name: "Administración",
-              position: "right",
-              action: async () => {
-                await this.router.navigate(['/my-panel/']);
-                await this.selectionMenu();
-              }
-            },
-            {
-              key: "logout",
-              name: "Cerrar sesión",
-              position: "right",
-              action: async () => {
-                await this.authService.logout();
-                await this.router.navigate(['/login']);
-                await this.selectionMenu();
-              }
-            }
-          ]
-        }
-      ];
-    }
-
-
-    this.selectionMenu()
-
-
+  closeMenus() {
+    this.mobileOpen = false;
+    this.userMenuOpen = false;
   }
 
-  getMenu(pos: string) {
-    if (pos === "right") {
-      return this.menu.filter(el => el.position === "right")
-    } else {
-      return this.menu.filter(el => el.position === "left")
-    }
-
-  }
-
-
-  async selectionMenu() {
-    await this.utilitiesService.sleep(0)
-    let item = this.router.url.split("/")[1]
-
-    console.log(item)
-    switch (item) {
-      case "recipes":
-        this.selected = this.menu.find(el => el.key === "recipes")?.name ?? ""
-        return
-
-      case "register":
-        this.selected = this.menu.find(el => el.key === "register")?.name ?? ""
-        return
-      case "contact":
-        this.selected = this.menu.find(el => el.key === "contact")?.name ?? ""
-        return
-      case "profile":
-        this.selected = this.menu.find(el => el.key === "profile")?.name ?? ""
-        return
-      case "management":
-        this.selected = this.menu.find(el => el.key === "profile")?.name ?? ""
-        return
-      case "categories":
-        this.selected = this.menu.find(el => el.key === "profile")?.name ?? ""
-        return
-      case "my-panel":
-        this.selected = this.menu.find(el => el.key === "profile")?.name ?? ""
-        return
-      case "":
-        this.selected = this.menu.find(el => el.key === "init")?.name ?? ""
-        return
-
-      case "login":
-        this.selected = this.menu.find(el => el.key === "login")?.name ?? ""
-        return
-      case "logout":
-        this.selected = this.menu.find(el => el.key === "login")?.name ?? ""
-        return
-
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.host.nativeElement.contains(event.target as Node)) {
+      this.closeMenus();
     }
   }
 
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.closeMenus();
+  }
 
+  async logout() {
+    this.closeMenus();
+    await this.authService.logout();
+  }
 }

@@ -1,5 +1,120 @@
-/* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3 {
+    @apply font-display text-ink;
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+  }
+
+  a, button {
+    @apply rounded-sm;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme('colors.herb.DEFAULT');
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-5 py-2 text-base font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-primary {
+    @apply btn bg-herb text-paper hover:bg-herb-dark;
+  }
+
+  .btn-outline {
+    @apply btn border border-ink/25 text-ink hover:border-ink hover:bg-surface;
+  }
+
+  .btn-ghost {
+    @apply btn text-ink hover:bg-ink/5;
+  }
+
+  .btn-danger {
+    @apply btn bg-tomato text-white hover:bg-[#9F2F1C];
+  }
+
+  .icon-btn {
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full text-ink transition-colors hover:bg-ink/5;
+  }
+
+  .eyebrow {
+    @apply text-sm font-medium uppercase tracking-[0.14em] text-tomato;
+  }
+
+  .label {
+    @apply mb-1.5 block text-base font-medium;
+  }
+
+  .input {
+    @apply block min-h-[44px] w-full rounded-lg border border-ink/20 bg-surface px-3.5 py-2 text-base text-ink placeholder:text-muted/80 focus:border-herb focus:outline-none focus:ring-1 focus:ring-herb;
+  }
+
+  .field-error {
+    @apply mt-1.5 text-sm text-tomato;
+  }
+
+  .field-hint {
+    @apply mt-1.5 text-sm text-muted;
+  }
+
+  .chip {
+    @apply inline-flex min-h-[36px] items-center gap-1.5 whitespace-nowrap rounded-full border border-ink/20 px-3.5 py-1 text-[0.9375rem] transition-colors hover:border-ink;
+  }
+
+  .chip-active {
+    @apply border-herb bg-herb text-paper hover:border-herb;
+  }
+
+  .tag {
+    @apply text-[0.9375rem] font-medium text-herb underline-offset-4 hover:underline;
+  }
+
+  .panel {
+    @apply rounded-2xl border border-line bg-surface;
+  }
+
+  .recipe-grid {
+    @apply grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .tab {
+    @apply -mb-px inline-flex min-h-[44px] items-center gap-2 border-b-2 border-transparent px-1 font-medium text-muted transition-colors hover:text-ink;
+  }
+
+  .tab-active {
+    @apply border-herb text-ink;
+  }
+}

@@ -1,3 +1,13 @@
-<app-header></app-header>
+<div class="flex min-h-screen flex-col">
+  <div *ngIf="isDemo" class="bg-ink px-4 py-1.5 text-center text-sm text-paper">
+    Demo sin servidor: tus cambios se guardan solo en este navegador.
+    <button type="button" class="ml-1 font-medium underline underline-offset-2" (click)="resetDemo()">Restablecer datos</button>
+  </div>
+  <app-header></app-header>
+  <main class="flex-1">
+    <router-outlet></router-outlet>
+  </main>
+  <app-footer></app-footer>
+</div>
 <app-modal #modal></app-modal>
-<router-outlet></router-outlet>
+<app-toast></app-toast>

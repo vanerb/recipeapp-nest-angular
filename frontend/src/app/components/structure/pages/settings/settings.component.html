@@ -1,0 +1,60 @@
+<div class="page max-w-2xl pt-8 sm:pt-12">
+  <h1 class="text-4xl sm:text-5xl">Ajustes</h1>
+
+  <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="panel mt-8 space-y-4 p-5 sm:p-7" novalidate>
+    <h2 class="text-2xl">Tu perfil</h2>
+    <div class="flex items-center gap-4">
+      <img *ngIf="avatarPreview; else currentAvatar" [src]="avatarPreview" alt="Vista previa" class="h-20 w-20 rounded-full object-cover" />
+      <ng-template #currentAvatar>
+        <app-avatar [user]="authService.user$ | async" [size]="80"></app-avatar>
+      </ng-template>
+      <div>
+        <label for="avatar" class="btn-outline cursor-pointer">Cambiar foto</label>
+        <input id="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="sr-only" (change)="onAvatar($event)" />
+      </div>
+    </div>
+    <div>
+      <label class="label" for="name">Nombre</label>
+      <input id="name" class="input" autocomplete="name" formControlName="name" />
+      <p *ngIf="profileForm.get('name')?.touched && profileForm.get('name')?.invalid" class="field-error">El nombre es obligatorio.</p>
+    </div>
+    <div>
+      <label class="label" for="email">Correo</label>
+      <input id="email" class="input" type="email" autocomplete="email" formControlName="email" />
+      <p class="field-hint">Solo lo ves tú.</p>
+      <p *ngIf="profileForm.get('email')?.touched && profileForm.get('email')?.invalid" class="field-error">Introduce un correo válido.</p>
+    </div>
+    <div>
+      <label class="label" for="bio">Presentación</label>
+      <textarea id="bio" rows="3" class="input" maxlength="300" formControlName="bio" placeholder="Qué te gusta cocinar, de dónde vienen tus recetas…"></textarea>
+    </div>
+    <div class="flex justify-end">
+      <button type="submit" class="btn-primary" [disabled]="savingProfile">{{ savingProfile ? 'Guardando…' : 'Guardar cambios' }}</button>
+    </div>
+  </form>
+
+  <form *ngIf="!isDemo" [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="panel mt-6 space-y-4 p-5 sm:p-7" novalidate>
+    <h2 class="text-2xl">Contraseña</h2>
+    <div>
+      <label class="label" for="currentPassword">Contraseña actual</label>
+      <input id="currentPassword" class="input" type="password" autocomplete="current-password" formControlName="currentPassword" />
+      <p *ngIf="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid" class="field-error">Introduce tu contraseña actual.</p>
+    </div>
+    <div>
+      <label class="label" for="password">Contraseña nueva</label>
+      <input id="password" class="input" type="password" autocomplete="new-password" formControlName="password" />
+      <p class="field-hint" [class.!text-tomato]="passwordForm.get('password')?.touched && passwordForm.get('password')?.invalid">
+        Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo.
+      </p>
+    </div>
+    <div class="flex justify-end">
+      <button type="submit" class="btn-primary" [disabled]="savingPassword">{{ savingPassword ? 'Cambiando…' : 'Cambiar contraseña' }}</button>
+    </div>
+  </form>
+
+  <section class="mt-6 rounded-2xl border border-tomato/40 p-5 sm:p-7">
+    <h2 class="text-2xl">Eliminar cuenta</h2>
+    <p class="mt-1 text-muted">Se borrará todo tu contenido de forma permanente.</p>
+    <button type="button" class="btn-danger mt-4" (click)="deleteAccount()">Eliminar mi cuenta</button>
+  </section>
+</div>

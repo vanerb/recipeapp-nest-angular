@@ -1,0 +1,40 @@
+<article class="panel flex h-full flex-col overflow-hidden">
+  <header class="flex items-center gap-3 px-4 py-3">
+    <a [routerLink]="['/profile', post.user.id]" class="flex min-w-0 flex-1 items-center gap-2.5">
+      <app-avatar [user]="post.user" [size]="38"></app-avatar>
+      <span class="min-w-0 leading-tight">
+        <span class="block truncate font-medium">{{ post.user.name }}</span>
+        <span class="block text-sm text-muted">{{ post.createdAt | timeAgo }}</span>
+      </span>
+    </a>
+    <button
+      *ngIf="canRemove"
+      type="button"
+      class="icon-btn text-muted"
+      aria-label="Eliminar publicación"
+      (click)="remove.emit(post)"
+    >
+      <i class="bi bi-trash3" aria-hidden="true"></i>
+    </button>
+  </header>
+  <img
+    appImgFallback
+    [src]="post.image | media"
+    [alt]="'Foto de ' + post.recipe.title"
+    loading="lazy"
+    class="aspect-[4/3] w-full object-cover"
+  />
+  <div class="flex flex-1 flex-col gap-3 p-4">
+    <p class="flex-1">{{ post.caption }}</p>
+    <a
+      [routerLink]="['/recipe', post.recipe.id]"
+      class="group flex items-center justify-between gap-3 rounded-xl bg-paper px-4 py-2.5 transition-colors hover:bg-herb-soft"
+    >
+      <span class="min-w-0">
+        <span class="block text-sm text-muted">Ver la receta</span>
+        <span class="line-clamp-2 font-display text-lg leading-snug">{{ post.recipe.title }}</span>
+      </span>
+      <i class="bi bi-arrow-right text-xl transition-transform group-hover:translate-x-0.5" aria-hidden="true"></i>
+    </a>
+  </div>
+</article>

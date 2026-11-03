@@ -1,6 +1,88 @@
-<app-main-container>
-  <div class="w-full h-full grid grid-cols-4 gap-4 p-4  grid-rows-[300px] auto-rows-[300px]">
-    <app-card (action)="update($event)" *ngFor="let item of recipes" [data]="item"></app-card>
-  </div>
-</app-main-container>
+<div class="page pt-8 sm:pt-12">
+  <h1 class="text-4xl sm:text-5xl">Recetas</h1>
 
+  <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+    <div class="relative flex-1">
+      <i class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" aria-hidden="true"></i>
+      <input
+        type="search"
+        class="input pl-10"
+        placeholder="Busca por plato o descripción"
+        aria-label="Buscar recetas"
+        [ngModel]="search"
+        (ngModelChange)="onSearch($event)"
+      />
+    </div>
+    <div class="flex items-center gap-2">
+      <label for="sort" class="shrink-0 text-muted">Ordenar por</label>
+      <select
+        id="sort"
+        class="input w-full sm:w-auto"
+        [ngModel]="sort"
+        (ngModelChange)="updateFilters({ sort: $event === 'top' ? 'top' : null })"
+      >
+        <option value="recent">Más recientes</option>
+        <option value="top">Mejor valoradas</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Filtrar por categoría">
+    <button
+      type="button"
+      class="chip"
+      [class.chip-active]="!categoryId"
+      (click)="updateFilters({ category: null })"
+    >
+      Todas
+    </button>
+    <button
+      *ngFor="let category of categories"
+      type="button"
+      class="chip"
+      [class.chip-active]="categoryId === category.id"
+      [attr.aria-pressed]="categoryId === category.id"
+      (click)="updateFilters({ category: category.id })"
+    >
+      {{ category.name }}
+    </button>
+  </div>
+
+  <div *ngIf="hashtag" class="mt-3 flex items-center gap-2">
+    <span class="text-muted">Con la etiqueta</span>
+    <button type="button" class="chip chip-active" (click)="updateFilters({ hashtag: null })">
+      #{{ hashtag }}
+      <i class="bi bi-x-lg text-xs" aria-hidden="true"></i>
+      <span class="sr-only">Quitar filtro</span>
+    </button>
+  </div>
+
+  <app-loader *ngIf="loading"></app-loader>
+
+  <div *ngIf="!loading" class="mt-8">
+    <app-empty-state
+      *ngIf="failed"
+      icon="bi-plug"
+      title="No hemos podido cargar las recetas"
+      text="Comprueba que la API está en marcha y recarga la página."
+    ></app-empty-state>
+
+    <ng-container *ngIf="!failed">
+      <p class="mb-5 text-muted" aria-live="polite">
+        {{ recipes.length }} {{ recipes.length === 1 ? 'receta' : 'recetas' }}
+      </p>
+      <div *ngIf="recipes.length; else empty" class="recipe-grid">
+        <app-card *ngFor="let recipe of recipes" [data]="recipe"></app-card>
+      </div>
+      <ng-template #empty>
+        <app-empty-state
+          icon="bi-search"
+          title="No hay recetas con esos filtros"
+          text="Prueba con otra búsqueda o quita alguno de los filtros."
+        >
+          <button *ngIf="hasFilters" type="button" class="btn-outline" (click)="clearFilters()">Quitar filtros</button>
+        </app-empty-state>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>

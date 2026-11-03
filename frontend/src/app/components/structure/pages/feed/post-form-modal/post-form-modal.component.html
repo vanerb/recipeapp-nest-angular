@@ -1,0 +1,53 @@
+<div class="flex items-start justify-between gap-4">
+  <h2 class="text-2xl">Publicar un plato</h2>
+  <button type="button" class="icon-btn -mr-2 -mt-2" aria-label="Cerrar" (click)="close()">
+    <i class="bi bi-x-lg" aria-hidden="true"></i>
+  </button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="mt-4 space-y-4" novalidate>
+  <div>
+    <label class="label" for="post-image">Foto del plato</label>
+    <label
+      for="post-image"
+      class="flex aspect-[4/3] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed border-ink/30 bg-paper text-muted transition-colors hover:border-ink"
+    >
+      <img *ngIf="preview; else placeholder" [src]="preview" alt="Vista previa" class="h-full w-full object-cover" />
+      <ng-template #placeholder>
+        <i class="bi bi-image text-3xl" aria-hidden="true"></i>
+        <span class="mt-1">Elige una imagen (máx. 5 MB)</span>
+      </ng-template>
+    </label>
+    <input id="post-image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="sr-only" (change)="onFile($event)" />
+    <p *ngIf="fileError" class="field-error">{{ fileError }}</p>
+    <p *ngIf="submitted && !file && !fileError" class="field-error">Añade una foto.</p>
+  </div>
+
+  <div>
+    <label class="label" for="post-caption">¿Qué tal ha salido?</label>
+    <textarea id="post-caption" rows="3" class="input" maxlength="500" formControlName="caption"></textarea>
+    <p *ngIf="form.get('caption')?.touched && form.get('caption')?.invalid" class="field-error">Escribe unas palabras.</p>
+  </div>
+
+  <div *ngIf="fixedRecipe; else pickRecipe">
+    <p class="label">Receta enlazada</p>
+    <p class="rounded-lg bg-paper px-3.5 py-2.5 font-medium">{{ fixedRecipe.title }}</p>
+  </div>
+  <ng-template #pickRecipe>
+    <div>
+      <label class="label" for="post-recipe">Receta enlazada</label>
+      <select id="post-recipe" class="input" formControlName="recipeId">
+        <option value="" disabled>Elige una receta</option>
+        <option *ngFor="let recipe of recipes" [value]="recipe.id">{{ recipe.title }}</option>
+      </select>
+      <p *ngIf="form.get('recipeId')?.touched && form.get('recipeId')?.invalid" class="field-error">Elige la receta que has cocinado.</p>
+    </div>
+  </ng-template>
+
+  <p *ngIf="error" class="rounded-lg bg-tomato-soft px-3 py-2 text-tomato" role="alert">{{ error }}</p>
+
+  <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+    <button type="button" class="btn-outline" (click)="close()">Cancelar</button>
+    <button type="submit" class="btn-primary" [disabled]="sending">{{ sending ? 'Publicando…' : 'Publicar' }}</button>
+  </div>
+</form>

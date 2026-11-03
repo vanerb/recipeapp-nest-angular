@@ -6,7 +6,11 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { CurrentUser } from 'src/common/auth/current-user.decorator';
+import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
+import { User } from 'src/users/users.entity';
 import { CategoriesService } from './categories.service';
 import { Category } from './categories.entity';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -27,22 +31,27 @@ export class CategoriesController {
   }
 
   @Post()
-  async createCategory(
-    @Body() createRecipeDto: CreateCategoryDto,
+  @UseGuards(JwtAuthGuard)
+  createCategory(
+    @Body() dto: CreateCategoryDto,
+    @CurrentUser() user: User,
   ): Promise<Category> {
-    return this.categoriesService.createCategory(createRecipeDto);
+    return this.categoriesService.createCategory(dto, user);
   }
 
   @Patch(':id')
-  async updateCategory(
+  @UseGuards(JwtAuthGuard)
+  updateCategory(
     @Param('id') id: string,
-    @Body() updateRecipeDto: UpdateCategoryDto,
+    @Body() dto: UpdateCategoryDto,
+    @CurrentUser() user: User,
   ) {
-    return this.categoriesService.updateCategory(id, updateRecipeDto);
+    return this.categoriesService.updateCategory(id, dto, user);
   }
 
   @Delete(':id')
-  async deleteCategory(@Param('id') id: string) {
-    return this.categoriesService.deleteCategory(id);
+  @UseGuards(JwtAuthGuard)
+  deleteCategory(@Param('id') id: string, @CurrentUser() user: User) {
+    return this.categoriesService.deleteCategory(id, user);
   }
 }

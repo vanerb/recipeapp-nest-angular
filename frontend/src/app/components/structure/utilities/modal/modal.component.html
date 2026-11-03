@@ -1,5 +1,15 @@
-<div class="modal-backdrop" *ngIf="show" >
-  <div class="modal" [ngStyle]="styles" (click)="$event.stopPropagation()">
+<div
+  *ngIf="show"
+  class="fixed inset-0 z-40 flex items-end justify-center overflow-y-auto bg-ink/50 p-0 sm:items-center sm:p-4"
+  (mousedown)="$event.target === $event.currentTarget && finish()"
+>
+  <div
+    #dialog
+    tabindex="-1"
+    role="dialog"
+    aria-modal="true"
+    class="max-h-[92vh] w-full overflow-y-auto rounded-t-2xl bg-surface p-5 shadow-lift outline-none sm:max-w-lg sm:rounded-2xl sm:p-7"
+  >
     <ng-template #modalContent></ng-template>
   </div>
 </div>

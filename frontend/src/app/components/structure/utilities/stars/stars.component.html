@@ -1,0 +1,39 @@
+<ng-template #star let-position>
+  <span class="relative inline-block leading-none" [style.fontSize.px]="size">
+    <i class="bi bi-star-fill text-ink/15" aria-hidden="true"></i>
+    <span class="absolute inset-0 overflow-hidden text-saffron" [style.width.%]="fill(position)">
+      <i class="bi bi-star-fill" aria-hidden="true"></i>
+    </span>
+  </span>
+</ng-template>
+
+<div
+  *ngIf="interactive; else readOnly"
+  class="inline-flex"
+  role="radiogroup"
+  aria-label="Tu valoración"
+  (mouseleave)="hovered = null"
+>
+  <button
+    *ngFor="let position of scale"
+    type="button"
+    role="radio"
+    class="p-1.5 transition-transform hover:scale-110"
+    [attr.aria-checked]="value === position"
+    [attr.aria-label]="position + (position === 1 ? ' estrella' : ' estrellas')"
+    (mouseenter)="hovered = position"
+    (focus)="hovered = position"
+    (blur)="hovered = null"
+    (click)="rated.emit(position)"
+  >
+    <ng-container *ngTemplateOutlet="star; context: { $implicit: position }"></ng-container>
+  </button>
+</div>
+
+<ng-template #readOnly>
+  <span class="inline-flex items-center gap-0.5" role="img" [attr.aria-label]="value + ' de 5 estrellas'">
+    <ng-container *ngFor="let position of scale">
+      <ng-container *ngTemplateOutlet="star; context: { $implicit: position }"></ng-container>
+    </ng-container>
+  </span>
+</ng-template>

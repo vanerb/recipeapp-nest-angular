@@ -1,28 +1,31 @@
-export interface Users {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    token: string;
+export type UserRole = 'user' | 'admin';
+
+export interface PublicUser {
+  id: string;
+  name: string;
+  bio: string | null;
+  avatar: string | null;
+  createdAt: string;
 }
 
-export interface User {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    token: string;
+export interface CurrentUser extends PublicUser {
+  email: string;
+  role: UserRole;
+}
+
+export interface UserProfile extends PublicUser {
+  recipesCount: number;
+  postsCount: number;
+  averageRating: number;
 }
 
 export interface CreateUser {
-    name: string;
-    email: string;
-    password: string;
-    token: string;
+  name: string;
+  email: string;
+  password: string;
 }
 
-export interface UpdateUser {
-  name?: string;
-  email?: string;
-  password?: string;
+export interface Login {
+  email: string;
+  password: string;
 }

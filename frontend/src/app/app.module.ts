@@ -1,34 +1,41 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './components/structure/pages/login/login.component';
-import { ModalComponent } from './components/structure/utilities/modal/modal.component';
-import { CardComponent } from './components/structure/utilities/card/card.component';
-import { RegisterComponent } from './components/structure/pages/register/register.component';
-import { AdminComponent } from './components/structure/pages/admin/admin.component';
-import { WelcomeComponent } from './components/structure/pages/welcome/welcome.component';
-import { MainComponent } from './components/structure/pages/main/main.component';
-import { ContactComponent } from './components/structure/pages/contact/contact.component';
 import { HeaderComponent } from './components/structure/menu/header/header.component';
 import { FooterComponent } from './components/structure/menu/footer/footer.component';
-import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ProfileComponent } from './components/structure/pages/profile/profile.component';
+import { LoginComponent } from './components/structure/pages/login/login.component';
+import { RegisterComponent } from './components/structure/pages/register/register.component';
+import { WelcomeComponent } from './components/structure/pages/welcome/welcome.component';
+import { MainComponent } from './components/structure/pages/main/main.component';
 import { MainDetailComponent } from './components/structure/pages/main-detail/main-detail.component';
-import { MainManagementComponent } from './components/structure/pages/main-management/main-management.component';
-import { AddModalComponent } from './components/structure/pages/main-management/add-modal/add-modal.component';
-import { EditModalComponent } from './components/structure/pages/main-management/edit-modal/edit-modal.component';
-import { DeleteModalComponent } from './components/structure/utilities/delete-modal/delete-modal.component';
-import { CategoryManagementComponent } from './components/structure/pages/category-management/category-management.component';
-import { WarningModalComponent } from './components/structure/utilities/warning-modal/warning-modal.component';
-import { SeparatorComponent } from './components/structure/utilities/separator/separator.component';
-import { MainContainerComponent } from './components/structure/utilities/main-container/main-container.component';
-import { EditCategoryModalComponent } from './components/structure/pages/category-management/edit-category-modal/edit-category-modal.component';
-import { AddCategoryModalComponent } from './components/structure/pages/category-management/add-category-modal/add-category-modal.component';
-import { LoaderComponent } from './components/structure/utilities/loader/loader.component';
+import { RecipeFormComponent } from './components/structure/pages/recipe-form/recipe-form.component';
+import { FeedComponent } from './components/structure/pages/feed/feed.component';
+import { PostFormModalComponent } from './components/structure/pages/feed/post-form-modal/post-form-modal.component';
+import { ProfileComponent } from './components/structure/pages/profile/profile.component';
+import { SettingsComponent } from './components/structure/pages/settings/settings.component';
 import { ManagementComponent } from './components/structure/pages/management/management.component';
+import { AdminComponent } from './components/structure/pages/admin/admin.component';
+import { NotFoundComponent } from './components/structure/pages/not-found/not-found.component';
+import { ModalComponent } from './components/structure/utilities/modal/modal.component';
+import { CardComponent } from './components/structure/utilities/card/card.component';
+import { PostCardComponent } from './components/structure/utilities/post-card/post-card.component';
+import { DeleteModalComponent } from './components/structure/utilities/delete-modal/delete-modal.component';
+import { LoaderComponent } from './components/structure/utilities/loader/loader.component';
+import { StarsComponent } from './components/structure/utilities/stars/stars.component';
+import { AvatarComponent } from './components/structure/utilities/avatar/avatar.component';
+import { ToastComponent } from './components/structure/utilities/toast/toast.component';
+import { EmptyStateComponent } from './components/structure/utilities/empty-state/empty-state.component';
+import { MediaPipe } from './components/structure/utilities/media.pipe';
+import { TimeAgoPipe } from './components/structure/utilities/time-ago.pipe';
+import { ImgFallbackDirective } from './components/structure/utilities/img-fallback.directive';
+import { DemoApiInterceptor } from './demo/demo-api.interceptor';
+import { AuthInterceptor } from './services/auth.interceptor';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -36,37 +43,50 @@ import { ManagementComponent } from './components/structure/pages/management/man
     HeaderComponent,
     FooterComponent,
     LoginComponent,
-    ModalComponent,
-    CardComponent,
     RegisterComponent,
-    AdminComponent,
     WelcomeComponent,
     MainComponent,
-    ContactComponent,
-    ProfileComponent,
     MainDetailComponent,
-    MainManagementComponent,
-    AddModalComponent,
-    EditModalComponent,
+    RecipeFormComponent,
+    FeedComponent,
+    PostFormModalComponent,
+    ProfileComponent,
+    SettingsComponent,
+    ManagementComponent,
+    AdminComponent,
+    NotFoundComponent,
+    ModalComponent,
+    CardComponent,
+    PostCardComponent,
     DeleteModalComponent,
-    CategoryManagementComponent,
-    WarningModalComponent,
-    SeparatorComponent,
-    MainContainerComponent,
-    EditCategoryModalComponent,
-    AddCategoryModalComponent,
     LoaderComponent,
-    ManagementComponent
+    StarsComponent,
+    AvatarComponent,
+    ToastComponent,
+    EmptyStateComponent,
+    MediaPipe,
+    TimeAgoPipe,
+    ImgFallbackDirective,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
     ReactiveFormsModule,
   ],
   providers: [
-    provideClientHydration()
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    ...(environment.demo
+      ? [{ provide: HTTP_INTERCEPTORS, useClass: DemoApiInterceptor, multi: true }]
+      : []),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (auth: AuthService) => () => auth.restoreSession(),
+      deps: [AuthService],
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

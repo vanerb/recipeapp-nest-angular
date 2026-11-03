@@ -1,52 +1,61 @@
-import {Component} from '@angular/core';
-import {Login} from '../../../../interfaces/auth';
-import {AuthService} from '../../../../services/auth.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {UtilitiesService} from "../../../../services/utilities.service";
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../../../../environments/environment';
+import { AuthService } from '../../../../services/auth.service';
+import { errorMessage } from '../../../../services/error-message';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  readonly isDemo = environment.demo;
+  readonly demoUsers = [
+    { name: 'Marta Soler', email: 'marta@recetas.test' },
+    { name: 'Diego Romero', email: 'diego@recetas.test' },
+    { name: 'Administración', email: 'admin@recetas.test' },
+  ];
 
-  form: FormGroup
+  form: FormGroup;
+  error = '';
+  loading = false;
 
-  constructor(private readonly authService: AuthService, private fb: FormBuilder, private router: Router, private readonly utilitiesService: UtilitiesService) {
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+  ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
   }
 
-
-  async login() {
-    const command: Login = {
-      email: this.form.get('email')?.value,
-      password: this.form.get('password')?.value
+  async submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
     }
+    await this.enter(this.form.value);
+  }
 
-    if (this.authService.isAuthenticated()) {
-      await this.authService.logout()
+  enterAs(email: string) {
+    return this.enter({ email, password: 'demo' });
+  }
+
+  private async enter(command: { email: string; password: string }) {
+    this.loading = true;
+    this.error = '';
+    try {
+      await this.authService.login(command);
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+      await this.router.navigateByUrl(returnUrl ?? '/');
+    } catch (error) {
+      this.error = errorMessage(error);
+    } finally {
+      this.loading = false;
     }
-
-    this.authService.login(command).subscribe({
-      next: async (res) => {
-        if (res.access_token) {
-          this.authService.setToken(res.access_token)
-          await this.router.navigate(['/']);
-
-          await this.utilitiesService.sleep(0)
-
-          window.location.reload()
-        }
-
-      },
-      error: (error) => {
-        this.authService.removeToken()
-      }
-    })
   }
 }

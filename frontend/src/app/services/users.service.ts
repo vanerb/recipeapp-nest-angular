@@ -1,39 +1,16 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {CreateUser, UpdateUser, User} from '../interfaces/users';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { UserProfile } from '../interfaces/users';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsersService {
+  constructor(private readonly http: HttpClient) {}
 
-  baseUrl = "http://localhost:3002/users"
-
-  constructor(private readonly http: HttpClient) {
-  }
-
-
-  get(id: string) {
-    return this.http.get<User>(this.baseUrl + "/" + id)
-  }
-
-  getByToken(token: string) {
-    return this.http.get<User>(this.baseUrl + "/token/" + token)
-  }
-
-  getAll() {
-    return this.http.get<User[]>(this.baseUrl)
-  }
-
-  create(command: CreateUser) {
-    return this.http.post(this.baseUrl + '/create', command)
-  }
-
-  delete(id: string) {
-    return this.http.delete(this.baseUrl + "/" + id)
-  }
-
-  update(id: string | null, command: UpdateUser) {
-    return this.http.patch(this.baseUrl + "/" + id, command)
+  getProfile(id: string): Observable<UserProfile> {
+    return this.http.get<UserProfile>(`${environment.apiUrl}/users/${id}`);
   }
 }

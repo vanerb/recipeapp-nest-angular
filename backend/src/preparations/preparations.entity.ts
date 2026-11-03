@@ -1,16 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, BeforeInsert, OneToMany, ManyToOne } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Recipe } from 'src/recipes/recipes.entity';
-import { Category } from 'src/categories/categories.entity';
 
 @Entity()
 export class Preparations {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    preparation: string;
+  @Column()
+  preparation: string;
 
-    @ManyToOne(() => Recipe, (recipe) => recipe.preparations, { onDelete: 'CASCADE' })
-    recipe: Recipe;
+  // Sin esto los pasos volvían en cualquier orden
+  @Column({ default: 0 })
+  position: number;
+
+  @ManyToOne(() => Recipe, (recipe) => recipe.preparations, {
+    onDelete: 'CASCADE',
+  })
+  recipe: Recipe;
 }

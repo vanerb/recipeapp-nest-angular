@@ -1,17 +1,16 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Category } from 'src/categories/categories.entity';
+import { Comment } from 'src/comments/comments.entity';
+import { Image } from 'src/images/images.entity';
+import { Rating } from 'src/ratings/ratings.entity';
 import { RecipesController } from './recipes.controller';
 import { RecipesService } from './recipes.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Recipe } from './recipes.entity';
-import { User } from 'src/users/users.entity';
-import { Category } from 'src/categories/categories.entity';
-import { Image } from 'src/images/images.entity';
-import { Preparations } from 'src/preparations/preparations.entity';
-import { Ingredients } from 'src/ingredients/ingredients.entity';
 
 @Module({
-  imports: [ TypeOrmModule.forFeature([Recipe, User, Image, Category, Preparations, Ingredients])], // Asegúrate de que tus entidades estén registradas
+  imports: [TypeOrmModule.forFeature([Recipe, Image, Category, Rating, Comment])],
   controllers: [RecipesController],
-  providers: [RecipesService], 
+  providers: [RecipesService],
 })
-export class RecipesModule { }
+export class RecipesModule {}

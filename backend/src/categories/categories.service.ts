@@ -1,70 +1,82 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { isAdmin, User } from 'src/users/users.entity';
 import { Category } from './categories.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { Repository } from 'typeorm';
-import { User } from 'src/users/users.entity';
 
 @Injectable()
 export class CategoriesService {
   constructor(
     @InjectRepository(Category)
-    private cateoriesRepository: Repository<Category>,
-    @InjectRepository(User) private userRepository: Repository<User>,
+    private categoriesRepository: Repository<Category>,
   ) {}
 
-  async getAllCategories(): Promise<Category[]> {
-    return await this.cateoriesRepository.find();
+  getAllCategories(): Promise<Category[]> {
+    return this.categoriesRepository.find({ order: { name: 'ASC' } });
   }
 
-  async getByUserId(id: string): Promise<Category[]> {
-    return await this.cateoriesRepository.find({
+  getByUserId(id: string): Promise<Category[]> {
+    return this.categoriesRepository.find({
       where: { user: { id } },
+      order: { name: 'ASC' },
+    });
+  }
+
+  // Las categorías son compartidas: se evita que cada usuario cree "Postres"
+  private async assertNameIsFree(name: string, ignoreId?: string) {
+    const categories = await this.categoriesRepository.find();
+    const taken = categories.some(
+      (category) =>
+        category.id !== ignoreId &&
+        category.name.toLowerCase() === name.trim().toLowerCase(),
+    );
+    if (taken) {
+      throw new ConflictException('Ya existe una categoría con ese nombre');
+    }
+  }
+
+  private async findOwned(id: string, user: User): Promise<Category> {
+    const category = await this.categoriesRepository.findOne({
+      where: { id },
       relations: ['user'],
     });
+    if (!category) {
+      throw new NotFoundException('Categoría no encontrada');
+    }
+    if (category.user?.id !== user.id && !isAdmin(user)) {
+      throw new ForbiddenException('Esta categoría no es tuya');
+    }
+    return category;
   }
 
-  async createCategory(
-    createCategoryDto: CreateCategoryDto,
-  ): Promise<Category> {
-    const user = await this.userRepository.findOne({
-      where: { id: createCategoryDto.userId },
-    });
-
-    if (!user) {
-      throw new Error('Usuario no encontrado');
-    }
-
-    const newCategory = this.cateoriesRepository.create({
-      ...createCategoryDto,
-      user,
-    });
-    return this.cateoriesRepository.save(newCategory);
+  async createCategory(dto: CreateCategoryDto, user: User): Promise<Category> {
+    await this.assertNameIsFree(dto.name);
+    const name = dto.name.trim();
+    return this.categoriesRepository.save(
+      this.categoriesRepository.create({ name, user }),
+    );
   }
 
   async updateCategory(
     id: string,
-    updateCategoryDto: UpdateCategoryDto,
+    dto: UpdateCategoryDto,
+    user: User,
   ): Promise<Category> {
-    const category = await this.cateoriesRepository.findOne({ where: { id } });
-    if (!category) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-    await this.cateoriesRepository.update(id, updateCategoryDto);
-    const updatedCategory = await this.cateoriesRepository.findOne({
-      where: { id },
-    });
-    const { ...categoryUpdated } = updatedCategory;
-    return categoryUpdated;
+    const category = await this.findOwned(id, user);
+    await this.assertNameIsFree(dto.name, id);
+    category.name = dto.name.trim();
+    return this.categoriesRepository.save(category);
   }
 
-  async deleteCategory(id: string) {
-    const category = await this.cateoriesRepository.findOne({ where: { id } });
-    if (!category) {
-      throw new NotFoundException(`Recipe with ID ${id} not found`);
-    }
-
-    this.cateoriesRepository.delete(id);
+  async deleteCategory(id: string, user: User) {
+    await this.findOwned(id, user);
+    await this.categoriesRepository.delete(id);
   }
 }

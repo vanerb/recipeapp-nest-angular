@@ -1,17 +1,18 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Post } from 'src/posts/posts.entity';
+import { Rating } from 'src/ratings/ratings.entity';
+import { Recipe } from 'src/recipes/recipes.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users.entity';
-import { JwtModule } from '@nestjs/jwt';
 
+// Global porque JwtAuthGuard lo necesita en todos los módulos
+@Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([User]),  JwtModule.register({
-    secret: process.env.JWT_SECRET || 'secretKey',
-    signOptions: { expiresIn: '1h' },
-  }),],
+  imports: [TypeOrmModule.forFeature([User, Recipe, Post, Rating])],
   providers: [UsersService],
   controllers: [UsersController],
-  exports: [UsersService, JwtModule],
+  exports: [UsersService],
 })
 export class UsersModule {}

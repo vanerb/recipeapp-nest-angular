@@ -1,146 +1,101 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {RecipesService} from "../../../../services/recipes.service";
-import {ModalService} from "../../../../services/modal.service";
-import {UsersService} from "../../../../services/users.service";
-import {AuthService} from "../../../../services/auth.service";
-import {CategoriesService} from "../../../../services/categories.service";
-import {ActivatedRoute} from "@angular/router";
-import {UpdateUser, User} from "../../../../interfaces/users";
-import {firstValueFrom} from "rxjs";
-import {DeleteModalComponent} from "../../utilities/delete-modal/delete-modal.component";
-import {WarningModalComponent} from "../../utilities/warning-modal/warning-modal.component";
-import {UtilitiesService} from "../../../../services/utilities.service";
-import {LoaderComponent} from "../../utilities/loader/loader.component";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { forkJoin, Subscription, switchMap, tap } from 'rxjs';
+import { Post } from '../../../../interfaces/posts';
+import { Recipe } from '../../../../interfaces/recipes';
+import { UserProfile } from '../../../../interfaces/users';
+import { AuthService } from '../../../../services/auth.service';
+import { errorMessage } from '../../../../services/error-message';
+import { ModalService } from '../../../../services/modal.service';
+import { PostsService } from '../../../../services/posts.service';
+import { RecipesService } from '../../../../services/recipes.service';
+import { ToastService } from '../../../../services/toast.service';
+import { UsersService } from '../../../../services/users.service';
+import { DeleteModalComponent } from '../../utilities/delete-modal/delete-modal.component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
 })
-export class ProfileComponent implements OnInit {
-  form: FormGroup;
+export class ProfileComponent implements OnInit, OnDestroy {
+  profile: UserProfile | null = null;
+  recipes: Recipe[] = [];
+  posts: Post[] = [];
+  tab: 'recipes' | 'posts' = 'recipes';
+  loading = true;
+  notFound = false;
+  failed = false;
 
-  formPassword: FormGroup
-  user: User | null = null
-  id: string = ""
+  private subscription?: Subscription;
 
   constructor(
-    private fb: FormBuilder,
-    private readonly recipesService: RecipesService,
-    private readonly modalService: ModalService,
-    private readonly userService: UsersService,
     private readonly authService: AuthService,
-    private readonly categoryService: CategoriesService,
+    private readonly usersService: UsersService,
+    private readonly recipesService: RecipesService,
+    private readonly postsService: PostsService,
+    private readonly modalService: ModalService,
+    private readonly toast: ToastService,
     private readonly route: ActivatedRoute,
-    private readonly utilitiesService: UtilitiesService
-  ) {
-    this.form = this.fb.group({
-      name: ['', [Validators.required]],
-    });
+    private readonly title: Title,
+  ) {}
 
-    this.formPassword = this.fb.group({
-      password: [''],
-      repeatPassword: ['']
-    });
-  }
-
-  close() {
-
-  }
-
-
-  async updatePassword() {
-    if (this.formPassword.get('password')?.value === this.formPassword.get('repeatPassword')?.value) {
-      if (this.formPassword.get('password')?.value !== '') {
-        this.modalService.open(LoaderComponent, {}, {text: 'Actualizando contraseña...'})
-        await this.utilitiesService.sleep(1000)
-        const command: UpdateUser = {
-          password: this.formPassword.get('password')?.value
-        }
-        this.userService.update(this.id, command).subscribe({
-          next: (user) => {
-
-          },
-          error: (err) => {
-            console.error(err)
-          }
-        });
-      } else {
-        this.modalService.open(WarningModalComponent, {
-            width: '450px',
-          },
-          {
-            title: "Aviso",
-            message: "La contraseña no puede estar vacio"
-          }).then(async () => {
-          console.log('✘ Cancelado');
-          this.modalService.close()
-        })
-          .catch(() => {
-            console.log('✘ Cancelado');
-            this.modalService.close()
+  ngOnInit() {
+    this.subscription = this.route.paramMap
+      .pipe(
+        tap(() => {
+          this.loading = true;
+          this.notFound = false;
+          this.failed = false;
+          this.tab = 'recipes';
+        }),
+        switchMap((params) => {
+          const id = params.get('id') ?? '';
+          return forkJoin({
+            profile: this.usersService.getProfile(id),
+            recipes: this.recipesService.getByUserId(id),
+            posts: this.postsService.getByUserId(id),
           });
-
-      }
-
-    } else {
-      this.modalService.open(WarningModalComponent, {
-          width: '450px',
+        }),
+      )
+      .subscribe({
+        next: ({ profile, recipes, posts }) => {
+          this.profile = profile;
+          this.recipes = recipes;
+          this.posts = posts;
+          this.loading = false;
+          this.title.setTitle(`${profile.name} · Recetas Creativas`);
         },
-        {
-          title: "Aviso",
-          message: "La contraseña no coincide"
-        }).then(async () => {
-        console.log('✘ Cancelado');
-        this.modalService.close()
-      })
-        .catch(() => {
-          console.log('✘ Cancelado');
-          this.modalService.close()
-        });
-    }
-    this.modalService.close()
-
+        error: (error: HttpErrorResponse) => {
+          this.notFound = error.status === 404;
+          this.failed = !this.notFound;
+          this.loading = false;
+        },
+      });
   }
 
-  async updateProfile() {
-    if (!this.form.valid) {
-      this.modalService.open(WarningModalComponent, {
-          width: '450px',
-        },
-        {
-          title: "Aviso",
-          message: "Hay errores en el formulario, reviselo."
-        }).then(async () => {
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
+  }
 
-      })
+  get isMine(): boolean {
+    return this.authService.user?.id === this.profile?.id;
+  }
 
-      console.log(this.form)
-      return
-    }
-
-    this.modalService.open(LoaderComponent, {}, {text: 'Editando perfil...'})
-    await this.utilitiesService.sleep(1000)
-
-    const command: UpdateUser = {
-      name: this.form.get('name')?.value
-    }
-    this.userService.update(this.id, command).subscribe({
-      next: (user) => {
-
-      },
-      error: (err) => {
-        console.error(err)
-      }
+  async removePost(post: Post) {
+    const confirmed = await this.modalService.open(DeleteModalComponent, {
+      title: '¿Eliminar la publicación?',
     });
-
-    this.modalService.close()
-  }
-
-  async ngOnInit() {
-    const user = await firstValueFrom(this.userService.getByToken(this.authService.getToken() ?? ''));
-    this.form.get('name')?.setValue(user.name)
-    this.id = user.id
+    if (!confirmed) {
+      return;
+    }
+    this.postsService.delete(post.id).subscribe({
+      next: () => {
+        this.posts = this.posts.filter((item) => item.id !== post.id);
+        this.profile!.postsCount = this.posts.length;
+      },
+      error: (error) => this.toast.error(errorMessage(error)),
+    });
   }
 }
