@@ -4,7 +4,7 @@ Comunidad de cocina casera: sube tus recetas, valora las de otras personas con e
 
 **[Ver la demo](https://vanerb.github.io/recipeapp-nest-angular/)**: funciona sin instalar nada y sin registrarse.
 
-![Página de inicio de Recetas Creativas](docs/screenshots/home.webp)
+![Página de inicio de Recetas Creativas](docs/screenshots/home.png)
 
 **Stack:** Angular 17 · Tailwind CSS · NestJS 11 · TypeORM · MySQL o SQLite · JWT
 
