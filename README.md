@@ -62,7 +62,7 @@ npm start
 
 ### Cuentas de prueba
 
-Todas usan la contraseña `Demo1234!`.
+En la demo y con `npm run seed`, todas usan la contraseña `Demo1234!`. Si importas el SQL de MySQL, usan `Usuario123*`.
 
 | Correo | Rol |
 | --- | --- |

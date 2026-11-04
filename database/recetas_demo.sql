@@ -1,7 +1,7 @@
 -- Recetas Creativas: base de datos de prueba para MySQL.
 -- Crea la base `recetas_demo` y no toca ninguna otra.
 -- Cuentas: admin@recetas.test (administración), marta@recetas.test, diego@recetas.test, aiko@recetas.test y nora@recetas.test
--- Contraseña de todas: Demo1234!
+-- Contraseña de todas: Usuario123*
 
 CREATE DATABASE IF NOT EXISTS `recetas_demo` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `recetas_demo`;
@@ -44,11 +44,11 @@ ALTER TABLE `comment` ADD CONSTRAINT `FK_c0354a9a009d3bb45a08655ce3b` FOREIGN KE
 ALTER TABLE `rating` ADD CONSTRAINT `FK_52e568d130cc658fc17c9dd00ff` FOREIGN KEY (`recipeId`) REFERENCES `recipe`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE `rating` ADD CONSTRAINT `FK_a6c53dfc89ba3188b389ef29a62` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `isBlocked`, `bio`, `avatar`, `createdAt`) VALUES ('978ccac3-c603-4835-a256-4e15079cd5b1', 'Administración', 'admin@recetas.test', '$2b$10$urPQcR94QizJKKwj9jBibe.VXE/rQwHRMuWKZi.gYRSpjixmx6jDi', 'admin', 0, 'Cuenta de administración de Recetas Creativas.', NULL, '2026-11-03 23:10:07');
-INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `isBlocked`, `bio`, `avatar`, `createdAt`) VALUES ('5272160d-8de7-48b0-aa99-36dded3c90c7', 'Marta Soler', 'marta@recetas.test', '$2b$10$urPQcR94QizJKKwj9jBibe.VXE/rQwHRMuWKZi.gYRSpjixmx6jDi', 'user', 0, 'Cocina de mercado y sobremesas largas. Si lleva sofrito, me apunto.', NULL, '2026-11-03 23:10:07');
-INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `isBlocked`, `bio`, `avatar`, `createdAt`) VALUES ('701b80bf-3b53-474f-a293-114d5f12e3eb', 'Diego Romero', 'diego@recetas.test', '$2b$10$urPQcR94QizJKKwj9jBibe.VXE/rQwHRMuWKZi.gYRSpjixmx6jDi', 'user', 0, 'Panadero de domingo y obseso de las masas. Mi horno no descansa.', NULL, '2026-11-03 23:10:07');
-INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `isBlocked`, `bio`, `avatar`, `createdAt`) VALUES ('6f11ec4d-e787-480a-b471-9a1a8bbfa21f', 'Aiko Tanaka', 'aiko@recetas.test', '$2b$10$urPQcR94QizJKKwj9jBibe.VXE/rQwHRMuWKZi.gYRSpjixmx6jDi', 'user', 0, 'Entre Valencia y Osaka. Recetas de casa con caldos sin prisa.', NULL, '2026-11-03 23:10:07');
-INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `isBlocked`, `bio`, `avatar`, `createdAt`) VALUES ('88041fc0-8be7-4176-be8f-709ff828f70d', 'Nora Benali', 'nora@recetas.test', '$2b$10$urPQcR94QizJKKwj9jBibe.VXE/rQwHRMuWKZi.gYRSpjixmx6jDi', 'user', 0, 'Especias, verduras y platos para compartir. Cocino para que sobre.', NULL, '2026-11-03 23:10:07');
+INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `isBlocked`, `bio`, `avatar`, `createdAt`) VALUES ('978ccac3-c603-4835-a256-4e15079cd5b1', 'Administración', 'admin@recetas.test', '$2b$10$dYQeE7/N.xEjUk439Kh...0BOhgobPv3z.Epf.PnkxzVKxUP.Jb3G', 'admin', 0, 'Cuenta de administración de Recetas Creativas.', NULL, '2026-11-03 23:10:07');
+INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `isBlocked`, `bio`, `avatar`, `createdAt`) VALUES ('5272160d-8de7-48b0-aa99-36dded3c90c7', 'Marta Soler', 'marta@recetas.test', '$2b$10$dYQeE7/N.xEjUk439Kh...0BOhgobPv3z.Epf.PnkxzVKxUP.Jb3G', 'user', 0, 'Cocina de mercado y sobremesas largas. Si lleva sofrito, me apunto.', NULL, '2026-11-03 23:10:07');
+INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `isBlocked`, `bio`, `avatar`, `createdAt`) VALUES ('701b80bf-3b53-474f-a293-114d5f12e3eb', 'Diego Romero', 'diego@recetas.test', '$2b$10$dYQeE7/N.xEjUk439Kh...0BOhgobPv3z.Epf.PnkxzVKxUP.Jb3G', 'user', 0, 'Panadero de domingo y obseso de las masas. Mi horno no descansa.', NULL, '2026-11-03 23:10:07');
+INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `isBlocked`, `bio`, `avatar`, `createdAt`) VALUES ('6f11ec4d-e787-480a-b471-9a1a8bbfa21f', 'Aiko Tanaka', 'aiko@recetas.test', '$2b$10$dYQeE7/N.xEjUk439Kh...0BOhgobPv3z.Epf.PnkxzVKxUP.Jb3G', 'user', 0, 'Entre Valencia y Osaka. Recetas de casa con caldos sin prisa.', NULL, '2026-11-03 23:10:07');
+INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `isBlocked`, `bio`, `avatar`, `createdAt`) VALUES ('88041fc0-8be7-4176-be8f-709ff828f70d', 'Nora Benali', 'nora@recetas.test', '$2b$10$dYQeE7/N.xEjUk439Kh...0BOhgobPv3z.Epf.PnkxzVKxUP.Jb3G', 'user', 0, 'Especias, verduras y platos para compartir. Cocino para que sobre.', NULL, '2026-11-03 23:10:07');
 
 INSERT INTO `category` (`id`, `name`, `createdAt`, `updatedAt`, `userId`) VALUES ('5a94fc1d-aaed-40de-bc2e-b512ada1516d', 'Desayunos', '2026-11-03 23:10:07', '2026-11-03 23:10:07', '88041fc0-8be7-4176-be8f-709ff828f70d');
 INSERT INTO `category` (`id`, `name`, `createdAt`, `updatedAt`, `userId`) VALUES ('4ec3f279-17eb-4668-8d5d-89e35db6d029', 'Principales', '2026-11-03 23:10:07', '2026-11-03 23:10:07', '5272160d-8de7-48b0-aa99-36dded3c90c7');
