@@ -2,7 +2,7 @@
 
 Comunidad de cocina casera: sube tus recetas, valora las de otras personas con estrellas, coméntalas y publica fotos de tus platos con un enlace directo a su receta.
 
-**[Ver la demo](https://vanerb.github.io/RecipeApp-NestJs/)**: funciona sin instalar nada y sin registrarse.
+**[Ver la demo](https://vanerb.github.io/recipeapp-nest-angular/)**: funciona sin instalar nada y sin registrarse.
 
 ![Página de inicio de Recetas Creativas](docs/screenshots/home.webp)
 
