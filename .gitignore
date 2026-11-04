@@ -79,3 +79,6 @@ frontend/.DS_Store
 frontend/Thumbs.db
 # Base de datos local (SQLite)
 backend/data/
+
+# Configuración local de Claude Code
+.claude/
