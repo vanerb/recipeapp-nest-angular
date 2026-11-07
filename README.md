@@ -2,13 +2,13 @@
 
 Comunidad de cocina casera: sube tus recetas, valora las de otras personas con estrellas, coméntalas y publica fotos de tus platos con un enlace directo a su receta.
 
-**[Ver la demo](https://vanerb.github.io/recipeapp-nest-angular/)**: funciona sin instalar nada y sin registrarse.
+**[Ver la demo](https://vanerb.github.io/recipeapp-nest-angular/)**: funciona en el navegador, sin instalar nada.
 
 ![Página de inicio de Recetas Creativas](docs/screenshots/home.png)
 
-**Stack:** Angular 17 · Tailwind CSS · NestJS 11 · TypeORM · MySQL o SQLite · JWT
+**Stack:** Angular 17 · Tailwind CSS · NestJS 11 · TypeORM · JWT · MySQL o SQLite
 
-## Funcionalidades
+## Qué puedes hacer
 
 - **Recetas:** crear, editar y borrar, con varias fotos, ingredientes, pasos reordenables, categoría y etiquetas.
 - **Búsqueda:** por texto, categoría y etiqueta, con orden por novedad o por nota. Los filtros viven en la URL, así que se pueden compartir.
@@ -21,7 +21,7 @@ Comunidad de cocina casera: sube tus recetas, valora las de otras personas con e
 
 Leer es público; para participar hace falta iniciar sesión.
 
-## Capturas
+### Capturas
 
 | Recetas | Detalle de una receta |
 | --- | --- |
@@ -39,32 +39,11 @@ Leer es público; para participar hace falta iniciar sesión.
   <img src="docs/screenshots/movil.webp" alt="Listado de recetas en un móvil" width="280">
 </p>
 
-## Puesta en marcha
+## Demo
 
-Necesitas Node 20 o superior. No hace falta instalar una base de datos: sin `DB_HOST` en `backend/.env`, la API usa un fichero SQLite.
+La demo es el frontend compilado en modo `demo`: un interceptor HTTP responde dentro del navegador a las mismas rutas que la API, a partir de los mismos datos que usa el seed. Tus cambios se guardan en el `localStorage` de tu navegador.
 
-**API**, en `http://localhost:3002`:
-
-```bash
-cd backend
-npm install
-npm run seed
-npm run start:dev
-```
-
-**Web**, en `http://localhost:4200`, desde otra terminal:
-
-```bash
-cd frontend
-npm install
-npm start
-```
-
-### Cuentas de prueba
-
-En la demo y con `npm run seed`, todas usan la contraseña `Demo1234!`. Si importas el SQL de MySQL, usan `Usuario123*`.
-
-| Correo | Rol |
+| Correo | Tipo de cuenta |
 | --- | --- |
 | `admin@recetas.test` | Administración |
 | `marta@recetas.test` | Usuario |
@@ -72,23 +51,13 @@ En la demo y con `npm run seed`, todas usan la contraseña `Demo1234!`. Si impor
 | `aiko@recetas.test` | Usuario |
 | `nora@recetas.test` | Usuario |
 
-Son solo para probar: su contraseña es pública, así que no uses estos datos en producción.
+La contraseña de todas es `Demo1234!`.
 
-### Con MySQL
-
-[recetas_demo.sql](database/recetas_demo.sql) trae los mismos datos de ejemplo: 5 usuarios, 10 recetas con imágenes, valoraciones, comentarios y publicaciones. Crea la base `recetas_demo` y no toca ninguna otra; si ya existe una con ese nombre, sus tablas se sustituyen. Se importa desde la raíz del proyecto:
-
-```bash
-mysql -u root -p --default-character-set=utf8mb4 -e "source database/recetas_demo.sql"
-```
-
-También se puede importar desde phpMyAdmin o MySQL Workbench. Después, configura `backend/.env` con `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASS` y `DB_NAME=recetas_demo`. Si prefieres empezar con una base vacía, basta con crearla: la API genera las tablas al arrancar.
-
-## Arquitectura
+## Cómo está construido
 
 ```mermaid
 flowchart LR
-    A[Angular] -->|REST y JWT| B[API NestJS]
+    A[Angular 17] -->|REST y JWT| B[API NestJS]
     B --> C[(MySQL o SQLite)]
     B --> D[/Imágenes en uploads/]
     A -.->|Build de demo| E[Interceptor con la API simulada]
@@ -124,10 +93,56 @@ Cada parte tiene su propia documentación: [backend](backend/README.md), con las
 ## Decisiones técnicas
 
 - **Demo sin servidor.** Un interceptor HTTP responde a las mismas rutas que la API dentro del navegador, a partir de los mismos datos que usa el seed. El resto de la app no sabe que no hay backend, y se puede publicar en cualquier hosting estático.
-- **Sin configuración para empezar.** El motor de base de datos se elige por variables de entorno, así que el proyecto arranca con SQLite y pasa a MySQL sin cambiar código.
+- **Sin base de datos que instalar.** El motor se elige por variables de entorno, así que el proyecto arranca con SQLite y pasa a MySQL sin cambiar código.
 - **Los permisos los decide la API.** Cada operación comprueba quién la pide; ocultar un botón en la web es solo comodidad. Contraseñas y correos se excluyen de las respuestas públicas en la propia entidad.
 - **Administración que no se bloquea sola.** Nadie puede bloquearse, degradarse ni eliminarse desde el panel, y la última cuenta de administración no puede darse de baja.
 - **Subidas restringidas.** Solo se aceptan JPG, PNG, WebP y GIF de hasta 5 MB, con nombres generados en el servidor. SVG queda fuera porque puede contener scripts.
+
+## Puesta en marcha
+
+Necesitas Node.js 20 o superior. No hace falta instalar una base de datos: sin `DB_HOST` en `backend/.env`, la API usa un fichero SQLite.
+
+**API**, en `http://localhost:3002`:
+
+```bash
+cd backend
+npm install
+npm run seed
+npm run start:dev
+```
+
+`npm run seed` carga los datos de ejemplo, con las mismas cuentas y la contraseña `Demo1234!` que la demo.
+
+**Web**, en `http://localhost:4200`, desde otra terminal:
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+Para abrir la demo en local, sin backend: `npm run start:demo`.
+
+### Configuración
+
+Las variables van en `backend/.env`; [`backend/.env.example`](backend/.env.example) las explica todas. Las principales:
+
+| Variable | Por defecto | Uso |
+| --- | --- | --- |
+| `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASS`, `DB_NAME` | Sin valor | Conexión con MySQL. Sin `DB_HOST`, se usa SQLite. |
+| `JWT_SECRET` | Clave de desarrollo | Firma de las sesiones. Es obligatoria con `NODE_ENV=production`. |
+| `PORT` | `3002` | Puerto de la API. |
+| `CORS_ORIGIN` | `http://localhost:4200` | Origen que puede llamar a la API. |
+
+### Datos de prueba
+
+[`database/recetas_demo.sql`](database/recetas_demo.sql) trae los mismos datos de ejemplo para MySQL: 5 usuarios, 10 recetas con imágenes, valoraciones, comentarios y publicaciones. Crea la base `recetas_demo` y no toca ninguna otra; si ya existe una con ese nombre, sus tablas se sustituyen.
+
+```bash
+mysql -u root -p --default-character-set=utf8mb4 -e "source database/recetas_demo.sql"
+```
+
+Después, configura `backend/.env` con tus datos de conexión y `DB_NAME=recetas_demo`. Las cuentas son las mismas que en la demo, pero en el SQL la contraseña de todas es `Usuario123*`. Es pública, así que no uses estas cuentas fuera de un entorno local.
 
 ## Tests
 
@@ -145,6 +160,6 @@ Los 20 tests recorren la API completa contra SQLite en memoria: permisos, valida
 - Las imágenes se guardan en el disco del servidor, así que un despliegue real necesitaría almacenamiento persistente.
 - La administración no guarda un historial de sus acciones, y los borrados no se pueden deshacer.
 
-## Créditos
+## Autoría
 
-Las ilustraciones de los platos de ejemplo se han creado para este proyecto. Desarrollado por [vanerb](https://github.com/vanerb).
+Proyecto de portfolio de **Vanesa Ribera Bautista** ([vanerb](https://github.com/vanerb)). Las ilustraciones de los platos de ejemplo se han creado para este proyecto.
